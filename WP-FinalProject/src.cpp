@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include "resource.h"
+#include "Mouse.h"
 
 //void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -22,12 +23,11 @@ static PAINTSTRUCT ps;
 static HBITMAP hBitmap;
 static RECT rt;
 
+static Mouse mouse;
+
 using namespace std;
 
-//¸¶¿ì½º
-bool isLeftClick = false;
-bool isRightClick = false;
-POINT startPosR, endPosR, startPosL, endPosL;
+
 
 void HandleKeyDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (wParam)
@@ -93,10 +93,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		//HandleMouseMove(hWnd, uMsg, wParam, lParam);
 		break;
+	case WM_RBUTTONDOWN:
 	case WM_LBUTTONDOWN:
+		mouse.OnMouseDown(uMsg, lParam);
 		//HandleLButtonDown(hWnd, uMsg, wParam, lParam);
 		break;
+	case WM_RBUTTONUP:
 	case WM_LBUTTONUP:
+		mouse.OnMouseUp(uMsg, lParam);
 		//HandleLButtonUp(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_KEYDOWN:
