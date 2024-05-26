@@ -43,16 +43,6 @@ void HandlePaint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	SelectObject(mDC, hBitmap);
 	FillRect(mDC, &rt, (HBRUSH)GetStockObject(GRAY_BRUSH));
 
-	POINT test[4] = {
-		{0, 0}, // 왼쪽 위
-		{300, 50}, // 오른쪽 위
-		{600, 300}, // 오른쪽 아래
-		{100, 600}  // 왼쪽 아래
-	};
-	SelectObject(mDC, (HPEN)GetStockObject(BLACK_PEN));
-	SelectObject(mDC, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	Polygon(mDC, test, 4);
-
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
 	DeleteDC(mDC);
 	DeleteObject(hBitmap);
