@@ -26,7 +26,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 static UINT_PTR timerId = 0;
 
-//static Mouse mouse;
+static Mouse mouse;
 
 using namespace std;
 
@@ -71,7 +71,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		HandlePaint(hWnd, uMsg, wParam, lParam);
-	break;
+		break;
 	case WM_SIZE:
 		//HandleResize(hWnd, uMsg, wParam, lParam);
 		break;
@@ -80,12 +80,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONDOWN:
-		//mouse.OnMouseDown(uMsg, lParam);
+		mouse.OnMouseDown(uMsg, lParam);
 		//HandleLButtonDown(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_RBUTTONUP:
 	case WM_LBUTTONUP:
-		//mouse.OnMouseUp(uMsg, lParam);
+		mouse.OnMouseUp(uMsg, lParam);
 		//HandleLButtonUp(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_KEYDOWN:
