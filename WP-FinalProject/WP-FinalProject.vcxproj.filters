@@ -13,33 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="헤더 파일\Utils">
+      <UniqueIdentifier>{2aae63df-7264-489d-b601-835dd3a8de70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utils">
+      <UniqueIdentifier>{9213bc29-ba52-4b99-b53c-150a690eb4f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameObjects">
+      <UniqueIdentifier>{d044217d-2f04-4054-9bcd-3e6d5a885e3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GameObjects">
+      <UniqueIdentifier>{61e73459-5138-4d05-b160-ded8530636a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="Actor.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>헤더 파일\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="Actor.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
