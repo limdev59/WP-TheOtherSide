@@ -70,6 +70,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//HandleCreate(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_PAINT:
+	{
+		hDC = BeginPaint(hWnd, &ps);
+		mDC = CreateCompatibleDC(hDC);
+		hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
+		SelectObject(mDC, hBitmap);
+		FillRect(mDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
+		{
+			POINT test[4] = {
+			{0, 0}, // 왼쪽 위
+			{300, 50}, // 오른쪽 위
+			{600, 300}, // 오른쪽 아래
+			{100, 600}  // 왼쪽 아래
+			};
+			SelectObject(mDC, (HPEN)GetStockObject(WHITE_PEN));
+			SelectObject(mDC, (HBRUSH)GetStockObject(NULL_BRUSH));
+			Polygon(mDC, test, 4);
+		}
+		BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
+		DeleteDC(mDC);
+		DeleteObject(hBitmap);
+		EndPaint(hWnd, &ps);
+
+	}
 		HandlePaint(hWnd, uMsg, wParam, lParam);
 	break;
 	case WM_SIZE:
