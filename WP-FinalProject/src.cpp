@@ -1,19 +1,19 @@
-#include <windows.h>
+#include <Windows.h>
 #include <tchar.h>
 #include <iostream>
 #include <sstream>
 #include "resource.h"
 #include "Mouse.h"
 
-//void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 //void HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 //void HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 //void HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 //void HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-//void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+//void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+//void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = L"Window Class Name";
@@ -24,70 +24,43 @@ static HDC hDC, mDC;
 static PAINTSTRUCT ps;
 static HBITMAP hBitmap;
 static RECT rt;
+static UINT_PTR timerId = 0;
 
-static Mouse mouse;
+//static Mouse mouse;
 
 using namespace std;
 
 
-
-void HandleKeyDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (wParam)
-	{
-	case VK_LEFT:
-		break;
-	case VK_UP:
-		break;
-	case VK_RIGHT:
-		break;
-	case VK_DOWN:
-		break;
-	case VK_RETURN:
-	default:
-		break;
-	}
-}
-
-void HandleKeyUp(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (wParam)
-	{
-	case VK_LEFT:
-		break;
-	case VK_UP:
-		break;
-	case VK_RIGHT:
-		break;
-	case VK_DOWN:
-		break;
-	case VK_RETURN:
-	default:
-		break;
-	}
+void HandleCreate(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	timerId = SetTimer(hWnd, 1, 16, NULL);
 }
 void HandlePaint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	GetClientRect(hWnd, &rt);
 	hDC = BeginPaint(hWnd, &ps);
 	GetClientRect(hWnd, &rt);
 	mDC = CreateCompatibleDC(hDC);
 	hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
 	SelectObject(mDC, hBitmap);
-	FillRect(mDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
-	SelectObject(mDC, (HPEN)GetStockObject(WHITE_PEN));
-		SelectObject(mDC, (HBRUSH)GetStockObject(NULL_BRUSH));
-		POINT test[4] = {
+	FillRect(mDC, &rt, (HBRUSH)GetStockObject(GRAY_BRUSH));
+
+	POINT test[4] = {
 		{0, 0}, // 왼쪽 위
 		{300, 50}, // 오른쪽 위
 		{600, 300}, // 오른쪽 아래
 		{100, 600}  // 왼쪽 아래
-		};
-		SelectObject(mDC, (HPEN)GetStockObject(WHITE_PEN));
-		SelectObject(mDC, (HBRUSH)GetStockObject(NULL_BRUSH));
-		Polygon(mDC, test, 4);
-	
+	};
+	SelectObject(mDC, (HPEN)GetStockObject(BLACK_PEN));
+	SelectObject(mDC, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	Polygon(mDC, test, 4);
+
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
 	DeleteDC(mDC);
 	DeleteObject(hBitmap);
 	EndPaint(hWnd, &ps);
 
+}
+void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	InvalidateRect(hWnd, NULL, TRUE);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -122,7 +95,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	}
 		HandlePaint(hWnd, uMsg, wParam, lParam);
-		break;
+	break;
 	case WM_SIZE:
 		//HandleResize(hWnd, uMsg, wParam, lParam);
 		break;
@@ -131,22 +104,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONDOWN:
-		mouse.OnMouseDown(uMsg, lParam);
+		//mouse.OnMouseDown(uMsg, lParam);
 		//HandleLButtonDown(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_RBUTTONUP:
 	case WM_LBUTTONUP:
-		mouse.OnMouseUp(uMsg, lParam);
+		//mouse.OnMouseUp(uMsg, lParam);
 		//HandleLButtonUp(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_KEYDOWN:
-		HandleKeyDown(hWnd, uMsg, wParam, lParam);
+		//HandleKeyDown(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_KEYUP:
-		HandleKeyUp(hWnd, uMsg, wParam, lParam);
+		//HandleKeyUp(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_TIMER:
-		//HandleTimer(hWnd, uMsg, wParam, lParam);
+		HandleTimer(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_DESTROY:
 		KillTimer(hWnd, 1);
