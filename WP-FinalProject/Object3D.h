@@ -22,3 +22,6 @@ private:
     Vector3 position;
     Vector3 size;
 };
+
+void DrawObject3D(HDC hdc, const Camera& cam, const Object3D& obj);
+
