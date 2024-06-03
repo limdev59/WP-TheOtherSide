@@ -1,32 +1,36 @@
 #pragma once
-#include <vector>
-#include <atlimage.h> // CImage 사용을 위해 포함
 
-class Actor {
+#include "Object3D.h"
+#include "Animation.h"
+#include <atlimage.h>
+#include <vector>
+
+class Actor : public Object3D {
 public:
-    Actor(int x, int y);
+    Actor(Vector3 position, Vector3 size);
     virtual ~Actor();
 
-    void setPosition(int x, int y);
-    POINT getPosition() const;
+    // 2D 위치 설정 및 이동
+    void set2DPosition(int x, int y);
+    POINT get2DPosition() const;
+    void move2DPosition(int dx, int dy);
 
+    // 히트박스 설정 및 가져오기
     void setHitbox(int width, int height);
     RECT getHitbox() const;
 
+    // 애니메이션 설정 및 업데이트
     void setImage(const CImage& image);
     const CImage& getImage() const;
-
     void addAnimationFrame(const CImage& image, int duration);
-    const std::vector<std::pair<CImage, int>>& getAnimationFrames() const;
+    void update(int deltaTime);
+    void render(HDC hdc, const Camera& cam);
 
-    virtual void update(int deltaTime);
-    virtual void render(HDC hdc);
+    // 3D 객체 그리기 메서드 오버라이드
+    void DrawObject3D(HDC hdc, const Camera& cam, CImage& image);
 
-protected:
-    POINT position;
-    RECT hitbox;
-    CImage currentImage;
-    std::vector<std::pair<CImage, int>> animationFrames; // (이미지, 지속 시간)의 벡터
-    int currentFrameIndex;
-    int frameTime; // 현재 프레임이 얼마나 지속되었는지 추적
+private:
+    POINT position2D; // 2D 위치
+    RECT hitbox; // 히트박스
+    Animation animation;
 };

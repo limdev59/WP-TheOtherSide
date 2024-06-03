@@ -3,9 +3,11 @@
 #include "Camera.h"
 #include "Object3D.h"
 #include "Construction.h"
+#include "Animation.h"
+#include "Actor.h"
 
 // 전역 상수
-constexpr int gameTick =6;
+constexpr int gameTick =7;
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -31,12 +33,16 @@ void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 // 초기화된 카메라와 객체
-static Camera camera({ 0, 2.6f, 3 }, 0, 0);
+static Camera camera({ 0, 2.6f, 3 }, 0, 0, 0);
 static Construction floor1({ 0, 0, 10 }, { 10, 0, 10 });
 static Construction floor2({ 10, 0, 10 }, { 10, 0, 10 });
 static Construction wall({ 0, 5, 15 }, { 10, 10, 0 });
 static Construction wall2({ -5, 5, 10 }, { 0, 10, 10 });
+//static Construction wall3({ 0, 1, 10 }, { 2, 2, 0 });
+static Actor actor({ 0, 1, 10 }, { 2, 2, 0 });
 static CImage image;
+static CImage image2;
+
 
 // WinMain 함수
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
@@ -111,6 +117,10 @@ void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         MessageBox(hWnd, TEXT("Failed to load image"), TEXT("Error"), MB_OK);
         PostQuitMessage(0);
     }
+    if (FAILED(image2.Load(TEXT("scared_kitten_with_background.png")))) {
+        MessageBox(hWnd, TEXT("Failed to load image"), TEXT("Error"), MB_OK);
+        PostQuitMessage(0);
+    }
     SetTimer(hWnd, 1, gameTick, NULL);
 }
 void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -127,6 +137,8 @@ void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     floor2.DrawObject3D(mDC, camera);
     wall.DrawObject3D(mDC, camera);
     wall2.DrawObject3D(mDC, camera);
+    //wall3.DrawObject3D(mDC, camera);
+    actor.DrawObject3D(mDC, camera, image2);
 
     BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
     DeleteDC(mDC);
@@ -155,6 +167,12 @@ void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     keyStates[wParam] = false;
 }
 void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    if (keyStates['4']) {
+        camera.rotate( 0, 0, -0.05f );
+    }
+    if (keyStates['6']) {
+        camera.rotate( 0, 0, 0.05f );
+    }
     if (keyStates['A']) {
         camera.move({ -0.1f, 0, 0 });
     }
@@ -174,16 +192,16 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         camera.move({ 0, -0.1f, 0 });
     }
     if (keyStates[VK_LEFT]) {
-        camera.rotate(-0.02f, 0);
+        camera.rotate(-0.02f, 0, 0);
     }
     if (keyStates[VK_RIGHT]) {
-        camera.rotate(0.02f, 0);
+        camera.rotate(0.02f, 0, 0);
     }
     if (keyStates[VK_UP]) {
-        camera.rotate(0, 0.02f);
+        camera.rotate(0, 0.02f, 0);
     }
     if (keyStates[VK_DOWN]) {
-        camera.rotate(0, -0.02f);
+        camera.rotate(0, -0.02f, 0);
     }
 
     InvalidateRect(hWnd, NULL, FALSE);

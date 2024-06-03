@@ -48,6 +48,9 @@
     <ClCompile Include="Construction.cpp">
       <Filter>소스 파일\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -74,6 +77,9 @@
     <ClInclude Include="Construction.h">
       <Filter>헤더 파일\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>헤더 파일\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -82,6 +88,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Horror_background.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="wall.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="scared_kitten_with_background.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="scared_kitten1.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

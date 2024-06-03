@@ -8,7 +8,6 @@ class Object3D {
 public:
     Object3D();
     Object3D(Vector3 position, Vector3 size );
-    Object3D(Vector3 position, Vector3 size, COLORREF brushColor, COLORREF penColor);
 
     Vector3 getPosition() const;
     Vector3 getSize() const;
@@ -19,9 +18,8 @@ public:
     virtual void DrawObject3D(HDC hdc, const Camera& cam);
 
 private:
-    Vector3 position;
+    Vector3 position3D;
     Vector3 size;
 };
 
-void DrawObject3D(HDC hdc, const Camera& cam, const Object3D& obj);
 

@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Construction.cpp" />
     <ClCompile Include="Object3D.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -139,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Construction.h" />
     <ClInclude Include="Object3D.h" />
     <ClInclude Include="Camera.h" />
@@ -152,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Horror_background.jpg" />
+    <Image Include="scared_kitten1.png" />
+    <Image Include="scared_kitten_with_background.png" />
+    <Image Include="wall.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

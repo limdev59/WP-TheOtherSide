@@ -3,11 +3,11 @@
 #include <Windows.h>
 #include <vector>
 
-Object3D::Object3D() : position{ 0, 0, 0 }, size{ 1, 1, 1 } {}
-Object3D::Object3D(Vector3 position, Vector3 size)
-    : position(position), size(size) {}
+Object3D::Object3D() : position3D{ 0, 0, 0 }, size{ 1, 1, 1 } {}
+Object3D::Object3D(Vector3 position3D, Vector3 size)
+    : position3D(position3D), size(size) {}
 Vector3 Object3D::getPosition() const {
-    return position;
+    return position3D;
 }
 
 Vector3 Object3D::getSize() const {
@@ -15,12 +15,13 @@ Vector3 Object3D::getSize() const {
 }
 
 void Object3D::setPosition(const Vector3& newPosition) {
-    position = newPosition;
+    position3D = newPosition;
 }
 
 void Object3D::setSize(const Vector3& newSize) {
     size = newSize;
 }
+
 void Object3D::DrawObject3D(HDC hdc, const Camera& cam) {
-    
+
 }
