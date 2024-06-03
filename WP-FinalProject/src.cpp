@@ -33,12 +33,12 @@ void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 // 초기화된 카메라와 객체
-static Camera camera({ 0, 2.6f, 3 }, 0, 0, 0);
-static Construction floor1({ 0, 0, 10 }, { 10, 0, 10 });
-static Construction floor2({ 10, 0, 10 }, { 10, 0, 10 });
-static Construction wall({ 0, 5, 15 }, { 10, 10, 0 });
-static Construction wall2({ -5, 5, 10 }, { 0, 10, 10 });
-//static Construction wall3({ 0, 1, 10 }, { 2, 2, 0 });
+static Camera camera({ 0, 2.6f, 3 }, 0.1, 0, 0);
+static Construction floor1({ 0, 0, 10 }, { 10, 0, 10 }, RGB(42, 32, 50), RGB(34, 15, 33));
+static Construction floor2({ 10, 0, 10 }, { 10, 0, 10 }, RGB(42, 32, 50), RGB(34, 15, 33));
+static Construction wall({ 0, 5, 15 }, { 10, 10, 0 },RGB(32,32,50), RGB(24, 15, 33));
+static Construction wall2({ -5, 5, 10 }, { 0, 10, 10 }, RGB(32, 32, 50), RGB(24, 15, 33));
+static Construction wall3({ 0, 1, 10 }, { 2, 2, 0 });
 static Actor actor({ 0, 1, 10 }, { 2, 2, 0 });
 static CImage image;
 static CImage image2;
