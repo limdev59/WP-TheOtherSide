@@ -1,20 +1,38 @@
+// Animation.h
 #pragma once
 
+#include <map>
+#include <string>
 #include <atlimage.h>
-#include <vector>
 
 class Animation {
 public:
-    Animation();
+    Animation() {}
+    Animation(const std::string& id, bool loop, float animationLength,
+        const std::map<float, POINT>& positions,
+        const std::map<float, POINT>& scales,
+        const std::map<float, std::string>& images);
     ~Animation();
+    void update(float deltaTime);
+    const CImage* getCurrentFrame() const;
+    float getCurrentFrameKey() const;
 
-    void addFrame(const CImage& image, int duration);
-    void update(int deltaTime);
-    const CImage& getCurrentFrame() const;
+    std::string getId() const;
+    bool isComplete() const;
 
-    std::vector<std::pair<CImage, int>> frames; // (이미지, 지속 시간)의 벡터
 private:
-    int currentFrameIndex;
-    int frameTime; // 현재 프레임이 얼마나 지속되었는지 추적
-};
+    std::string id;
+    bool loop;
+    float animationLength;
+    float elapsedTime;
 
+    std::map<float, POINT> positions;
+    std::map<float, POINT> scales;
+    std::map<float, std::string> images;
+    std::map<std::string, CImage*> loadedImages;
+
+    float currentFrameKey;
+    CImage* currentFrame;
+
+    void updateFrame(float time);
+};

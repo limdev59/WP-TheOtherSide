@@ -2,10 +2,12 @@
 #include "Vector3.h"
 #include "Actor.h"
 #include <gdiplus.h>
+#include <iostream>
+#include <string>
 using namespace Gdiplus;
 
 Actor::Actor(Vector3 position, Vector3 size)
-    : Object3D(position, size), position2D({ 0, 0 }), hitbox({ 0, 0, 0, 0 }) {
+    : Object3D(position, size), position2D({ 0, 0 }), hitbox({ 0, 0, 0, 0 }), animationController("default") {
     // 초기화 코드
 }
 
@@ -43,35 +45,26 @@ RECT Actor::getHitbox() const {
     return hitbox;
 }
 
-void Actor::setImage(const CImage& image) {
-    animation.addFrame(image, 0);
+void Actor::setAnimationController(const AnimationController& animationController) {
+    this->animationController = animationController;
 }
 
-const CImage& Actor::getImage() const {
-    return animation.getCurrentFrame();
+AnimationController& Actor::getAnimationController() {
+    return animationController;
 }
 
-void Actor::addAnimationFrame(const CImage& image, int duration) {
-    animation.addFrame(image, duration);
-}
-
-void Actor::update(int deltaTime) {
-    animation.update(deltaTime);
-}
-
-void Actor::render(HDC hdc, const Camera& cam) {
-    // 2D 위치를 사용하여 현재 프레임을 그리기
-    animation.getCurrentFrame().Draw(hdc, position2D.x, position2D.y);
-}
-
-void Actor::DrawObject3D(HDC hdc, const Camera& cam, CImage& image) {
+void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
     // GDI+ 초기화
     ULONG_PTR gdiplusToken;
     GdiplusStartupInput gdiplusStartupInput;
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-
-    int frameWidth = image.GetWidth();
-    int frameHeight = image.GetHeight();
+    const CImage* currentFrame = animationController.getCurrentFrame();
+    if (!currentFrame) {
+        GdiplusShutdown(gdiplusToken);
+        return; // 유효한 프레임이 없는 경우
+    }
+    int frameWidth = currentFrame->GetWidth();
+    int frameHeight = currentFrame->GetHeight();
 
     if (frameWidth <= 0 || frameHeight <= 0) {
         GdiplusShutdown(gdiplusToken);
@@ -119,19 +112,62 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam, CImage& image) {
             allPointsProjected = false;
         }
     }
-
-    // points[2] 조작문
     points[2].x += (points[3].x - points[1].x);
 
     if (!allPointsProjected) {
         GdiplusShutdown(gdiplusToken);
         return;
     }
+
+    ////그리기////
+
+    Bitmap* pTransformedBitmap = CreateTransformedBitmap(hdc, currentFrame, rotate90, flipHorizontal, flipVertical);
+    if (pTransformedBitmap == nullptr) {
+        GdiplusShutdown(gdiplusToken);
+        return;
+    }
+
+    HBITMAP maskBitmap = CreateMask(hdc, pTransformedBitmap, frameWidth, frameHeight, cam);
+
+    // 변형된 이미지를 그리기
+    HDC transformedDC = CreateCompatibleDC(hdc);
+    HBITMAP transformedBitmap;
+    pTransformedBitmap->GetHBITMAP(Color(0, 0, 0), &transformedBitmap);
+    SelectObject(transformedDC, transformedBitmap);
+
+    PlgBlt(hdc, points, transformedDC, 0, 0, frameWidth, frameHeight, maskBitmap, 0, 0);
+    {
+        Graphics graphics(hdc);
+        Font font(L"Arial", 16);
+        SolidBrush brush(Color(255, 255, 255));
+
+        std::wstring yawStr = L"Yaw: " + std::to_wstring(cam.getYaw());
+        std::wstring pitchStr = L"Pitch: " + std::to_wstring(cam.getPitch());
+        std::wstring rollStr = L"Roll: " + std::to_wstring(cam.getRoll());
+
+        graphics.DrawString(yawStr.c_str(), -1, &font, PointF(10, 10), &brush);
+        graphics.DrawString(pitchStr.c_str(), -1, &font, PointF(10, 30), &brush);
+        graphics.DrawString(rollStr.c_str(), -1, &font, PointF(10, 50), &brush);
+    }
+    // 객체 삭제
+    delete pTransformedBitmap;
+    DeleteObject(maskBitmap);
+    DeleteObject(transformedBitmap);
+    DeleteDC(transformedDC);
+
+    // GDI+ 종료
+    GdiplusShutdown(gdiplusToken);
+}
+
+Bitmap* Actor::CreateTransformedBitmap(HDC hdc, const CImage* image, bool rotate90, bool flipHorizontal, bool flipVertical) {
+    int frameWidth = image->GetWidth();
+    int frameHeight = image->GetHeight();
+
     HDC memDC = CreateCompatibleDC(hdc);
     HBITMAP memBitmap = CreateCompatibleBitmap(hdc, frameWidth, frameHeight);
     HBITMAP oldMemBitmap = (HBITMAP)SelectObject(memDC, memBitmap);
 
-    image.Draw(memDC, 0, 0);  // 이미지를 메모리 DC에 그림
+    image->Draw(memDC, 0, 0);  // 이미지를 메모리 DC에 그림
 
     // GDI+ 비트맵으로 변환
     Bitmap bitmap(memBitmap, NULL);
@@ -141,7 +177,7 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam, CImage& image) {
     if (rotate90) {
         pTransformedBitmap->RotateFlip(Rotate90FlipNone);
     }
-    else if (flipHorizontal && flipVertical) {
+    if (flipHorizontal && flipVertical) {
         pTransformedBitmap->RotateFlip(RotateNoneFlipXY);
     }
     else if (flipHorizontal) {
@@ -151,7 +187,15 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam, CImage& image) {
         pTransformedBitmap->RotateFlip(RotateNoneFlipY);
     }
 
-    // 변형된 이미지를 기준으로 마스크 생성
+    SelectObject(memDC, oldMemBitmap);
+    DeleteDC(memDC);
+    DeleteObject(memBitmap);
+
+    return pTransformedBitmap;
+}
+
+
+HBITMAP Actor::CreateMask(HDC hdc, Bitmap* pTransformedBitmap, int frameWidth, int frameHeight, Camera cam) {
     HDC transformedDC = CreateCompatibleDC(hdc);
     HBITMAP transformedBitmap;
     pTransformedBitmap->GetHBITMAP(Color(0, 0, 0), &transformedBitmap);
@@ -167,7 +211,7 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam, CImage& image) {
     ZeroMemory(&bmi, sizeof(BITMAPINFO));
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = frameWidth;
-    bmi.bmiHeader.biHeight = -frameHeight; // top-down DIB
+    bmi.bmiHeader.biHeight = (cam.getYaw() == 0.0f) ? frameHeight : -frameHeight; // top-down DIB
     bmi.bmiHeader.biPlanes = 1;
     bmi.bmiHeader.biBitCount = 32; // 32-bit color depth
     bmi.bmiHeader.biCompression = BI_RGB;
@@ -190,18 +234,10 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam, CImage& image) {
     }
     delete[] imageData;
 
-    // 변형된 이미지를 그리기
-    PlgBlt(hdc, points, transformedDC, 0, 0, frameWidth, frameHeight, maskBitmap, 0, 0);
-
-    // 클린업
-    delete pTransformedBitmap;
-    SelectObject(transformedDC, memBitmap);
     SelectObject(maskDC, oldMaskBitmap);
-    DeleteObject(maskBitmap);
     DeleteDC(maskDC);
-    DeleteObject(transformedBitmap);
     DeleteDC(transformedDC);
+    DeleteObject(transformedBitmap);
 
-    // GDI+ 종료
-    GdiplusShutdown(gdiplusToken);
+    return maskBitmap;
 }

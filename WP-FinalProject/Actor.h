@@ -1,9 +1,12 @@
+//Actor.h
 #pragma once
 
 #include "Object3D.h"
-#include "Animation.h"
+#include "AnimationController.h"
 #include <atlimage.h>
-#include <vector>
+#include <gdiplus.h>
+
+using namespace Gdiplus;
 
 class Actor : public Object3D {
 public:
@@ -19,18 +22,18 @@ public:
     void setHitbox(int width, int height);
     RECT getHitbox() const;
 
-    // 애니메이션 설정 및 업데이트
-    void setImage(const CImage& image);
-    const CImage& getImage() const;
-    void addAnimationFrame(const CImage& image, int duration);
-    void update(int deltaTime);
-    void render(HDC hdc, const Camera& cam);
+    // 애니메이션 컨트롤러 설정
+    void setAnimationController(const AnimationController& animationController);
+    AnimationController& getAnimationController();
 
     // 3D 객체 그리기 메서드 오버라이드
-    void DrawObject3D(HDC hdc, const Camera& cam, CImage& image);
+    void DrawObject3D(HDC hdc, const Camera& cam);
 
 private:
     POINT position2D; // 2D 위치
     RECT hitbox; // 히트박스
-    Animation animation;
+    AnimationController animationController; // 애니메이션 컨트롤러
+
+    Bitmap* CreateTransformedBitmap(HDC hdc, const CImage* image, bool rotate90, bool flipHorizontal, bool flipVertical);
+    HBITMAP CreateMask(HDC hdc, Bitmap* pTransformedBitmap, int frameWidth, int frameHeight, Camera cam);
 };

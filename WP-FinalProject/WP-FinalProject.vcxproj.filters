@@ -51,6 +51,9 @@
     <ClCompile Include="Animation.cpp">
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -80,6 +83,9 @@
     <ClInclude Include="Animation.h">
       <Filter>헤더 파일\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>헤더 파일\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -90,13 +96,16 @@
     <Image Include="Horror_background.jpg">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="wall.png">
+    <Image Include="kitten_L_default_1.png">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="scared_kitten_with_background.png">
+    <Image Include="kitten_L_default_2.png">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="scared_kitten1.png">
+    <Image Include="kitten_R_default_1.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="kitten_R_default_2.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
