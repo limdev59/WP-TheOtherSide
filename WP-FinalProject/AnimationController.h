@@ -1,4 +1,3 @@
-//AnimationController.h
 #pragma once
 
 #include "Animation.h"
@@ -19,6 +18,7 @@ public:
     void addState(const std::string& state, const Animation& animation, const std::vector<Transition>& transitions);
     void update(float deltaTime);
     const CImage* getCurrentFrame() const;
+    void setCurrentState(const std::string& state);
 
 private:
     struct AnimationState {

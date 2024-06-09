@@ -1,9 +1,9 @@
-// Animation.h
 #pragma once
 
 #include <map>
 #include <string>
 #include <atlimage.h>
+
 
 class Animation {
 public:
@@ -19,6 +19,8 @@ public:
 
     std::string getId() const;
     bool isComplete() const;
+
+    void reset(); // 애니메이션 리셋 함수 추가
 
 private:
     std::string id;

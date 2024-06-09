@@ -7,8 +7,7 @@
 #include "Animation.h"
 #include "Actor.h"
 #include "AnimationController.h"
-
-#pragma comment(lib, "winmm.lib")  // 이 라인을 추가합니다.
+#pragma comment(lib, "winmm.lib")
 
 // 전역 상수
 constexpr int gameTick = 7;
@@ -27,24 +26,14 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 // 애니메이션 컨트롤러와 시간 관련 변수
-static AnimationController animationController("idle");
-static bool shiftPressed = false;
+static AnimationController animationController("kitten_R_default");
 static DWORD lastTime = timeGetTime();
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 // 초기화된 카메라와 객체
-static Camera camera({ 0, 2.6f, 3 }, 0, 0, 0);
+static Camera camera({ 0, 2.6f, 3 }, 0.02f, -0.4f, 0);
 static Construction floor1({ 0, 0, 10 }, { 10, 0, 10 }, RGB(42, 32, 50), RGB(34, 15, 33));
 static Construction floor2({ 10, 0, 10 }, { 10, 0, 10 }, RGB(42, 32, 50), RGB(34, 15, 33));
 static Construction wall({ 0, 5, 15 }, { 10, 10, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
@@ -54,7 +43,6 @@ static Construction wall2_({ -4, 1, 9.5 }, { 0, 2, 9 }, RGB(20, 20, 36), RGB(24,
 static Construction wall3({ 0, 1, 10 }, { 2, 2, 0 });
 static Actor actor({ 0, 0.5, 10 }, { 2, 2, 0 });
 static CImage image;
-static CImage image2;
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
@@ -70,26 +58,32 @@ void InitializeAnimations() {
         {1.0f, {3, 3}}
     };
 
-    std::map<float, std::string> images = {
+    std::map<float, std::string> imagesKittenR = {
         {0.0f, "kitten_R_default_1"},
         {0.2f, "kitten_R_default_2"},
         {0.4f, "kitten_R_default_1"}
     };
 
-    Animation animation("run", true, 0.4f, positions, scales, images);
+    std::map<float, std::string> imagesKittenL = {
+        {0.0f, "kitten_L_default_1"},
+        {0.2f, "kitten_L_default_2"},
+        {0.4f, "kitten_L_default_1"}
+    };
+
+    Animation animationKittenR("kitten_R_default", true, 0.4f, positions, scales, imagesKittenR);
+    Animation animationKittenL("kitten_L_default", true, 0.4f, positions, scales, imagesKittenL);
+
     std::vector<AnimationController::Transition> transitions;
 
-    animationController.addState("idle", animation, transitions);
+    animationController.addState("kitten_R_default", animationKittenR, transitions);
+    animationController.addState("kitten_L_default", animationKittenL, transitions);
+
     actor.setAnimationController(animationController);
 }
 
 void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     GetClientRect(hWnd, &rt);
     if (FAILED(image.Load(TEXT("Horror_background.jpg")))) {
-        MessageBox(hWnd, TEXT("Failed to load image"), TEXT("Error"), MB_OK);
-        PostQuitMessage(0);
-    }
-    if (FAILED(image2.Load(TEXT("kitten_R_default_1.png")))) {
         MessageBox(hWnd, TEXT("Failed to load image"), TEXT("Error"), MB_OK);
         PostQuitMessage(0);
     }
@@ -142,16 +136,17 @@ void HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     keyStates[wParam] = true;
-    if (wParam == VK_SHIFT) {
-        shiftPressed = true;
+    if (wParam == 'P') {
+        actor.getAnimationController().setCurrentState("kitten_L_default");
+    }
+    else if (wParam == VK_TAB) {
+        actor.getAnimationController().setCurrentState("kitten_R_default");
     }
 }
 
+
 void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     keyStates[wParam] = false;
-    if (wParam == VK_SHIFT) {
-        shiftPressed = false;
-    }
 }
 
 void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -159,9 +154,8 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     float deltaTime = (currentTime - lastTime) / 1000.0f;
     lastTime = currentTime;
 
-    if (keyStates[VK_TAB]) {
-        animationController.update(deltaTime);
-        actor.getAnimationController().update(deltaTime);  // 액터의 애니메이션 업데이트
+    if (keyStates[VK_TAB] || keyStates['P']) {
+        actor.getAnimationController().update(deltaTime);
     }
 
     if (keyStates['4']) {

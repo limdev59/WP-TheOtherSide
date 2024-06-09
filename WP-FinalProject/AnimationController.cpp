@@ -1,4 +1,3 @@
-//AnimationController.cpp
 #include "AnimationController.h"
 
 AnimationController::AnimationController(const std::string& initialState)
@@ -18,7 +17,7 @@ void AnimationController::update(float deltaTime) {
 
         for (const auto& transition : state.transitions) {
             if (transition.condition()) {
-                currentState = transition.targetState;
+                setCurrentState(transition.targetState);
                 break;
             }
         }
@@ -30,4 +29,11 @@ const CImage* AnimationController::getCurrentFrame() const {
         return states.at(currentState).animation.getCurrentFrame();
     }
     return nullptr;
+}
+
+void AnimationController::setCurrentState(const std::string& state) {
+    if (states.find(state) != states.end()) {
+        currentState = state;
+        states[currentState].animation.reset();  // 애니메이션 상태 변경 시 리셋
+    }
 }

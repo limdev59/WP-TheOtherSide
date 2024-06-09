@@ -58,17 +58,18 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
     ULONG_PTR gdiplusToken;
     GdiplusStartupInput gdiplusStartupInput;
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
     const CImage* currentFrame = animationController.getCurrentFrame();
     if (!currentFrame) {
         GdiplusShutdown(gdiplusToken);
-        return; // 유효한 프레임이 없는 경우
+        return;
     }
     int frameWidth = currentFrame->GetWidth();
     int frameHeight = currentFrame->GetHeight();
 
     if (frameWidth <= 0 || frameHeight <= 0) {
         GdiplusShutdown(gdiplusToken);
-        return; // 유효하지 않은 프레임 크기
+        return;
     }
 
     Vector3 center = getPosition();
@@ -104,7 +105,7 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
     }
     else {
         GdiplusShutdown(gdiplusToken);
-        return; // 유효한 면이 아닌 경우 함수 종료
+        return;
     }
 
     for (int i = 0; i < 4; ++i) {
@@ -112,14 +113,11 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
             allPointsProjected = false;
         }
     }
-    points[2].x += (points[3].x - points[1].x);
 
     if (!allPointsProjected) {
         GdiplusShutdown(gdiplusToken);
         return;
     }
-
-    ////그리기////
 
     Bitmap* pTransformedBitmap = CreateTransformedBitmap(hdc, currentFrame, rotate90, flipHorizontal, flipVertical);
     if (pTransformedBitmap == nullptr) {
@@ -129,13 +127,13 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
 
     HBITMAP maskBitmap = CreateMask(hdc, pTransformedBitmap, frameWidth, frameHeight, cam);
 
-    // 변형된 이미지를 그리기
     HDC transformedDC = CreateCompatibleDC(hdc);
     HBITMAP transformedBitmap;
     pTransformedBitmap->GetHBITMAP(Color(0, 0, 0), &transformedBitmap);
     SelectObject(transformedDC, transformedBitmap);
 
     PlgBlt(hdc, points, transformedDC, 0, 0, frameWidth, frameHeight, maskBitmap, 0, 0);
+
     {
         Graphics graphics(hdc);
         Font font(L"Arial", 16);
@@ -149,15 +147,15 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
         graphics.DrawString(pitchStr.c_str(), -1, &font, PointF(10, 30), &brush);
         graphics.DrawString(rollStr.c_str(), -1, &font, PointF(10, 50), &brush);
     }
-    // 객체 삭제
+
     delete pTransformedBitmap;
     DeleteObject(maskBitmap);
     DeleteObject(transformedBitmap);
     DeleteDC(transformedDC);
 
-    // GDI+ 종료
     GdiplusShutdown(gdiplusToken);
 }
+
 
 Bitmap* Actor::CreateTransformedBitmap(HDC hdc, const CImage* image, bool rotate90, bool flipHorizontal, bool flipVertical) {
     int frameWidth = image->GetWidth();
@@ -194,7 +192,6 @@ Bitmap* Actor::CreateTransformedBitmap(HDC hdc, const CImage* image, bool rotate
     return pTransformedBitmap;
 }
 
-
 HBITMAP Actor::CreateMask(HDC hdc, Bitmap* pTransformedBitmap, int frameWidth, int frameHeight, Camera cam) {
     HDC transformedDC = CreateCompatibleDC(hdc);
     HBITMAP transformedBitmap;
@@ -205,30 +202,31 @@ HBITMAP Actor::CreateMask(HDC hdc, Bitmap* pTransformedBitmap, int frameWidth, i
     HDC maskDC = CreateCompatibleDC(hdc);
     HBITMAP oldMaskBitmap = (HBITMAP)SelectObject(maskDC, maskBitmap);
 
-    // 이미지의 투명 색상 식별 및 마스크 설정
-    COLORREF transparentColor = RGB(0, 0, 0); // 투명 색상 설정 (여기서는 검은색)
+    COLORREF transparentColor = RGB(0, 0, 0);
     BITMAPINFO bmi;
     ZeroMemory(&bmi, sizeof(BITMAPINFO));
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = frameWidth;
-    bmi.bmiHeader.biHeight = (cam.getYaw() == 0.0f) ? frameHeight : -frameHeight; // top-down DIB
+    bmi.bmiHeader.biHeight = (cam.getYaw()==0.02&&-0.44<=cam.getPitch()&& 0.04<= cam.getPitch())? -frameHeight :frameHeight;
     bmi.bmiHeader.biPlanes = 1;
-    bmi.bmiHeader.biBitCount = 32; // 32-bit color depth
+    bmi.bmiHeader.biBitCount = 32;
     bmi.bmiHeader.biCompression = BI_RGB;
     BYTE* imageData = new BYTE[frameWidth * frameHeight * 4];
     GetDIBits(transformedDC, transformedBitmap, 0, frameHeight, imageData, &bmi, DIB_RGB_COLORS);
+
+    // Invert the height for mask creation to account for coordinate system differences
     for (int y = 0; y < frameHeight; ++y) {
         for (int x = 0; x < frameWidth; ++x) {
             COLORREF color = RGB(
-                imageData[(y * frameWidth + x) * 4 + 2], // R
-                imageData[(y * frameWidth + x) * 4 + 1], // G
-                imageData[(y * frameWidth + x) * 4]      // B
+                imageData[(y * frameWidth + x) * 4 + 2],
+                imageData[(y * frameWidth + x) * 4 + 1],
+                imageData[(y * frameWidth + x) * 4]
             );
             if (color == transparentColor) {
-                SetPixel(maskDC, x, y, transparentColor);
+                SetPixel(maskDC, x, frameHeight - 1 - y, transparentColor);
             }
             else {
-                SetPixel(maskDC, x, y, RGB(255, 255, 255)); // 나머지는 흰색으로 설정
+                SetPixel(maskDC, x, frameHeight - 1 - y, RGB(255, 255, 255));
             }
         }
     }
@@ -241,3 +239,4 @@ HBITMAP Actor::CreateMask(HDC hdc, Bitmap* pTransformedBitmap, int frameWidth, i
 
     return maskBitmap;
 }
+

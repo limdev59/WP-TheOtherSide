@@ -27,7 +27,7 @@ public:
     AnimationController& getAnimationController();
 
     // 3D 객체 그리기 메서드 오버라이드
-    void DrawObject3D(HDC hdc, const Camera& cam);
+    void DrawObject3D(HDC hdc, const Camera& cam) override;
 
 private:
     POINT position2D; // 2D 위치

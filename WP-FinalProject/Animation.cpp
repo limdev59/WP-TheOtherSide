@@ -1,6 +1,4 @@
-//Animation.cpp
 #include "Animation.h"
-#include <atlimage.h>
 
 Animation::Animation(const std::string& id, bool loop, float animationLength,
     const std::map<float, POINT>& positions,
@@ -27,25 +25,28 @@ Animation::Animation(const std::string& id, bool loop, float animationLength,
 }
 
 Animation::~Animation() {
-    //for (auto& [imageName, img] : loadedImages) {
-    //    delete img;
-    //}
-    //loadedImages.clear();
+    /*for (auto& [imageName, img] : loadedImages) {
+        delete img;
+    }
+    loadedImages.clear();*/
 }
 
 void Animation::update(float deltaTime) {
     elapsedTime += deltaTime;
-    if (elapsedTime > animationLength) {
+    if (isComplete()) {
         if (loop) {
-            elapsedTime = fmod(elapsedTime, animationLength);
+            reset();
         }
         else {
             elapsedTime = animationLength;
         }
     }
-
-    updateFrame(elapsedTime);
+    else {
+        updateFrame(elapsedTime);
+    }
 }
+
+
 
 const CImage* Animation::getCurrentFrame() const {
     return currentFrame;
@@ -61,6 +62,11 @@ std::string Animation::getId() const {
 
 bool Animation::isComplete() const {
     return elapsedTime >= animationLength && !loop;
+}
+
+void Animation::reset() {
+    elapsedTime = 0.0f;
+    updateFrame(elapsedTime);
 }
 
 void Animation::updateFrame(float time) {
