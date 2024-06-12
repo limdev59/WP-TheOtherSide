@@ -14,9 +14,9 @@ public:
     virtual ~Actor();
 
     // 2D 위치 설정 및 이동
-    void set2DPosition(int x, int y);
+    void set2DPosition(float x, float z);
     POINT get2DPosition() const;
-    void move2DPosition(int dx, int dy);
+    void move2DPosition(float dx, float dz);
 
     // 히트박스 설정 및 가져오기
     void setHitbox(int width, int height);
@@ -30,7 +30,6 @@ public:
     void DrawObject3D(HDC hdc, const Camera& cam) override;
 
 private:
-    POINT position2D; // 2D 위치
     RECT hitbox; // 히트박스
     AnimationController animationController; // 애니메이션 컨트롤러
 

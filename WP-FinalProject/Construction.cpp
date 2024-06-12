@@ -2,7 +2,7 @@
 #include "Construction.h"
 #include "Camera.h"
 #include <windows.h>
-
+#include <vector>
 
 Construction::Construction() : penColor(RGB(0, 0, 0)), brushColor(RGB(255, 255, 255)) {}
 Construction::Construction(Vector3 position, Vector3 size)
@@ -23,7 +23,6 @@ void Construction::setPenColor(COLORREF color) {
 void Construction::setBrushColor(COLORREF color) {
     brushColor = color;
 }
-
 void Construction::DrawObject3D(HDC hdc, const Camera& cam) {
     Vector3 center = getPosition();
     Vector3 size = getSize();
@@ -31,7 +30,7 @@ void Construction::DrawObject3D(HDC hdc, const Camera& cam) {
 
     Vector3 vertices[4];
     POINT points[4];
-    bool allPointsProjected = true;
+    POINT projectedPoints[4]; // 투영된 점을 저장할 공간 미리 할당
 
     // 객체의 크기를 기반으로 면 유형 결정
     if (size.y == 0) {
@@ -59,25 +58,26 @@ void Construction::DrawObject3D(HDC hdc, const Camera& cam) {
         return; // 유효한 면이 아닌 경우 함수 종료
     }
 
+    int numProjectedPoints = 0; // 투영된 점의 수 초기화
+
     // 점들을 2D로 투영
     for (int i = 0; i < 4; ++i) {
-        if (!Project3DTo2D(cam, vertices[i], points[i])) {
-            allPointsProjected = false;
+        if (Project3DTo2D(cam, vertices[i], points[i])) {
+            // 투영된 점을 저장
+            projectedPoints[numProjectedPoints++] = points[i];
         }
     }
 
-    // 모든 점이 투영되지 않았다면 그리지 않음
-    if (!allPointsProjected) {
-        return;
+    // 적어도 3개의 점이 투영되었다면 그리기
+    if (numProjectedPoints >= 3) {
+        HBRUSH br = CreateSolidBrush(getBrushColor());
+        HPEN pen = CreatePen(0, 2, getPenColor());
+        SelectObject(hdc, br);
+        SelectObject(hdc, pen);
+
+        // 투영된 점만 사용하여 Polygon 그리기
+        Polygon(hdc, projectedPoints, numProjectedPoints);
+        DeleteObject(br);
+        DeleteObject(pen);
     }
-
-    // 선택한 면 그리기
-    HBRUSH br = CreateSolidBrush(getBrushColor());
-    HPEN pen = CreatePen(0, 2, getPenColor());
-    SelectObject(hdc, br);
-    SelectObject(hdc, pen);
-
-    Polygon(hdc, points, 4);
-    DeleteObject(br);
-    DeleteObject(pen);
 }

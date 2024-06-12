@@ -7,7 +7,7 @@
 using namespace Gdiplus;
 
 Actor::Actor(Vector3 position, Vector3 size)
-    : Object3D(position, size), position2D({ 0, 0 }), hitbox({ 0, 0, 0, 0 }), animationController("default") {
+    : Object3D(position, size), hitbox({ 0, 0, 0, 0 }), animationController("default") {
     // 초기화 코드
 }
 
@@ -15,18 +15,16 @@ Actor::~Actor() {
     // 소멸자 코드 (필요한 경우)
 }
 
-void Actor::set2DPosition(int x, int y) {
-    position2D.x = x;
-    position2D.y = y;
+void Actor::set2DPosition(float x, float z) {
+    setPosition({x,getPosition().y, z});
 }
 
 POINT Actor::get2DPosition() const {
-    return position2D;
+    return POINT{(long)getPosition().x, (long)getPosition().z };
 }
 
-void Actor::move2DPosition(int dx, int dy) {
-    position2D.x += dx;
-    position2D.y += dy;
+void Actor::move2DPosition(float dx, float dy) {
+    movePosition(dx, 0, dy);
     // 히트박스도 함께 이동시킴
     hitbox.left += dx;
     hitbox.right += dx;
@@ -35,10 +33,10 @@ void Actor::move2DPosition(int dx, int dy) {
 }
 
 void Actor::setHitbox(int width, int height) {
-    hitbox.left = position2D.x;
-    hitbox.top = position2D.y;
-    hitbox.right = position2D.x + width;
-    hitbox.bottom = position2D.y + height;
+    hitbox.left = getPosition().x - width / 2;
+    hitbox.top = getPosition().z - height / 2;
+    hitbox.right = getPosition().x + width / 2;
+    hitbox.bottom = getPosition().z + height / 2;
 }
 
 RECT Actor::getHitbox() const {

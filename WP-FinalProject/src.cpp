@@ -1,3 +1,5 @@
+#pragma once
+
 #include <windows.h>
 #include <atlimage.h>
 #include <mmsystem.h>
@@ -7,12 +9,15 @@
 #include "Animation.h"
 #include "Actor.h"
 #include "AnimationController.h"
+#include "Player.h"
 #pragma comment(lib, "winmm.lib")
+
+#pragma comment(linker,"/entry:WinMainCRTStartup /subsystem:console")
+#define KEY_UP_CONDITION(KEY) (!keyStates[KEY] && KEY == wParam)
 
 // 전역 상수
 constexpr int gameTick = 7;
-
-//#pragma comment(linker,"/entry:WinMainCRTStartup /subsystem:console")
+constexpr float cameraFollowSpeed = 0.1f; // 카메라가 플레이어를 따라오는 속도
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -33,52 +38,77 @@ static DWORD lastTime = timeGetTime();
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // 초기화된 카메라와 객체
-static Camera camera({ 0, 2.6f, 3 }, 0.02f, -0.4f, 0);
+static Camera camera({ 0, 3.6f, 3 }, 0.02f, -0.4f, 0);
 static Construction floor1({ 0, 0, 10 }, { 10, 0, 10 }, RGB(42, 32, 50), RGB(34, 15, 33));
 static Construction floor2({ 10, 0, 10 }, { 10, 0, 10 }, RGB(42, 32, 50), RGB(34, 15, 33));
-static Construction wall({ 0, 5, 15 }, { 10, 10, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+static Construction wall({ 0, 4, 15 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
 static Construction wall_({ 0, 1, 14 }, { 10, 2, 0 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction wall2({ -5, 5, 10 }, { 0, 10, 10 }, RGB(20, 20, 36), RGB(24, 15, 33));
-static Construction wall2_({ -4, 1, 9.5 }, { 0, 2, 9 }, RGB(20, 20, 36), RGB(24, 15, 33));
+static Construction wall2({ -5, 4, 10 }, { 0, 8, 10 }, RGB(20, 20, 36), RGB(24, 15, 33));
 static Construction wall3({ 0, 1, 10 }, { 2, 2, 0 });
-static Actor actor({ 0, 0.5, 10 }, { 2, 2, 0 });
+
+static Player player({ 0, 0.5, 10 }, { 2, 2, 0 });
 static CImage image;
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
-    std::map<float, POINT> positions = {
+    std::map<float, POINT> d_positions = {
+        {0.0f, {0, 0}}
+    };
+
+    std::map<float, POINT> d_scales = {
+        {0.0f, {1, 1}}
+    };
+    std::map<float, POINT> m_positions = {
         {0.0f, {0, 0}},
-        {0.5f, {10, 10}},
-        {1.0f, {20, 20}}
+        {0.2f, {0, 0}},
+        {0.4f, {0, 0}},
+        {0.6f, {0, 0}},
+        {0.8f, {0, 0}}
     };
 
-    std::map<float, POINT> scales = {
+    std::map<float, POINT> m_scales = {
         {0.0f, {1, 1}},
-        {0.5f, {2, 2}},
-        {1.0f, {3, 3}}
+        {0.2f, {1, 1}},
+        {0.4f, {1, 1}},
+        {0.6f, {1, 1}},
+        {0.8f, {1, 1}}
     };
 
-    std::map<float, std::string> imagesKittenR = {
+    std::map<float, std::string> img_imagesKittenR = {
+        {0.0f, "kitten_R_default_1"}
+    };
+    std::map<float, std::string> img_imagesKittenL = {
+        {0.0f, "kitten_L_default_1"}
+    };
+    std::map<float, std::string> img_KittenMoveR = {
         {0.0f, "kitten_R_default_1"},
         {0.2f, "kitten_R_default_2"},
-        {0.4f, "kitten_R_default_1"}
+        {0.4f, "kitten_R_default_1"},
+        {0.6f, "kitten_R_default_2"},
+        {0.8f, "kitten_R_default_1"}
     };
-
-    std::map<float, std::string> imagesKittenL = {
+    std::map<float, std::string> img_KittenMoveL = {
         {0.0f, "kitten_L_default_1"},
         {0.2f, "kitten_L_default_2"},
-        {0.4f, "kitten_L_default_1"}
+        {0.4f, "kitten_L_default_1"},
+        {0.6f, "kitten_L_default_2"},
+        {0.8f, "kitten_L_default_1"}
     };
 
-    Animation animationKittenR("kitten_R_default", true, 0.4f, positions, scales, imagesKittenR);
-    Animation animationKittenL("kitten_L_default", true, 0.4f, positions, scales, imagesKittenL);
+    Animation Kitten_R_default("kitten_R_default", true, 0.0f, d_positions, d_scales, img_imagesKittenR);
+    Animation Kitten_L_default("kitten_L_default", true, 0.0f, d_positions, d_scales, img_imagesKittenL);
+    Animation Kitten_R_move   ("kitten_R_move",    true,  0.8f, m_positions, m_scales, img_KittenMoveR);
+    Animation Kitten_L_move   ("kitten_L_move",    true,  0.8f, m_positions, m_scales, img_KittenMoveL);
 
     std::vector<AnimationController::Transition> transitions;
 
-    animationController.addState("kitten_R_default", animationKittenR, transitions);
-    animationController.addState("kitten_L_default", animationKittenL, transitions);
+    animationController.addState("kitten_R_default", Kitten_R_default, transitions);
+    animationController.addState("kitten_L_default", Kitten_L_default, transitions);
+    animationController.addState("kitten_R_move", Kitten_R_move, transitions);
+    animationController.addState("kitten_L_move", Kitten_L_move, transitions);
 
-    actor.setAnimationController(animationController);
+    player.setAnimationController(animationController);
 }
 
 void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -103,11 +133,13 @@ void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
     floor1.DrawObject3D(mDC, camera);
     floor2.DrawObject3D(mDC, camera);
+    floor2.DrawObject3D(mDC, camera);
+
+
     wall.DrawObject3D(mDC, camera);
-    wall_.DrawObject3D(mDC, camera);
     wall2.DrawObject3D(mDC, camera);
-    wall2_.DrawObject3D(mDC, camera);
-    actor.DrawObject3D(mDC, camera);
+    wall_.DrawObject3D(mDC, camera);
+    player.DrawObject3D(mDC, camera);
 
     BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
     DeleteDC(mDC);
@@ -136,17 +168,22 @@ void HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     keyStates[wParam] = true;
-    if (wParam == 'P') {
-        actor.getAnimationController().setCurrentState("kitten_L_default");
+    if (keyStates['A']&& player.getAnimationController().getCurrentState() != "kitten_L_move") {
+        player.getAnimationController().setCurrentState("kitten_L_move");
     }
-    else if (wParam == VK_TAB) {
-        actor.getAnimationController().setCurrentState("kitten_R_default");
+    else if (keyStates['D'] && player.getAnimationController().getCurrentState() != "kitten_R_move") {
+        player.getAnimationController().setCurrentState("kitten_R_move");
     }
 }
 
-
 void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     keyStates[wParam] = false;
+    if (KEY_UP_CONDITION('A')) {
+        player.getAnimationController().setCurrentState("kitten_L_default");
+    }
+    else if (KEY_UP_CONDITION('D')) {
+        player.getAnimationController().setCurrentState("kitten_R_default");
+    }
 }
 
 void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -154,49 +191,39 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     float deltaTime = (currentTime - lastTime) / 1000.0f;
     lastTime = currentTime;
 
-    if (keyStates[VK_TAB] || keyStates['P']) {
-        actor.getAnimationController().update(deltaTime);
-    }
+     // 항상 업데이트
 
-    if (keyStates['4']) {
-        camera.rotate(0, 0, -0.05f);
-    }
-    if (keyStates['6']) {
-        camera.rotate(0, 0, 0.05f);
-    }
     if (keyStates['A']) {
-        camera.move({ -0.1f, 0, 0 });
+        player.move2DPosition(-0.1f, 0);
+        player.getAnimationController().update(deltaTime);
     }
     if (keyStates['D']) {
-        camera.move({ 0.1f, 0, 0 });
+        player.move2DPosition(0.1f, 0);
+        player.getAnimationController().update(deltaTime);
+
     }
     if (keyStates['W']) {
-        camera.move({ 0, 0, 0.1f });
+        player.move2DPosition(0, 0.1f);
     }
     if (keyStates['S']) {
-        camera.move({ 0, 0, -0.1f });
+        player.move2DPosition(0, -0.1f);
     }
-    if (keyStates[VK_SPACE]) {
-        camera.move({ 0, 0.1f, 0 });
-    }
-    if (keyStates[VK_SHIFT]) {
-        camera.move({ 0, -0.1f, 0 });
-    }
-    if (keyStates[VK_LEFT]) {
-        camera.rotate(-0.02f, 0, 0);
-    }
-    if (keyStates[VK_RIGHT]) {
-        camera.rotate(0.02f, 0, 0);
-    }
-    if (keyStates[VK_UP]) {
-        camera.rotate(0, 0.02f, 0);
-    }
-    if (keyStates[VK_DOWN]) {
-        camera.rotate(0, -0.02f, 0);
-    }
+
+    // 카메라가 플레이어를 부드럽게 따라오도록 조작
+    Vector3 playerPos = player.getPosition();
+    Vector3 cameraPos = camera.getPosition();
+    Vector3 targetPos = { playerPos.x, playerPos.y + 3.0f, playerPos.z - 5.5f }; // 카메라의 y좌표를 플레이어보다 낮게 설정
+
+    camera.setPosition({
+        cameraPos.x + (targetPos.x - cameraPos.x) * cameraFollowSpeed,
+        cameraPos.y + (targetPos.y - cameraPos.y) * cameraFollowSpeed,
+        cameraPos.z + (targetPos.z - cameraPos.z) * cameraFollowSpeed
+        });
 
     InvalidateRect(hWnd, NULL, FALSE);
 }
+
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {

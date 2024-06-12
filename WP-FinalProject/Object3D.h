@@ -11,6 +11,7 @@ public:
 
     Vector3 getPosition() const;
     Vector3 getSize() const;
+    void movePosition(float dx, float dy, float dz);
 
     void setPosition(const Vector3& newPosition);
     void setSize(const Vector3& newSize);

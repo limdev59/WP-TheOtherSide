@@ -14,6 +14,12 @@ Vector3 Object3D::getSize() const {
     return size;
 }
 
+void Object3D::movePosition(float dx, float dy, float dz) {
+    position3D.x += dx;
+    position3D.y += dy;
+    position3D.z += dz;
+}
+
 void Object3D::setPosition(const Vector3& newPosition) {
     position3D = newPosition;
 }

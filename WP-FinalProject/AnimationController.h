@@ -19,6 +19,7 @@ public:
     void update(float deltaTime);
     const CImage* getCurrentFrame() const;
     void setCurrentState(const std::string& state);
+    std::string getCurrentState() const;
 
 private:
     struct AnimationState {

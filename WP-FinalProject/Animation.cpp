@@ -1,4 +1,6 @@
 #include "Animation.h"
+#include <iostream> // 추가
+#include <cmath>    // 추가
 
 Animation::Animation(const std::string& id, bool loop, float animationLength,
     const std::map<float, POINT>& positions,
@@ -25,27 +27,28 @@ Animation::Animation(const std::string& id, bool loop, float animationLength,
 }
 
 Animation::~Animation() {
-    /*for (auto& [imageName, img] : loadedImages) {
-        delete img;
-    }
-    loadedImages.clear();*/
+    loadedImages.clear();
 }
 
 void Animation::update(float deltaTime) {
     elapsedTime += deltaTime;
-    if (isComplete()) {
-        if (loop) {
-            reset();
-        }
-        else {
-            elapsedTime = animationLength;
+
+    if (loop) {
+        if (elapsedTime >= animationLength) {
+            elapsedTime -= animationLength;
         }
     }
     else {
-        updateFrame(elapsedTime);
+        if (elapsedTime >= animationLength) {
+            elapsedTime = animationLength;
+        }
     }
-}
 
+    updateFrame(elapsedTime);
+
+    // 테스트 코드 추가
+    std::cout << "Frame: " << getCurrentFrameKey() << ", Loop: " << (loop ? "Yes" : "No") << std::endl;
+}
 
 
 const CImage* Animation::getCurrentFrame() const {
@@ -70,17 +73,12 @@ void Animation::reset() {
 }
 
 void Animation::updateFrame(float time) {
-    float nearestTime = -1.0f;
-    for (const auto& [keyTime, imageName] : images) {
-        if (keyTime <= time) {
-            nearestTime = keyTime;
-        }
-        else {
-            break;
-        }
+    auto it = images.lower_bound(time);
+    if (it != images.begin() && (it == images.end() || it->first > time)) {
+        --it;
     }
-    if (nearestTime != -1.0f) {
-        currentFrameKey = nearestTime;
-        currentFrame = loadedImages[images.at(nearestTime)];
+    if (it != images.end()) {
+        currentFrameKey = it->first;
+        currentFrame = loadedImages[it->second];
     }
 }

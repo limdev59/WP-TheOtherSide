@@ -37,3 +37,7 @@ void AnimationController::setCurrentState(const std::string& state) {
         states[currentState].animation.reset();  // 애니메이션 상태 변경 시 리셋
     }
 }
+
+std::string AnimationController::getCurrentState() const {
+    return currentState;
+}

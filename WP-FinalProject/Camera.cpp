@@ -12,6 +12,11 @@ Vector3 Camera::getPosition() const {
     return position;
 }
 
+void Camera::setPosition(Vector3 pos)
+{
+    position = pos;
+}
+
 float Camera::getYaw() const {
     return yaw;
 }
@@ -22,6 +27,20 @@ float Camera::getPitch() const {
 
 float Camera::getRoll() const {
     return roll;
+}
+
+Vector3 Camera::getDirection() const {
+    // 카메라의 방향 벡터 계산
+    float cosYaw = cosf(yaw);
+    float sinYaw = sinf(yaw);
+    float cosPitch = cosf(pitch);
+    float sinPitch = sinf(pitch);
+
+    return Vector3(
+        cosYaw * cosPitch,
+        sinPitch,
+        sinYaw * cosPitch
+    ).Normalize();
 }
 
 void Camera::move(const Vector3& delta) {
@@ -48,9 +67,11 @@ bool Project3DTo2D(const Camera& cam, const Vector3& pos, POINT& point) {
     float cosRoll = cosf(cam.getRoll());
     float sinRoll = sinf(cam.getRoll());
 
-    float x = pos.x - cam.getPosition().x;
-    float y = pos.y - cam.getPosition().y;
-    float z = pos.z - cam.getPosition().z;
+    Vector3 camPos = cam.getPosition(); // 카메라 위치를 한 번만 가져옴
+
+    float x = pos.x - camPos.x;
+    float y = pos.y - camPos.y;
+    float z = pos.z - camPos.z;
 
     float dx = cosYaw * x - sinYaw * z;
     float dz = sinYaw * x + cosYaw * z;
