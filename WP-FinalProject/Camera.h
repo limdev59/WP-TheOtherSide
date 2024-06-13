@@ -13,9 +13,11 @@ public:
     float getPitch() const;
     float getRoll() const;
 
-    Vector3 getDirection() const; // 새롭게 추가된 메서드
-
+    Vector3 getDirection() const;
     void move(const Vector3& delta);
+
+    Vector3 getRotation() const;
+    void setRotation(Vector3 rot);
     void rotate(float yawDelta, float pitchDelta, float rollDelta);
 
 private:

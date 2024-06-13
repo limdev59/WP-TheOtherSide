@@ -29,6 +29,17 @@ float Camera::getRoll() const {
     return roll;
 }
 
+Vector3 Camera::getRotation() const
+{
+    return Vector3(yaw, pitch, roll);
+}
+
+void Camera::setRotation(Vector3 rot) {
+    yaw = rot.x;
+    pitch = rot.y;
+    roll = rot.z;
+}
+
 Vector3 Camera::getDirection() const {
     // 카메라의 방향 벡터 계산
     float cosYaw = cosf(yaw);
