@@ -1,5 +1,3 @@
-#pragma once
-
 #include <windows.h>
 #include <atlimage.h>
 #include <mmsystem.h>
@@ -15,16 +13,16 @@
 #define KEY_UP_CONDITION(KEY) (!keyStates[KEY] && KEY == wParam)
 
 
-// Àü¿ª »ó¼ö
+// ì „ì—­ ìƒìˆ˜
 constexpr int gameTick = 7;
-constexpr float cameraFollowSpeed = 0.2f; // Ä«¸Ş¶ó°¡ ÇÃ·¹ÀÌ¾î¸¦ µû¶ó¿À´Â ¼Óµµ
+constexpr float cameraFollowSpeed = 0.2f; // ì¹´ë©”ë¼ê°€ í”Œë ˆì´ì–´ë¥¼ ë”°ë¼ì˜¤ëŠ” ì†ë„
 constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34, 15, 33);
 constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
 
 
-// Àü¿ª º¯¼ö
+// ì „ì—­ ë³€ìˆ˜
 bool keyStates[256] = { 0 };
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = L"Window Class Name";
@@ -35,14 +33,14 @@ static PAINTSTRUCT ps;
 static HBITMAP hBitmap;
 static RECT rt;
 
-// ¾Ö´Ï¸ŞÀÌ¼Ç ÄÁÆ®·Ñ·¯¿Í ½Ã°£ °ü·Ã º¯¼ö
+// ì• ë‹ˆë©”ì´ì…˜ ì»¨íŠ¸ë¡¤ëŸ¬ì™€ ì‹œê°„ ê´€ë ¨ ë³€ìˆ˜
 static AnimationController animationController("kitten_R_default");
 static DWORD lastTime = timeGetTime();
 
-// ÇÔ¼ö ¼±¾ğ
+// í•¨ìˆ˜ ì„ ì–¸
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// ÃÊ±âÈ­µÈ Ä«¸Ş¶ó¿Í °´Ã¼
+// ì´ˆê¸°í™”ëœ ì¹´ë©”ë¼ì™€ ê°ì²´
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 
 
@@ -343,7 +341,7 @@ std::vector<Construction> floors = {
 static Player player({ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 });
 static CImage image;
 
-// ¾Ö´Ï¸ŞÀÌ¼Ç ÃÊ±âÈ­ ÇÔ¼ö
+// ì• ë‹ˆë©”ì´ì…˜ ì´ˆê¸°í™” í•¨ìˆ˜
 void InitializeAnimations() {
 	std::map<float, POINT> d_positions = {
 		{0.0f, {0, 0}}
@@ -411,7 +409,7 @@ void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		PostQuitMessage(0);
 	}
 	SetTimer(hWnd, 1, gameTick, NULL);
-	InitializeAnimations();  // ¾Ö´Ï¸ŞÀÌ¼Ç ÃÊ±âÈ­ È£Ãâ
+	InitializeAnimations();  // ì• ë‹ˆë©”ì´ì…˜ ì´ˆê¸°í™” í˜¸ì¶œ
 }
 
 void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -444,15 +442,15 @@ void HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 void HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// ÇÊ¿ä ½Ã ±¸Çö
+	// í•„ìš” ì‹œ êµ¬í˜„
 }
 
 void HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// ÇÊ¿ä ½Ã ±¸Çö
+	// í•„ìš” ì‹œ êµ¬í˜„
 }
 
 void HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// ÇÊ¿ä ½Ã ±¸Çö
+	// í•„ìš” ì‹œ êµ¬í˜„
 }
 
 void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -483,7 +481,7 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	float deltaTime = (currentTime - lastTime) / 1000.0f;
 	lastTime = currentTime;
 
-	// Ç×»ó ¾÷µ¥ÀÌÆ®
+	// í•­ìƒ ì—…ë°ì´íŠ¸
 	if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) player.getAnimationController().update(deltaTime);
 	if (keyStates['A']) {
 		player.move2DPosition(-0.2f, 0);
@@ -504,7 +502,7 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 
 
-	// Ä«¸Ş¶ó°¡ ÇÃ·¹ÀÌ¾î¸¦ ºÎµå·´°Ô µû¶ó¿Àµµ·Ï Á¶ÀÛ
+	// ì¹´ë©”ë¼ê°€ í”Œë ˆì´ì–´ë¥¼ ë¶€ë“œëŸ½ê²Œ ë”°ë¼ì˜¤ë„ë¡ ì¡°ì‘
 	Vector3 playerPos = player.getPosition();
 	Vector3 cameraPos = camera.getPosition();
 	Vector3 targetPos = {
