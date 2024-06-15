@@ -15,16 +15,16 @@
 #define KEY_UP_CONDITION(KEY) (!keyStates[KEY] && KEY == wParam)
 
 
-// Àü¿ª »ó¼ö
+// ì „ì—­ ìƒìˆ˜
 constexpr int gameTick = 7;
-constexpr float cameraFollowSpeed = 0.2f; // Ä«¸Ş¶ó°¡ ÇÃ·¹ÀÌ¾î¸¦ µû¶ó¿À´Â ¼Óµµ
+constexpr float cameraFollowSpeed = 0.2f; // ì¹´ë©”ë¼ê°€ í”Œë ˆì´ì–´ë¥¼ ë”°ë¼ì˜¤ëŠ” ì†ë„
 constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34, 15, 33);
 constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
 
 
-// Àü¿ª º¯¼ö
+// ì „ì—­ ë³€ìˆ˜
 bool keyStates[256] = { 0 };
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = L"Window Class Name";
@@ -35,17 +35,17 @@ static PAINTSTRUCT ps;
 static HBITMAP hBitmap;
 static RECT rt;
 
-// ¾Ö´Ï¸ŞÀÌ¼Ç ÄÁÆ®·Ñ·¯¿Í ½Ã°£ °ü·Ã º¯¼ö
+// ì• ë‹ˆë©”ì´ì…˜ ì»¨íŠ¸ë¡¤ëŸ¬ì™€ ì‹œê°„ ê´€ë ¨ ë³€ìˆ˜
 static AnimationController animationController("kitten_R_default");
 static DWORD lastTime = timeGetTime();
 
-// ÇÔ¼ö ¼±¾ğ
+// í•¨ìˆ˜ ì„ ì–¸
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// ÃÊ±âÈ­µÈ Ä«¸Ş¶ó¿Í °´Ã¼
+// ì´ˆê¸°í™”ëœ ì¹´ë©”ë¼ì™€ ê°ì²´
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 
-//À§º®
+//ìœ„ë²½
 static Construction widthWall1({ 12.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
 static Construction widthWall2({ 2.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
 
@@ -70,7 +70,7 @@ static Construction widthWall31({ 82.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40)
 static Construction widthWall32({ 112.5, 4, 57.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
 
 
-//¾Æ·¡º®
+//ì•„ë˜ë²½
 static Construction widthWall3({ 2.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
 
 static Construction widthWall6({ 12.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
@@ -89,7 +89,7 @@ static Construction widthWall17({ 112.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40
 
 static Construction widthWall30({ 102.5, 4, 17.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
 
-//¼¼·Îº®
+//ì„¸ë¡œë²½
 static Construction heightWall1({ 7.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
 static Construction heightWall2({ 7.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
 static Construction heightWall3({ 7.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
@@ -424,7 +424,7 @@ std::vector<Construction> ceilings = {
 static Player player({ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 });
 static CImage image;
 
-// ¾Ö´Ï¸ŞÀÌ¼Ç ÃÊ±âÈ­ ÇÔ¼ö
+// ì• ë‹ˆë©”ì´ì…˜ ì´ˆê¸°í™” í•¨ìˆ˜
 void InitializeAnimations() {
 	std::map<float, POINT> d_positions = {
 		{0.0f, {0, 0}}
@@ -492,7 +492,7 @@ void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		PostQuitMessage(0);
 	}
 	SetTimer(hWnd, 1, gameTick, NULL);
-	InitializeAnimations();  // ¾Ö´Ï¸ŞÀÌ¼Ç ÃÊ±âÈ­ È£Ãâ
+	InitializeAnimations();  // ì• ë‹ˆë©”ì´ì…˜ ì´ˆê¸°í™” í˜¸ì¶œ
 }
 
 void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -529,15 +529,15 @@ void HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 }
 
 void HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// ÇÊ¿ä ½Ã ±¸Çö
+	// í•„ìš” ì‹œ êµ¬í˜„
 }
 
 void HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// ÇÊ¿ä ½Ã ±¸Çö
+	// í•„ìš” ì‹œ êµ¬í˜„
 }
 
 void HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// ÇÊ¿ä ½Ã ±¸Çö
+	// í•„ìš” ì‹œ êµ¬í˜„
 }
 
 void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -570,7 +570,7 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	bool canMoveUp = true;
 	bool canMoveDown = true;
 
-	// °¢ ¹Ù´Ú°úÀÇ Ãæµ¹ °Ë»ç
+	// ê° ë°”ë‹¥ê³¼ì˜ ì¶©ëŒ ê²€ì‚¬
 	for (const Construction& floor : floors) {
 		POINT playerPos = player.get2DPosition();
 		Vector3 pos = floor.getPosition();
@@ -582,38 +582,38 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			static_cast<LONG>(pos.z + size.z / 2)
 		};
 
-		// ¿ŞÂÊ Ãæµ¹ °Ë»ç
+		// ì™¼ìª½ ì¶©ëŒ ê²€ì‚¬
 		if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
 			canMoveLeft = false;
 		}
-		// ¿À¸¥ÂÊ Ãæµ¹ °Ë»ç
+		// ì˜¤ë¥¸ìª½ ì¶©ëŒ ê²€ì‚¬
 		if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
 			canMoveRight = false;
 		}
-		// À§ÂÊ Ãæµ¹ °Ë»ç
+		// ìœ„ìª½ ì¶©ëŒ ê²€ì‚¬
 		if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 			canMoveUp = false;
 		}
-		// ¾Æ·¡ÂÊ Ãæµ¹ °Ë»ç
+		// ì•„ë˜ìª½ ì¶©ëŒ ê²€ì‚¬
 		if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 			canMoveDown = false;
 		}
 	}
 
-	// ¿òÁ÷ÀÓ Á¦ÇÑ ¿©ºÎ Ãâ·Â
+	// ì›€ì§ì„ ì œí•œ ì—¬ë¶€ ì¶œë ¥
 	if (!canMoveLeft && !canMoveRight && !canMoveUp && !canMoveDown) {
-		std::cout << "¿òÁ÷ÀÓ Çã¿ëµÊ" << '\n';
+		std::cout << "ì›€ì§ì„ í—ˆìš©ë¨" << '\n';
 	}
 	else {
-		std::cout << "¿òÁ÷ÀÓ Á¦ÇÑµÊ" << '\n';
+		std::cout << "ì›€ì§ì„ ì œí•œë¨" << '\n';
 	}
 
-	// Ç×»ó ¾÷µ¥ÀÌÆ®
+	// í•­ìƒ ì—…ë°ì´íŠ¸
 	if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
 		player.getAnimationController().update(deltaTime);
 	}
 
-	// ¿òÁ÷ÀÓ Ã³¸®
+	// ì›€ì§ì„ ì²˜ë¦¬
 	if (keyStates['A']) {
 		if (!canMoveLeft) {
 			player.move2DPosition(-0.2f, 0);
@@ -628,20 +628,20 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 	if (keyStates['W']) {
 		if (!canMoveUp) {
-			player.move2DPosition(0, 0.2f); // ÀÏ¹İ ÀÌµ¿
-			if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // ½¬ÇÁÆ® Å° ´©¸£¸é ºü¸¥ ÀÌµ¿
+			player.move2DPosition(0, 0.2f); // ì¼ë°˜ ì´ë™
+			if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // ì‰¬í”„íŠ¸ í‚¤ ëˆ„ë¥´ë©´ ë¹ ë¥¸ ì´ë™
 		}
 	}
 	if (keyStates['S']) {
 		if (!canMoveDown) {
-			player.move2DPosition(0, -0.2f); // ÀÏ¹İ ÀÌµ¿
-			if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // ½¬ÇÁÆ® Å° ´©¸£¸é ºü¸¥ ÀÌµ¿
+			player.move2DPosition(0, -0.2f); // ì¼ë°˜ ì´ë™
+			if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // ì‰¬í”„íŠ¸ í‚¤ ëˆ„ë¥´ë©´ ë¹ ë¥¸ ì´ë™
 		}
 	}
 
 
 
-	// Ä«¸Ş¶ó°¡ ÇÃ·¹ÀÌ¾î¸¦ ºÎµå·´°Ô µû¶ó¿Àµµ·Ï Á¶ÀÛ
+	// ì¹´ë©”ë¼ê°€ í”Œë ˆì´ì–´ë¥¼ ë¶€ë“œëŸ½ê²Œ ë”°ë¼ì˜¤ë„ë¡ ì¡°ì‘
 	Vector3 playerPos = player.getPosition();
 	Vector3 cameraPos = camera.getPosition();
 	Vector3 targetPos = {
