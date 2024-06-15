@@ -18,11 +18,10 @@
 // 전역 상수
 constexpr int gameTick = 7;
 constexpr float cameraFollowSpeed = 0.2f; // 카메라가 플레이어를 따라오는 속도
-constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34, 15, 33);
+constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(42, 32, 50);//RGB(34, 15, 33);
 constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
-
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -35,15 +34,11 @@ static PAINTSTRUCT ps;
 static HBITMAP hBitmap;
 static RECT rt;
 
-// 애니메이션 컨트롤러와 시간 관련 변수
 static AnimationController animationController("kitten_R_default");
 static DWORD lastTime = timeGetTime();
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
-// 초기화된 카메라와 객체
-static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 
 std::vector<Construction> walls = {
 	//위벽
@@ -406,6 +401,8 @@ std::vector<Construction> ceilings = {
 	{ { 85, 8, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF }
 };
 
+// 초기화된 카메라와 객체
+static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Player player({ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 });
 static CImage image;
 
@@ -554,10 +551,10 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	float deltaTime = (currentTime - lastTime) / 1000.0f;
 	lastTime = currentTime;
 
-	bool canMoveLeft = true;
-	bool canMoveRight = true;
-	bool canMoveUp = true;
-	bool canMoveDown = true;
+	bool cantMoveLeft = true;
+	bool cantMoveRight = true;
+	bool cantMoveUp = true;
+	bool cantMoveDown = true;
 
 	//각 바닥과의 충돌 검사
 	for (const Construction& floor : floors) {
@@ -573,25 +570,25 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 		// 왼쪽 충돌 검사
 		if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-			canMoveLeft = false;
+			cantMoveLeft = false;
 		}
 		// 오른쪽 충돌 검사
 		if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-			canMoveRight = false;
+			cantMoveRight = false;
 		}
 		// 위쪽 충돌 검사
 		if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-			canMoveDown = false;
+			cantMoveDown = false;
 		}
 		// 아래쪽 충돌 검사
 		if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-			canMoveUp = false;
+			cantMoveUp = false;
 		}
 	}
 
 	
 
-	if (!canMoveLeft && !canMoveRight && !canMoveUp && !canMoveDown) {
+	if (!cantMoveLeft && !cantMoveRight && !cantMoveUp && !cantMoveDown) {
 		std::wcout << "move" << std::endl;
 	}
 	else {
@@ -605,25 +602,25 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	// 움직임 처리
 	if (keyStates['A']) {
-		if (!canMoveLeft) {
+		if (!cantMoveLeft) {
 			player.move2DPosition(-0.2f, 0);
 			if (keyStates[VK_SHIFT]) player.move2DPosition(-1.0f, 0);
 		}
 	}
 	if (keyStates['D']) {
-		if (!canMoveRight) {
+		if (!cantMoveRight) {
 			player.move2DPosition(0.2f, 0);
 			if (keyStates[VK_SHIFT]) player.move2DPosition(1.0f, 0);
 		}
 	}
 	if (keyStates['W']) {
-		if (!canMoveUp) {
+		if (!cantMoveUp) {
 			player.move2DPosition(0, 0.2f); // 일반 이동
 			if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // 쉬프트 키 누르면 빠른 이동
 		}
 	}
 	if (keyStates['S']) {
-		if (!canMoveDown) {
+		if (!cantMoveDown) {
 			player.move2DPosition(0, -0.2f); // 일반 이동
 			if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
 		}
@@ -633,7 +630,7 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	Vector3 playerPos = player.getPosition();
 	Vector3 cameraPos = camera.getPosition();
 	Vector3 targetPos = {
-		playerPos.x + (keyStates['A'] ? -1.0f : (keyStates['D'] ? 1.0f : 0.0f)),
+		playerPos.x + (keyStates['A']&& !cantMoveLeft? -1.0f : (keyStates['D'] && !cantMoveRight? 1.0f : 0.0f)),
 		playerPos.y + 3.0f + (keyStates['W'] ? 0.1f : (keyStates['S'] ? -0.1f : 0.0f)),
 		playerPos.z - 5.8f + (keyStates['W'] ? 0.5f : (keyStates['S'] ? -1.5f : 0.0f))
 	};
@@ -658,7 +655,6 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	InvalidateRect(hWnd, NULL, FALSE);
 }
-
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {

@@ -101,3 +101,33 @@ bool Project3DTo2D(const Camera& cam, const Vector3& pos, POINT& point) {
 
     return true;
 }
+
+
+Vector3 Unproject2DTo3D(const Camera& cam, const POINT& point, float y = 0.0f) {
+    constexpr float FOV = 90.0f;
+    constexpr float ASPECT_RATIO = 800.0f / 600.0f;
+
+    float ndcX = (2.0f * (point.x - 770.0f) / 800.0f) - 1.0f;
+    float ndcY = 1.0f - (2.0f * (point.y - 450.0f) / 600.0f);
+
+    float cosYaw = cosf(cam.getYaw());
+    float sinYaw = sinf(cam.getYaw());
+    float cosPitch = cosf(cam.getPitch());
+    float sinPitch = sinf(cam.getPitch());
+    float cosRoll = cosf(cam.getRoll());
+    float sinRoll = sinf(cam.getRoll());
+
+    Vector3 camPos = cam.getPosition();
+
+    float fovTan = tanf(FOV * 0.5f * (3.14159265358979323846f / 180.0f));
+
+    float camZ = y / (ndcY * fovTan);
+    float camX = ndcX * camZ * ASPECT_RATIO;
+
+    Vector3 camSpacePos(camX, y, camZ);
+
+    float worldX = camSpacePos.x * cosYaw - camSpacePos.z * sinYaw + camPos.x;
+    float worldZ = camSpacePos.x * sinYaw + camSpacePos.z * cosYaw + camPos.z;
+
+    return Vector3(worldX, y, worldZ);
+}
