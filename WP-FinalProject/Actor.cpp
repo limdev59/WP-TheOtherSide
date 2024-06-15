@@ -111,7 +111,8 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
             allPointsProjected = false;
         }
     }
-
+    points[0].x = points[0].x + (points[3].x - points[1].x)/2;
+    points[2].x = points[2].x + (points[3].x - points[1].x)/2;
     if (!allPointsProjected) {
         GdiplusShutdown(gdiplusToken);
         return;

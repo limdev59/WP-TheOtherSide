@@ -1,6 +1,5 @@
 #include "Animation.h"
-#include <iostream> // 추가
-#include <cmath>    // 추가
+#include <cmath>
 
 Animation::Animation(const std::string& id, bool loop, float animationLength,
     const std::map<float, POINT>& positions,
@@ -45,9 +44,6 @@ void Animation::update(float deltaTime) {
     }
 
     updateFrame(elapsedTime);
-
-    // 테스트 코드 추가
-    std::cout << "Frame: " << getCurrentFrameKey() << ", Loop: " << (loop ? "Yes" : "No") << std::endl;
 }
 
 

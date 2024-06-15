@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 #include <windows.h>
 #include <atlimage.h>
 #include <mmsystem.h>
@@ -45,7 +45,88 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 
+//위벽
+static Construction widthWall1({ 12.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall2({ 2.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
 
+static Construction widthWall4({ 22.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall5({ 32.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+static Construction widthWall18({ 42.5, 2, -2.5 }, { 10, 4, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall19({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall20({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall21({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+static Construction widthWall22({ 22.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall23({ 32.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall24({ 42.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall25({ 52.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall26({ 62.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall27({ 72.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall28({ 92.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall29({ 102.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+static Construction widthWall31({ 82.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall32({ 112.5, 4, 57.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+
+//아래벽
+static Construction widthWall3({ 2.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+static Construction widthWall6({ 12.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall7({ 22.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall8({ 32.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall9({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+static Construction widthWall10({ 22.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall11({ 32.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall12({ 52.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall13({ 62.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall14({ 72.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall15({ 82.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall16({ 92.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+static Construction widthWall17({ 112.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+static Construction widthWall30({ 102.5, 4, 17.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+
+//세로벽
+static Construction heightWall1({ 7.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall2({ 7.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall3({ 7.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall4({ -2.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall5({ 7.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall6({ 7.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall7({ 7.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+
+static Construction heightWall8({ 17.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall9({ 17.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall10({ 17.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall11({ 17.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall12({ 17.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+
+static Construction heightWall13({ 37.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall14({ 37.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall15({ 47.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall16({ 47.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall17({ 47.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+
+static Construction heightWall18({ 77.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall19({ 77.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall20({ 77.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+
+static Construction heightWall21({ 87.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall22({ 87.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall23({ 87.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+
+static Construction heightWall24({ 107.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall25({ 107.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+
+static Construction heightWall26({ 117.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall27({ 117.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall28({ 117.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+static Construction heightWall29({ 117.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+
+std::vector<Construction> walls = {};
 std::vector<Construction> floors = {
 	{{ 10, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 15, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -191,7 +272,8 @@ std::vector<Construction> floors = {
 	{{ 85, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 80, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 85, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-
+};
+std::vector<Construction> ceilings = {
 	{ { 10, 8, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 15, 8, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 10, 8, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -337,7 +419,6 @@ std::vector<Construction> floors = {
 	{ { 85, 8, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 80, 8, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 85, 8, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF }
-
 };
 
 static Player player({ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 });
@@ -427,6 +508,10 @@ void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	for (auto& floor : floors) {
 		floor.DrawObject3D(mDC, camera);
 	}
+	for (auto& ceiling : ceilings) {
+		ceiling.DrawObject3D(mDC, camera);
+	}
+
 
 	player.DrawObject3D(mDC, camera);
 
@@ -459,13 +544,10 @@ void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = true;
 	if (keyStates['A'] && player.getAnimationController().getCurrentState() != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
-
 	}
 	else if (keyStates['D'] && player.getAnimationController().getCurrentState() != "kitten_R_move") {
 		player.getAnimationController().setCurrentState("kitten_R_move");
 	}
-
-
 }
 
 void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -483,34 +565,89 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	float deltaTime = (currentTime - lastTime) / 1000.0f;
 	lastTime = currentTime;
 
+	bool canMoveLeft = true;
+	bool canMoveRight = true;
+	bool canMoveUp = true;
+	bool canMoveDown = true;
+
+	// 각 바닥과의 충돌 검사
+	for (const Construction& floor : floors) {
+		POINT playerPos = player.get2DPosition();
+		Vector3 pos = floor.getPosition();
+		Vector3 size = floor.getSize();
+		RECT bound = {
+			static_cast<LONG>(pos.x - size.x / 2),
+			static_cast<LONG>(pos.z - size.z / 2),
+			static_cast<LONG>(pos.x + size.x / 2),
+			static_cast<LONG>(pos.z + size.z / 2)
+		};
+
+		// 왼쪽 충돌 검사
+		if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+			canMoveLeft = false;
+		}
+		// 오른쪽 충돌 검사
+		if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+			canMoveRight = false;
+		}
+		// 위쪽 충돌 검사
+		if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+			canMoveUp = false;
+		}
+		// 아래쪽 충돌 검사
+		if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+			canMoveDown = false;
+		}
+	}
+
+	// 움직임 제한 여부 출력
+	if (!canMoveLeft && !canMoveRight && !canMoveUp && !canMoveDown) {
+		std::cout << "움직임 허용됨" << '\n';
+	}
+	else {
+		std::cout << "움직임 제한됨" << '\n';
+	}
+
 	// 항상 업데이트
-	if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) player.getAnimationController().update(deltaTime);
+	if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
+		player.getAnimationController().update(deltaTime);
+	}
+
+	// 움직임 처리
 	if (keyStates['A']) {
-		player.move2DPosition(-0.2f, 0);
-		if (keyStates[VK_SHIFT])player.move2DPosition(-2.0f, 0);
+		if (!canMoveLeft) {
+			player.move2DPosition(-0.2f, 0);
+			if (keyStates[VK_SHIFT]) player.move2DPosition(-1.0f, 0);
+		}
 	}
 	if (keyStates['D']) {
-		player.move2DPosition(0.2f, 0);
-		if (keyStates[VK_SHIFT])player.move2DPosition(2.0f, 0);
-
+		if (!canMoveRight) {
+			player.move2DPosition(0.2f, 0);
+			if (keyStates[VK_SHIFT]) player.move2DPosition(1.0f, 0);
+		}
 	}
 	if (keyStates['W']) {
-		player.move2DPosition(0, 0.2f);
-		if (keyStates[VK_SHIFT])player.move2DPosition(0, 2.0f);
+		if (!canMoveUp) {
+			player.move2DPosition(0, 0.2f); // 일반 이동
+			if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // 쉬프트 키 누르면 빠른 이동
+		}
 	}
 	if (keyStates['S']) {
-		player.move2DPosition(0, -0.2f);
-		if (keyStates[VK_SHIFT])player.move2DPosition(0, -2.0f);
+		if (!canMoveDown) {
+			player.move2DPosition(0, -0.2f); // 일반 이동
+			if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
+		}
 	}
+
 
 
 	// 카메라가 플레이어를 부드럽게 따라오도록 조작
 	Vector3 playerPos = player.getPosition();
 	Vector3 cameraPos = camera.getPosition();
 	Vector3 targetPos = {
-		playerPos.x,
+		playerPos.x + (keyStates['A'] ? -1.0f : (keyStates['D'] ? 1.0f : 0.0f)),
 		playerPos.y + 3.0f + (keyStates['W'] ? 0.1f : (keyStates['S'] ? -0.1f : 0.0f)),
-		playerPos.z - 5.8f + (keyStates['W'] ? 0.5f : (keyStates['S'] ? -2.5f : 0.0f))
+		playerPos.z - 5.8f + (keyStates['W'] ? 0.5f : (keyStates['S'] ? -1.5f : 0.0f))
 	};
 	camera.setPosition({
 		cameraPos.x + (targetPos.x - cameraPos.x) * cameraFollowSpeed,
@@ -521,15 +658,15 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	Vector3 cameraRot = camera.getRotation();
 	Vector3 targetRot = {
 		cameraRot.x,
-		keyStates['W'] ? imsi + 0.3f : (keyStates['S'] ? imsi - 0.3f : imsi),
-		keyStates['A'] ? -0.1f : (keyStates['D'] ? 0.1f : 0.0f)
+		(keyStates['W'] ? imsi + 0.1f : (keyStates['S'] ? imsi - 0.1f : imsi)),
+		(keyStates['A'] ? 0.025f : (keyStates['D'] ? -0.025f : 0.0f))
 	};
-
 	camera.setRotation({
 		cameraRot.x + (targetRot.x - cameraRot.x) * cameraFollowSpeed,
 		cameraRot.y + (targetRot.y - cameraRot.y) * cameraFollowSpeed,
 		cameraRot.z + (targetRot.z - cameraRot.z) * cameraFollowSpeed
 		});
+
 
 	InvalidateRect(hWnd, NULL, FALSE);
 }
