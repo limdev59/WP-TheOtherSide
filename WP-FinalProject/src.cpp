@@ -45,88 +45,155 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 
-//위벽
-static Construction widthWall1({ 12.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall2({ 2.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+////위벽
+//static Construction widthWall1({ 12.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall2({ 2.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//static Construction widthWall4({ 22.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall5({ 32.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//static Construction widthWall18({ 42.5, 2, -2.5 }, { 10, 4, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall19({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall20({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall21({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//static Construction widthWall22({ 22.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall23({ 32.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall24({ 42.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall25({ 52.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall26({ 62.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall27({ 72.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall28({ 92.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall29({ 102.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//static Construction widthWall31({ 82.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall32({ 112.5, 4, 57.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//
+////아래벽
+//static Construction widthWall3({ 2.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//static Construction widthWall6({ 12.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall7({ 22.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall8({ 32.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall9({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//static Construction widthWall10({ 22.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall11({ 32.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall12({ 52.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall13({ 62.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall14({ 72.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall15({ 82.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall16({ 92.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//static Construction widthWall17({ 112.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+//static Construction widthWall30({ 102.5, 4, 17.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+//
+////세로벽
+//static Construction heightWall1({ 7.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall2({ 7.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall3({ 7.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall4({ -2.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall5({ 7.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall6({ 7.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall7({ 7.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//
+//static Construction heightWall8({ 17.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall9({ 17.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall10({ 17.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall11({ 17.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall12({ 17.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//
+//static Construction heightWall13({ 37.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall14({ 37.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall15({ 47.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall16({ 47.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall17({ 47.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//
+//static Construction heightWall18({ 77.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall19({ 77.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall20({ 77.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//
+//static Construction heightWall21({ 87.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall22({ 87.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall23({ 87.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//
+//static Construction heightWall24({ 107.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall25({ 107.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//
+//static Construction heightWall26({ 117.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall27({ 117.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall28({ 117.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
+//static Construction heightWall29({ 117.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
 
-static Construction widthWall4({ 22.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall5({ 32.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+std::vector<Construction> walls = {
+	//위벽
+	{{ 12.5, 4, 67.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 2.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 22.5, 4, 7.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 32.5, 4, 7.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 42.5, 2, -2.5 }, { 10, 4, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 42.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 42.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 42.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 22.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 32.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 42.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 52.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 62.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 72.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 92.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 102.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 82.5, 4, 67.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 112.5, 4, 57.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
-static Construction widthWall18({ 42.5, 2, -2.5 }, { 10, 4, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall19({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall20({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall21({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
+	//아래벽
+	{{ 2.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 12.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 22.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 32.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 42.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 22.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 32.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 52.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 62.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 72.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 82.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 92.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 112.5, 4, 27.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 102.5, 4, 17.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	//세로벽
+	{{ 7.5, 4, 62.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 7.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 7.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ -2.5, 4, 32.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 7.5, 4, 22.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 7.5, 4, 12.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 7.5, 4, 2.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 17.5, 4, 62.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 17.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 17.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 17.5, 4, 22.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 17.5, 4, 12.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 37.5, 4, 12.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 37.5, 4, 22.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 47.5, 4, 2.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 47.5, 4, 12.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 47.5, 4, 22.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 77.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 77.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 77.5, 4, 62.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 87.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 87.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 87.5, 4, 62.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 107.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 107.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 117.5, 4, 22.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 117.5, 4, 32.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 117.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 117.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF}
+};
 
-static Construction widthWall22({ 22.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall23({ 32.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall24({ 42.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall25({ 52.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall26({ 62.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall27({ 72.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall28({ 92.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall29({ 102.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-
-static Construction widthWall31({ 82.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall32({ 112.5, 4, 57.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-
-
-//아래벽
-static Construction widthWall3({ 2.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-
-static Construction widthWall6({ 12.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall7({ 22.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall8({ 32.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall9({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-
-static Construction widthWall10({ 22.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall11({ 32.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall12({ 52.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall13({ 62.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall14({ 72.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall15({ 82.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall16({ 92.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-static Construction widthWall17({ 112.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-
-static Construction widthWall30({ 102.5, 4, 17.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-
-//세로벽
-static Construction heightWall1({ 7.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall2({ 7.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall3({ 7.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall4({ -2.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall5({ 7.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall6({ 7.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall7({ 7.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-
-static Construction heightWall8({ 17.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall9({ 17.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall10({ 17.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall11({ 17.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall12({ 17.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-
-static Construction heightWall13({ 37.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall14({ 37.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall15({ 47.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall16({ 47.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall17({ 47.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-
-static Construction heightWall18({ 77.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall19({ 77.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall20({ 77.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-
-static Construction heightWall21({ 87.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall22({ 87.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall23({ 87.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-
-static Construction heightWall24({ 107.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall25({ 107.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-
-static Construction heightWall26({ 117.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall27({ 117.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall28({ 117.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-static Construction heightWall29({ 117.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-
-std::vector<Construction> walls = {};
 std::vector<Construction> floors = {
 	{{ 10, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 15, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -511,7 +578,9 @@ void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	for (auto& ceiling : ceilings) {
 		ceiling.DrawObject3D(mDC, camera);
 	}
-
+	for (auto& wall : walls) {
+		wall.DrawObject3D(mDC, camera);
+	}
 
 	player.DrawObject3D(mDC, camera);
 
@@ -570,7 +639,7 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	bool canMoveUp = true;
 	bool canMoveDown = true;
 
-	// 각 바닥과의 충돌 검사
+	//각 바닥과의 충돌 검사
 	for (const Construction& floor : floors) {
 		POINT playerPos = player.get2DPosition();
 		Vector3 pos = floor.getPosition();
@@ -600,13 +669,16 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		}
 	}
 
+	
+
 	// 움직임 제한 여부 출력
-	if (!canMoveLeft && !canMoveRight && !canMoveUp && !canMoveDown) {
+	/*if (!canMoveLeft && !canMoveRight && !canMoveUp && !canMoveDown) {
 		std::cout << "움직임 허용됨" << '\n';
 	}
 	else {
 		std::cout << "움직임 제한됨" << '\n';
-	}
+	}*/
+
 
 	// 항상 업데이트
 	if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
