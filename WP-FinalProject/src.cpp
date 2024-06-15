@@ -1,8 +1,9 @@
-#pragma once
 #include <iostream>
 #include <windows.h>
 #include <atlimage.h>
 #include <mmsystem.h>
+#include <algorithm>
+#include <vector>
 #include "Camera.h"
 #include "Object3D.h"
 #include "Construction.h"
@@ -13,7 +14,6 @@
 #pragma comment(lib, "winmm.lib")
 #pragma comment(linker,"/entry:WinMainCRTStartup /subsystem:console")
 #define KEY_UP_CONDITION(KEY) (!keyStates[KEY] && KEY == wParam)
-
 
 // 전역 상수
 constexpr int gameTick = 7;
@@ -44,87 +44,6 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
-
-////위벽
-//static Construction widthWall1({ 12.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall2({ 2.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//static Construction widthWall4({ 22.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall5({ 32.5, 4, 7.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//static Construction widthWall18({ 42.5, 2, -2.5 }, { 10, 4, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall19({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall20({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall21({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//static Construction widthWall22({ 22.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall23({ 32.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall24({ 42.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall25({ 52.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall26({ 62.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall27({ 72.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall28({ 92.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall29({ 102.5, 4, 37.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//static Construction widthWall31({ 82.5, 4, 67.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall32({ 112.5, 4, 57.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//
-////아래벽
-//static Construction widthWall3({ 2.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//static Construction widthWall6({ 12.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall7({ 22.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall8({ 32.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall9({ 42.5, 4, -2.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//static Construction widthWall10({ 22.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall11({ 32.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall12({ 52.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall13({ 62.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall14({ 72.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall15({ 82.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall16({ 92.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//static Construction widthWall17({ 112.5, 4, 27.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-//static Construction widthWall30({ 102.5, 4, 17.5 }, { 10, 8, 0 }, RGB(24, 24, 40), RGB(24, 15, 33));
-//
-////세로벽
-//static Construction heightWall1({ 7.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall2({ 7.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall3({ 7.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall4({ -2.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall5({ 7.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall6({ 7.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall7({ 7.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//
-//static Construction heightWall8({ 17.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall9({ 17.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall10({ 17.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall11({ 17.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall12({ 17.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//
-//static Construction heightWall13({ 37.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall14({ 37.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall15({ 47.5, 4, 2.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall16({ 47.5, 4, 12.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall17({ 47.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//
-//static Construction heightWall18({ 77.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall19({ 77.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall20({ 77.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//
-//static Construction heightWall21({ 87.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall22({ 87.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall23({ 87.5, 4, 62.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//
-//static Construction heightWall24({ 107.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall25({ 107.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//
-//static Construction heightWall26({ 117.5, 4, 22.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall27({ 117.5, 4, 32.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall28({ 117.5, 4, 42.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
-//static Construction heightWall29({ 117.5, 4, 52.5 }, { 0, 8, 10 }, RGB(32, 32, 48), RGB(24, 15, 33));
 
 std::vector<Construction> walls = {
 	//위벽
@@ -193,7 +112,6 @@ std::vector<Construction> walls = {
 	{{ 117.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 117.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF}
 };
-
 std::vector<Construction> floors = {
 	{{ 10, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 15, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -554,12 +472,14 @@ void InitializeAnimations() {
 
 void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	GetClientRect(hWnd, &rt);
+	std::sort(walls.begin(), walls.end(), compareByZ);
+
 	if (FAILED(image.Load(TEXT("Horror_background.jpg")))) {
 		MessageBox(hWnd, TEXT("Failed to load image"), TEXT("Error"), MB_OK);
 		PostQuitMessage(0);
 	}
 	SetTimer(hWnd, 1, gameTick, NULL);
-	InitializeAnimations();  // 애니메이션 초기화 호출
+	InitializeAnimations();
 }
 
 void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -661,23 +581,21 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		}
 		// 위쪽 충돌 검사
 		if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-			canMoveUp = false;
+			canMoveDown = false;
 		}
 		// 아래쪽 충돌 검사
 		if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-			canMoveDown = false;
+			canMoveUp = false;
 		}
 	}
 
 	
 
-	// 움직임 제한 여부 출력
-	/*if (!canMoveLeft && !canMoveRight && !canMoveUp && !canMoveDown) {
-		std::cout << "움직임 허용됨" << '\n';
+	if (!canMoveLeft && !canMoveRight && !canMoveUp && !canMoveDown) {
+		std::wcout << "move" << std::endl;
 	}
 	else {
-		std::cout << "움직임 제한됨" << '\n';
-	}*/
+	}
 
 
 	// 항상 업데이트
@@ -710,8 +628,6 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
 		}
 	}
-
-
 
 	// 카메라가 플레이어를 부드럽게 따라오도록 조작
 	Vector3 playerPos = player.getPosition();

@@ -133,6 +133,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="Construction.cpp" />
+    <ClCompile Include="ConstructionManager.cpp" />
     <ClCompile Include="Object3D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="Construction.h" />
+    <ClInclude Include="ConstructionManager.h" />
     <ClInclude Include="Object3D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Mouse.h" />

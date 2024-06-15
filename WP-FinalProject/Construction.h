@@ -20,9 +20,11 @@ public:
 
     // New function for Construction class
     void DrawObject3D(HDC hdc, const Camera& cam) override;
-    bool ClipLineWithPlane(const Vector3& p0, const Vector3& p1, const Vector3& planePoint, const Vector3& planeNormal, Vector3& outPoint);
+    //bool ClipLineWithPlane(const Vector3& p0, const Vector3& p1, const Vector3& planePoint, const Vector3& planeNormal, Vector3& outPoint);
 
 private:
     COLORREF penColor;    // 펜 색상
     COLORREF brushColor;  // 브러쉬 색상
 };
+
+bool compareByZ(const Construction& a, const Construction& b);

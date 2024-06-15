@@ -83,6 +83,10 @@ void Construction::DrawObject3D(HDC hdc, const Camera& cam) {
     }
 }
 
+bool compareByZ(const Construction& a, const Construction& b) {
+    return a.getPosition().z > b.getPosition().z;
+}
+
 //void ClipAndDrawPolygon(HDC hdc, POINT* points, int count);
 //void Construction::DrawObject3D(HDC hdc, const Camera& cam) {
 //    Vector3 center = getPosition();
