@@ -11,6 +11,8 @@
 #include "Actor.h"
 #include "AnimationController.h"
 #include "Player.h"
+#include "Mouse.h"
+#include "Shadow.h"
 #include "Vector3.h"
 #pragma comment(lib, "winmm.lib")
 #pragma comment(linker,"/entry:WinMainCRTStartup /subsystem:console")
@@ -1162,17 +1164,31 @@ std::vector<Construction> stage2Walls = {
 { { 112.5,4 ,-132.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 };
 
+static DWORD lastTime = timeGetTime();
+static AnimationController animationController("kitten_R_default");
+static AnimationController animationController2("shadow_A_default");
+static Mouse mouse;
+
 // 초기화된 카메라와 객체
+static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
+static Player player({ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 });
+static Shadow shadow{{ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 } };
 static Camera camera({ 0.0f, 3.6f, 0.0f }, 0.0f, -0.5f, 0.0f);
 static Player player(STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f });
 static CImage image;
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
+	std::map<float, POINT> shadow_positions = {
+		{0.0f, {0, 0}}
+	};
+	std::map<float, POINT> shadow_scales = {
+		{0.0f, {1, 1}}
+	};
+
 	std::map<float, POINT> d_positions = {
 		{0.0f, {0, 0}}
 	};
-
 	std::map<float, POINT> d_scales = {
 		{0.0f, {1, 1}}
 	};
@@ -1184,13 +1200,16 @@ void InitializeAnimations() {
 		{0.6f, {0, 0}},
 		{0.8f, {0, 0}}
 	};
-
 	std::map<float, POINT> m_scales = {
 		{0.0f, {1, 1}},
 		{0.2f, {1, 1}},
 		{0.4f, {1, 1}},
 		{0.6f, {1, 1}},
 		{0.8f, {1, 1}}
+	};
+
+	std::map<float, std::string> shadow_imagesKittenR = {
+		{0.0f, "kitten_R_default_1"}
 	};
 
 	std::map<float, std::string> img_imagesKittenR = {
@@ -1214,12 +1233,17 @@ void InitializeAnimations() {
 		{0.8f, "kitten_L_default_1"}
 	};
 
-	Animation Kitten_R_default("kitten_R_default", true, 0.0f, d_positions, d_scales, img_imagesKittenR);
-	Animation Kitten_L_default("kitten_L_default", true, 0.0f, d_positions, d_scales, img_imagesKittenL);
+	Animation Shadow_A_default("shadow_A_default", false, 0.0f, shadow_positions, shadow_scales, shadow_imagesKittenR);
+
+	Animation Kitten_R_default("kitten_R_default", false, 0.0f, d_positions, d_scales, img_imagesKittenR);
+	Animation Kitten_L_default("kitten_L_default", false, 0.0f, d_positions, d_scales, img_imagesKittenL);
 	Animation Kitten_R_move("kitten_R_move", true, 0.8f, m_positions, m_scales, img_KittenMoveR);
 	Animation Kitten_L_move("kitten_L_move", true, 0.8f, m_positions, m_scales, img_KittenMoveL);
 
 	std::vector<AnimationController::Transition> transitions;
+	std::vector<AnimationController::Transition> transitions2;
+
+	animationController2.addState("shadow_A_default", Shadow_A_default, transitions2);
 
 	animationController.addState("kitten_R_default", Kitten_R_default, transitions);
 	animationController.addState("kitten_L_default", Kitten_L_default, transitions);
@@ -1227,9 +1251,10 @@ void InitializeAnimations() {
 	animationController.addState("kitten_L_move", Kitten_L_move, transitions);
 
 	player.setAnimationController(animationController);
+	shadow.setAnimationController(animationController2);
 }
 
-void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	GetClientRect(hWnd, &rt);
 	
 	std::sort(walls.begin(), walls.end(), compareByZ);
@@ -1242,6 +1267,13 @@ void HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 	SetTimer(hWnd, 1, gameTick, NULL);
 	InitializeAnimations();
+}
+
+void CALLBACK HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	GetClientRect(hWnd, &rt);
+	DeleteObject(hBitmap);
+	hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
+	SelectObject(mDC, hBitmap);
 }
 
 void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1276,6 +1308,7 @@ void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		}
 	}
 
+	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
 
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
@@ -1284,26 +1317,35 @@ void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	EndPaint(hWnd, &ps);
 }
 
-void HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	GetClientRect(hWnd, &rt);
-	DeleteObject(hBitmap);
-	hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
-	SelectObject(mDC, hBitmap);
+// 콜백 함수들
+void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	mouse.OnMouseDown(wParam, lParam);
+	shadow.setLeftDown(true);
 }
 
-void HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// 필요 시 구현
+void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	mouse.OnMouseUp(wParam, lParam);
+	shadow.setLeftDown(false);
+	Vector3 a = (Unproject2DTo3D(camera, { mouse.getMousePosition().x + 10, mouse.getMousePosition().y }, 1.3f) - player.getPosition());
+	shadow.setDirection(a);
+	std::cout << shadow.getPosition().x << ' ' << shadow.getPosition().y << ' ' << shadow.getPosition().z << std::endl;
 }
 
-void HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// 필요 시 구현
+void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	mouse.OnMouseDown(wParam, lParam);
+	shadow.setRightDown(true);
 }
 
-void HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// 필요 시 구현
+void CALLBACK HandleRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	mouse.OnMouseUp(wParam, lParam);
+	shadow.setRightDown(false);
 }
 
-void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	mouse.OnMouseMove(lParam);
+}
+
+void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = true;
 	if (keyStates['A'] && player.getAnimationController().getCurrentState() != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
@@ -1313,7 +1355,7 @@ void HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 }
 
-void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+void CALLBACK HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = false;
 	if (KEY_UP_CONDITION('A')) {
 		player.getAnimationController().setCurrentState("kitten_L_move");
@@ -1323,7 +1365,7 @@ void HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 }
 
-void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	DWORD currentTime = timeGetTime();
 	float deltaTime = (currentTime - lastTime) / 1000.0f;
 	lastTime = currentTime;
@@ -1347,6 +1389,44 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				static_cast<LONG>(pos.z + size.z / 2)
 			};
 
+		// 왼쪽 충돌 검사
+		if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+			cantMoveLeft = false;
+		}
+		// 오른쪽 충돌 검사
+		if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+			cantMoveRight = false;
+		}
+		// 위쪽 충돌 검사
+		if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+			cantMoveDown = false;
+		}
+		// 아래쪽 충돌 검사
+		if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+			cantMoveUp = false;
+		}
+	}
+	// shadow 조작
+	{
+		if (keyStates[VK_SPACE]) {
+			std::string st = player.getAnimationController().getCurrentState();
+			Vector3 playerPos = player.getPosition();
+			Vector3 shadowPos = shadow.getPosition();
+			Vector3 targetPos = {
+				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.0f : 0.0f),
+				playerPos.y,
+				playerPos.z
+			};
+			shadow.setPosition({
+				shadowPos.x + (targetPos.x - shadowPos.x) * cameraFollowSpeed,
+				shadowPos.y + (targetPos.y - shadowPos.y) * cameraFollowSpeed,
+				shadowPos.z + (targetPos.z - shadowPos.z) * cameraFollowSpeed
+				});
+		}
+
+		//mouse.getMouse3DPosition(camera);
+		shadow.update(deltaTime, mouse.getMousePosition());
+		
 			// 왼쪽 충돌 검사
 			if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
 				cantMoveLeft = false;
@@ -1376,6 +1456,8 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				static_cast<LONG>(pos.z + size.z / 2)
 			};
 
+		shadow.getAnimationController().setCurrentState("shadow_A_default");
+		shadow.getAnimationController().update(deltaTime);
 			// 왼쪽 충돌 검사
 			if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
 				cantMoveLeft = false;
@@ -1392,6 +1474,65 @@ void HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 				cantMoveUp = false;
 			}
+		}
+	}
+	// player, camera 움직임 처리
+	{
+		if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
+			player.getAnimationController().update(deltaTime);
+		}
+		if (!keyStates[VK_SPACE]) {
+			if (keyStates['A']) {
+				if (!cantMoveLeft) {
+					player.move2DPosition(-0.2f, 0);
+					if (keyStates[VK_SHIFT]) player.move2DPosition(-1.0f, 0);
+				}
+			}
+			if (keyStates['D']) {
+				if (!cantMoveRight) {
+					player.move2DPosition(0.2f, 0);
+					if (keyStates[VK_SHIFT]) player.move2DPosition(1.0f, 0);
+				}
+			}
+			if (keyStates['W']) {
+				if (!cantMoveUp) {
+					player.move2DPosition(0, 0.2f); // 일반 이동
+					if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // 쉬프트 키 누르면 빠른 이동
+				}
+			}
+			if (keyStates['S']) {
+				if (!cantMoveDown) {
+					player.move2DPosition(0, -0.2f); // 일반 이동
+					if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
+				}
+			}
+		}
+		// camera가 플레이어를 부드럽게 따라오도록 조작
+		{
+			Vector3 playerPos = player.getPosition();
+			Vector3 cameraPos = camera.getPosition();
+			Vector3 targetPos = {
+				playerPos.x + (keyStates['A'] && !cantMoveLeft ? -1.0f : (keyStates['D'] && !cantMoveRight ? 1.0f : 0.0f)),
+				playerPos.y + 3.0f + (keyStates['W'] ? 0.1f : (keyStates['S'] ? -0.1f : 0.0f)),
+				playerPos.z - 5.8f + (keyStates['W'] ? 0.5f : (keyStates['S'] ? -1.5f : 0.0f))
+			};
+			camera.setPosition({
+				cameraPos.x + (targetPos.x - cameraPos.x) * cameraFollowSpeed,
+				cameraPos.y + (targetPos.y - cameraPos.y) * cameraFollowSpeed,
+				cameraPos.z + (targetPos.z - cameraPos.z) * cameraFollowSpeed
+				});
+			float imsi = -0.5f;
+			Vector3 cameraRot = camera.getRotation();
+			Vector3 targetRot = {
+				cameraRot.x,
+				(keyStates['W'] ? imsi + 0.1f : (keyStates['S'] ? imsi - 0.1f : imsi)),
+				(keyStates['A'] ? 0.025f : (keyStates['D'] ? -0.025f : 0.0f))
+			};
+			camera.setRotation({
+				cameraRot.x + (targetRot.x - cameraRot.x) * cameraFollowSpeed,
+				cameraRot.y + (targetRot.y - cameraRot.y) * cameraFollowSpeed,
+				cameraRot.z + (targetRot.z - cameraRot.z) * cameraFollowSpeed
+				});
 		}
 	}
 
@@ -1477,6 +1618,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		return 0;
 	case WM_LBUTTONUP:
 		HandleLButtonUp(hWnd, uMsg, wParam, lParam);
+		return 0;
+	case WM_RBUTTONDOWN:
+		HandleRButtonDown(hWnd, uMsg, wParam, lParam);
+		return 0;
+	case WM_RBUTTONUP:
+		HandleRButtonUp(hWnd, uMsg, wParam, lParam);
 		return 0;
 	case WM_KEYDOWN:
 		HandleKeyDown(hWnd, uMsg, wParam, lParam);
