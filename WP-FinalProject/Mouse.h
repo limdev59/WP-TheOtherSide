@@ -1,3 +1,4 @@
+// Mouse.h
 #pragma once
 #include <Windows.h>
 #include "Camera.h"
@@ -18,7 +19,8 @@ public:
     POINT getStartPosR() const;
     POINT getEndPosR() const;
     POINT getMousePosition() const;
-    Vector3 getMouse3DPosition(const Camera& cam) const;
+    Vector3 getMouse3DPosition() const;
+    void UpdateMouse3DPosition(const Camera& cam);
 
 private:
     bool isLeftClick;
@@ -28,4 +30,6 @@ private:
     POINT startPosR;
     POINT endPosR;
     POINT mousePos;
+
+    Vector3 mouse3DPos;
 };
