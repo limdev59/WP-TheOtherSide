@@ -35,7 +35,7 @@ void Shadow::Charge(float deltaTime) {
 
 void Shadow::Release(const POINT& mousePos, const Camera& camera) {
     // Determine the travel distance based on the charge amount
-    float distance = min(chargeAmount * 1.0f, 12.0f);
+    float distance = min(chargeAmount * 1.0f, 9.0f);
     Vector3 cPos3D = Unproject2DTo3D(camera, mousePos, 0.0f);
     direction = (cPos3D - startMousePos3D).Normalized();
     targetPos = getPosition() + direction * distance;

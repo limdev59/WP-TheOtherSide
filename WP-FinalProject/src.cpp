@@ -42,6 +42,7 @@ static RECT rt;
 
 static DWORD lastTime = timeGetTime();
 static int stage = 1;
+static bool canTake{ true };
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1352,10 +1353,11 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 static void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseDown(wParam, lParam);
 	shadow.OnLButtonDown(mouse.getMousePosition(), camera);
+	canTake = false;
 }
 
 static void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	mouse.OnMouseUp(wParam, lParam);
+	mouse.OnMouseLUp(wParam, lParam);
 	shadow.OnLButtonUp(mouse.getMousePosition(), camera);
 }
 
@@ -1364,7 +1366,7 @@ static void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 }
 
 static void CALLBACK HandleRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	mouse.OnMouseUp(wParam, lParam);
+	mouse.OnMouseRUp(wParam, lParam);
 }
 
 static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1531,12 +1533,13 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	// player, camera 움직임 처리
 	{
-		if (keyStates[VK_SPACE]) {
+		if (keyStates[VK_SPACE] || canTake) {
+			canTake = true;
 			std::string st = player.getAnimationController().getCurrentState();
 			Vector3 playerPos = player.getPosition();
 			Vector3 shadowPos = shadow.getPosition();
 			Vector3 targetPos = {
-				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.0f : 0.0f),
+				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.2f : 0.2f),
 				playerPos.y,
 				playerPos.z
 			};
@@ -1559,7 +1562,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
 			player.getAnimationController().update(deltaTime);
 		}
-		if (!keyStates[VK_SPACE]) {
+		if (!keyStates[VK_SPACE] && !mouse.IsLeftClick()) {
 			if (keyStates['A']) {
 				if (!cantMoveLeft) {
 					player.move2DPosition(-0.2f, 0);
