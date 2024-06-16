@@ -22,10 +22,10 @@
 // 전역 상수
 constexpr int gameTick = 7;
 constexpr float cameraFollowSpeed = 0.2f; // 카메라가 플레이어를 따라오는 속도
-constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34, 15, 33);
-constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
-constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
-constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
+constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34 / 3, 15 / 3, 33 / 3);
+constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42 / 3, 32 / 3, 50 / 3);
+constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24 / 3, 24 / 3, 40 / 3);
+constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24/5, 15 / 5, 33 / 5);
 Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
@@ -1409,10 +1409,10 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	mDC = CreateCompatibleDC(hDC);
 	hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
 	SelectObject(mDC, hBitmap);
-	HBRUSH br = CreateSolidBrush(RGB(25, 0, 55));
+	HBRUSH br = CreateSolidBrush(RGB(20, 3, 10));
 	FillRect(mDC, &rt, br);
 	DeleteObject(br);
-	image.Draw(mDC, 0, 0, rt.right, rt.bottom);
+	//image.Draw(mDC, 0, 0, rt.right, rt.bottom);
 
 	if (stage == 1) {
 		for (auto& floor : floors) {
