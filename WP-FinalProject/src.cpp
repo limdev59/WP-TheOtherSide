@@ -1247,7 +1247,7 @@ void InitializeAnimations() {
 	shadow.setAnimationController(animationController2);
 }
 
-void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	GetClientRect(hWnd, &rt);
 	
 	std::sort(walls.begin(), walls.end(), compareByZ);
@@ -1262,14 +1262,14 @@ void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	InitializeAnimations();
 }
 
-void CALLBACK HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	GetClientRect(hWnd, &rt);
 	DeleteObject(hBitmap);
 	hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
 	SelectObject(mDC, hBitmap);
 }
 
-void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	hDC = BeginPaint(hWnd, &ps);
 	mDC = CreateCompatibleDC(hDC);
 	hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
@@ -1310,12 +1310,12 @@ void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	EndPaint(hWnd, &ps);
 }
 
-void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseDown(wParam, lParam);
 	shadow.setLeftDown(true);
 }
 
-void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseUp(wParam, lParam);
 	shadow.setLeftDown(false);
 	Vector3 a = (Unproject2DTo3D(camera, { mouse.getMousePosition().x + 10, mouse.getMousePosition().y }, 1.3f) - player.getPosition());
@@ -1323,21 +1323,21 @@ void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	std::cout << shadow.getPosition().x << ' ' << shadow.getPosition().y << ' ' << shadow.getPosition().z << std::endl;
 }
 
-void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseDown(wParam, lParam);
 	shadow.setRightDown(true);
 }
 
-void CALLBACK HandleRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseUp(wParam, lParam);
 	shadow.setRightDown(false);
 }
 
-void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseMove(lParam);
 }
 
-void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = true;
 	if (keyStates['A'] && player.getAnimationController().getCurrentState() != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
@@ -1347,7 +1347,7 @@ void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	}
 }
 
-void CALLBACK HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = false;
 	if (KEY_UP_CONDITION('A')) {
 		player.getAnimationController().setCurrentState("kitten_L_move");
@@ -1357,7 +1357,7 @@ void CALLBACK HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 }
 
-void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	DWORD currentTime = timeGetTime();
 	float deltaTime = (currentTime - lastTime) / 1000.0f;
 	lastTime = currentTime;
