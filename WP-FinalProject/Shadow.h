@@ -1,16 +1,27 @@
 #pragma once
-#include "Actor.h"
-class Shadow : public Actor
-{
+#include "Player.h"
+
+class Shadow : public Actor {
 public:
-	Shadow();
-    
-    void setLeftDown(bool leftInput);
-    bool getLeftDown();
-    void setRightDown(bool rightInput);
-    bool getRightDown();
+    Shadow(Vector3 position, Vector3 size);
+
+    void setLeftDown(bool state);
+    void setRightDown(bool state);
+    void setDirection(Vector3 direction);
+    void update(float deltaTime, POINT pos);
 
 private:
-    bool leftDown;
-    bool rightDown;
+    Vector3 direction;
+    POINT mousePos;
+    bool isLeftDown;
+    bool isRightDown;
+    bool isHoldingObject;
+    bool canCharge;
+
+    float chargeLevel;
+    float maxChargeLevel;
+    float chargeRate;
+
+    void releaseCharge();
+    void moveInDirection(float distance);
 };

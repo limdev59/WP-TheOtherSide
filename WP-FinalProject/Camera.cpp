@@ -51,7 +51,7 @@ Vector3 Camera::getDirection() const {
         cosYaw * cosPitch,
         sinPitch,
         sinYaw * cosPitch
-    ).Normalize();
+    ).Normalized();
 }
 
 void Camera::move(const Vector3& delta) {
@@ -102,32 +102,57 @@ bool Project3DTo2D(const Camera& cam, const Vector3& pos, POINT& point) {
     return true;
 }
 
-
 Vector3 Unproject2DTo3D(const Camera& cam, const POINT& point, float y = 0.0f) {
     constexpr float FOV = 90.0f;
-    constexpr float ASPECT_RATIO = 800.0f / 600.0f;
+    constexpr float ASPECT_RATIO = 1600.0f / 900.0f;
 
-    float ndcX = (2.0f * (point.x - 770.0f) / 800.0f) - 1.0f;
-    float ndcY = 1.0f - (2.0f * (point.y - 450.0f) / 600.0f);
+    // 화면 좌표를 정규 장치 좌표로 변환 (상하 반전 적용)
+    float ndcX = (2.0f * point.x / 1600.0f) - 1.0f;
+    float ndcY = 1.0f - (2.0f * point.y / 900.0f);
 
+    float fovTan = tanf(FOV * 0.5f * (3.14159265358979323846f / 180.0f));
+
+    // NDC에서 카메라 공간으로 변환
+    float camZ = 1.0f; // 임의의 깊이값
+    float camX = ndcX * camZ * ASPECT_RATIO * fovTan;
+    float camY = ndcY * camZ * fovTan;
+
+    // 카메라 공간 좌표
+    Vector3 camSpacePos(camX, camY, camZ);
+
+    // 카메라의 회전 변환 행렬 생성
     float cosYaw = cosf(cam.getYaw());
     float sinYaw = sinf(cam.getYaw());
     float cosPitch = cosf(cam.getPitch());
     float sinPitch = sinf(cam.getPitch());
-    float cosRoll = cosf(cam.getRoll());
-    float sinRoll = sinf(cam.getRoll());
 
+    // 카메라의 위치
     Vector3 camPos = cam.getPosition();
 
-    float fovTan = tanf(FOV * 0.5f * (3.14159265358979323846f / 180.0f));
+    // Yaw 변환
+    Vector3 yawVec(
+        camSpacePos.x * cosYaw - camSpacePos.z * sinYaw,
+        camSpacePos.y,
+        camSpacePos.x * sinYaw + camSpacePos.z * cosYaw
+    );
 
-    float camZ = y / (ndcY * fovTan);
-    float camX = ndcX * camZ * ASPECT_RATIO;
+    // Pitch 변환
+    Vector3 pitchVec(
+        yawVec.x,
+        yawVec.y * cosPitch + yawVec.z * sinPitch,
+        yawVec.y * -sinPitch + yawVec.z * cosPitch
+    );
 
-    Vector3 camSpacePos(camX, y, camZ);
+    // 월드 공간 좌표로 변환
+    Vector3 worldPos = pitchVec + camPos;
 
-    float worldX = camSpacePos.x * cosYaw - camSpacePos.z * sinYaw + camPos.x;
-    float worldZ = camSpacePos.x * sinYaw + camSpacePos.z * cosYaw + camPos.z;
+    // 평면 y = 0.0f에 투영
+    if (worldPos.y != camPos.y) { // y가 동일한 경우 division by zero 방지
+        float t = (y - camPos.y) / (worldPos.y - camPos.y);
+        worldPos.x = camPos.x + t * (worldPos.x - camPos.x);
+        worldPos.z = camPos.z + t * (worldPos.z - camPos.z);
+        worldPos.y = y;
+    }
 
-    return Vector3(worldX, y, worldZ);
+    return worldPos;
 }

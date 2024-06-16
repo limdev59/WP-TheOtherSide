@@ -6,6 +6,11 @@
 #include <string>
 using namespace Gdiplus;
 
+Actor::Actor()
+    :Object3D({ 0, 0, 0 },{ 1, 1, 1 }), hitbox({ NULL, NULL, NULL, NULL }), animationController("default")
+{
+}
+
 Actor::Actor(Vector3 position, Vector3 size)
     : Object3D(position, size), hitbox({ 0, 0, 0, 0 }), animationController("default") {
     // 초기화 코드

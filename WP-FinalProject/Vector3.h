@@ -15,7 +15,7 @@ public:
     }
 
     // 벡터의 정규화 (단위 벡터화)
-    Vector3 Normalize() const {
+    Vector3 Normalized() const {
         float length = Length();
         if (length != 0)
             return Vector3(x / length, y / length, z / length);

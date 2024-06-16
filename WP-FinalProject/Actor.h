@@ -10,6 +10,7 @@ using namespace Gdiplus;
 
 class Actor : public Object3D {
 public:
+    Actor();
     Actor(Vector3 position, Vector3 size);
     virtual ~Actor();
 

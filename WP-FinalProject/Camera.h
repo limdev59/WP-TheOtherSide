@@ -28,3 +28,4 @@ private:
 };
 
 bool Project3DTo2D(const Camera& cam, const Vector3& pos, POINT& point);
+Vector3 Unproject2DTo3D(const Camera& cam, const POINT& point, float y);
