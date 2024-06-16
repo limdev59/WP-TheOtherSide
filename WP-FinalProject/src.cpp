@@ -40,9 +40,8 @@ static PAINTSTRUCT ps;
 static HBITMAP hBitmap;
 static RECT rt;
 
-static AnimationController animationController("kitten_R_default");
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 2;
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -730,7 +729,6 @@ std::vector<Construction> stage2Floors = {
 	{ { 105,0 ,-125}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 110,0 ,-125}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	};
-
 std::vector<Construction> stage2Ceilings = {
     { { 100,8 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 105,8 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1052,130 +1050,125 @@ std::vector<Construction> stage2Ceilings = {
 	{ { 105,8 ,-125}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 110,8 ,-125}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 };
-
-
 std::vector<Construction> stage2Walls = {
 	//위벽
-	{ { 102.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 122.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 132.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 142.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 152.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 162.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 172.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 182.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 192.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 202.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 212.5,4 ,102.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 102.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 122.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 132.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 142.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 152.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 162.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 172.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 182.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 192.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 202.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 212.5,4 ,102.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 //
 
-{ { 122.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 132.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 142.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 152.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 162.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 172.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 182.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 192.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 195,4 ,-17.5}, { 15, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 102.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-17.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{ { 122.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 132.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 142.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 152.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 162.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 172.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 182.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 192.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 195,4 ,-17.5}, { 15, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 102.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 //아래벽
-{ { 102.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 122.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 132.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 142.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 152.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 162.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 172.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 182.5,4 ,87.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 195 ,4 ,87.5}, { 15, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{ { 102.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 122.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 132.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 142.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 152.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 162.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 172.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 182.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 195 ,4 ,87.5}, { 15, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 
-{ { 115,4 ,-32.5}, { 5, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 122.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 132.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 142.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 152.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 162.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 172.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 182.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 192.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 202.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 212.5,4 ,-32.5}, { 10, 8, 0 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{ { 115,4 ,-32.5}, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 122.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 132.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 142.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 152.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 162.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 172.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 182.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 192.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 202.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 212.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 //세로벽
-{{ 97.5,4 ,95}, { 0, 8, 15 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{{ 97.5,4 ,95}, { 0, 8, 15 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 //
-{{ 217.5,4 ,97.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,87.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,77.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,67.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,57.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,47.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,37.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,27.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,17.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,7.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,-2.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,-12.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 217.5,4 ,-25}, { 0, 8, 15 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{{ 217.5,4 ,97.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,87.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,77.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,67.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,57.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,47.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,37.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,27.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,17.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,7.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,-2.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,-12.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 217.5,4 ,-25}, { 0, 8, 15 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 /////////////////////////////////////////////
-    { { 202.5,4 ,82.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,77.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,67.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,57.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,47.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,37.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,27.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,17.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,7.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,-2.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-    { { 202.5,4 ,-12.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+    { { 202.5,4 ,82.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,77.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,67.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,57.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,47.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,37.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,27.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,17.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,7.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,-2.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+    { { 202.5,4 ,-12.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	///
-	{ { 97.5,4 ,-22.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-32.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-42.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-52.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-62.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-72.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-82.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-92.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-102.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-112.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-122.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 97.5,4 ,-132.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 97.5,4 ,-22.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-32.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-42.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-52.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-62.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-72.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-82.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-92.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-102.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-112.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-122.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 97.5,4 ,-132.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 //
 
-{ { 112.5,4 ,-35}, { 0, 8, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-42.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-52.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-62.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-72.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-82.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-92.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-102.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-112.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-122.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{ { 112.5,4 ,-132.5}, { 0, 8, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{ { 112.5,4 ,-35}, { 0, 8, 5 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-42.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-52.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-62.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-72.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-82.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-92.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-102.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-112.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-122.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{ { 112.5,4 ,-132.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 };
 
-static DWORD lastTime = timeGetTime();
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_A_default");
-static Mouse mouse;
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
-static Player player({ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 });
-static Shadow shadow{{ 0, 1.3, 30 }, { 2.6f, 2.6f, 0 } };
-static Camera camera({ 0.0f, 3.6f, 0.0f }, 0.0f, -0.5f, 0.0f);
-static Player player(STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f });
+static Shadow shadow{ STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0 } };
+static Player player(STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f });
 static CImage image;
+static Mouse mouse;
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
@@ -1276,7 +1269,7 @@ void CALLBACK HandleResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	SelectObject(mDC, hBitmap);
 }
 
-void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	hDC = BeginPaint(hWnd, &ps);
 	mDC = CreateCompatibleDC(hDC);
 	hBitmap = CreateCompatibleBitmap(hDC, rt.right, rt.bottom);
@@ -1317,7 +1310,6 @@ void HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	EndPaint(hWnd, &ps);
 }
 
-// 콜백 함수들
 void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseDown(wParam, lParam);
 	shadow.setLeftDown(true);
@@ -1406,44 +1398,6 @@ void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			cantMoveUp = false;
 		}
 	}
-	// shadow 조작
-	{
-		if (keyStates[VK_SPACE]) {
-			std::string st = player.getAnimationController().getCurrentState();
-			Vector3 playerPos = player.getPosition();
-			Vector3 shadowPos = shadow.getPosition();
-			Vector3 targetPos = {
-				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.0f : 0.0f),
-				playerPos.y,
-				playerPos.z
-			};
-			shadow.setPosition({
-				shadowPos.x + (targetPos.x - shadowPos.x) * cameraFollowSpeed,
-				shadowPos.y + (targetPos.y - shadowPos.y) * cameraFollowSpeed,
-				shadowPos.z + (targetPos.z - shadowPos.z) * cameraFollowSpeed
-				});
-		}
-
-		//mouse.getMouse3DPosition(camera);
-		shadow.update(deltaTime, mouse.getMousePosition());
-		
-			// 왼쪽 충돌 검사
-			if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-				cantMoveLeft = false;
-			}
-			// 오른쪽 충돌 검사
-			if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-				cantMoveRight = false;
-			}
-			// 위쪽 충돌 검사
-			if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-				cantMoveDown = false;
-			}
-			// 아래쪽 충돌 검사
-			if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-				cantMoveUp = false;
-			}
-		}
 	} else if (stage == 2) {
 		for (const Construction& floor : stage2Floors) {
 			POINT playerPos = player.get2DPosition();
@@ -1455,9 +1409,6 @@ void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				static_cast<LONG>(pos.x + size.x / 2),
 				static_cast<LONG>(pos.z + size.z / 2)
 			};
-
-		shadow.getAnimationController().setCurrentState("shadow_A_default");
-		shadow.getAnimationController().update(deltaTime);
 			// 왼쪽 충돌 검사
 			if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
 				cantMoveLeft = false;
@@ -1477,6 +1428,27 @@ void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		}
 	}
 	// player, camera 움직임 처리
+	{
+		if (keyStates[VK_SPACE]) {
+			std::string st = player.getAnimationController().getCurrentState();
+			Vector3 playerPos = player.getPosition();
+			Vector3 shadowPos = shadow.getPosition();
+			Vector3 targetPos = {
+				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.0f : 0.0f),
+				playerPos.y,
+				playerPos.z
+			};
+			shadow.setPosition({
+				shadowPos.x + (targetPos.x - shadowPos.x) * cameraFollowSpeed,
+				shadowPos.y + (targetPos.y - shadowPos.y) * cameraFollowSpeed,
+				shadowPos.z + (targetPos.z - shadowPos.z) * cameraFollowSpeed
+				});
+		}
+		//mouse.getMouse3DPosition(camera);
+		shadow.update(deltaTime, mouse.getMousePosition());
+		shadow.getAnimationController().setCurrentState("shadow_A_default");
+		shadow.getAnimationController().update(deltaTime);
+	}
 	{
 		if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
 			player.getAnimationController().update(deltaTime);
@@ -1537,64 +1509,6 @@ void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	}
 
 	//{ 85, 0, 65 }, { 5, 0, 5 }
-
-	// 항상 업데이트
-	if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
-		player.getAnimationController().update(deltaTime);
-	}
-
-	// 움직임 처리
-	if (keyStates['A']) {
-		if (!cantMoveLeft) {
-			player.move2DPosition(-0.2f, 0);
-			if (keyStates[VK_SHIFT]) player.move2DPosition(-1.0f, 0);
-		}
-	}
-	if (keyStates['D']) {
-		if (!cantMoveRight) {
-			player.move2DPosition(0.2f, 0);
-			if (keyStates[VK_SHIFT]) player.move2DPosition(1.0f, 0);
-		}
-	}
-	if (keyStates['W']) {
-		if (!cantMoveUp) {
-			player.move2DPosition(0, 0.2f); // 일반 이동
-			if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // 쉬프트 키 누르면 빠른 이동
-		}
-	}
-	if (keyStates['S']) {
-		if (!cantMoveDown) {
-			player.move2DPosition(0, -0.2f); // 일반 이동
-			if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
-		}
-	}
-
-	// 카메라가 플레이어를 부드럽게 따라오도록 조작
-	Vector3 playerPos = player.getPosition();
-	Vector3 cameraPos = camera.getPosition();
-	Vector3 targetPos = {
-		playerPos.x + (keyStates['A'] && !cantMoveLeft ? -1.0f : (keyStates['D'] && !cantMoveRight ? 1.0f : 0.0f)),
-		playerPos.y + 3.0f + (keyStates['W'] ? 0.1f : (keyStates['S'] ? -0.1f : 0.0f)),
-		playerPos.z - 5.8f + (keyStates['W'] ? 0.5f : (keyStates['S'] ? -1.5f : 0.0f))
-	};
-	camera.setPosition({
-		cameraPos.x + (targetPos.x - cameraPos.x) * cameraFollowSpeed,
-		cameraPos.y + (targetPos.y - cameraPos.y) * cameraFollowSpeed,
-		cameraPos.z + (targetPos.z - cameraPos.z) * cameraFollowSpeed
-		});
-	float imsi = -0.5f;
-	Vector3 cameraRot = camera.getRotation();
-	Vector3 targetRot = {
-		cameraRot.x,
-		(keyStates['W'] ? imsi + 0.1f : (keyStates['S'] ? imsi - 0.1f : imsi)),
-		(keyStates['A'] ? 0.025f : (keyStates['D'] ? -0.025f : 0.0f))
-	};
-	camera.setRotation({
-		cameraRot.x + (targetRot.x - cameraRot.x) * cameraFollowSpeed,
-		cameraRot.y + (targetRot.y - cameraRot.y) * cameraFollowSpeed,
-		cameraRot.z + (targetRot.z - cameraRot.z) * cameraFollowSpeed
-		});
-
 
 	InvalidateRect(hWnd, NULL, FALSE);
 }
