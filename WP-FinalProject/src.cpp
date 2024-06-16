@@ -1246,7 +1246,7 @@ static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
-static Actor wolf{ WOLF_POSITION, { 4.5f, 7.5f, 0.0f } };
+static Actor wolf{ WOLF_POSITION, { 7.5f, 13.9f, 0.0f } };
 static Actor key{ KEY_POSITION, { 2.6f, 2.6f, 0.0f } };
 
 // 애니메이션 초기화 함수
@@ -1341,9 +1341,9 @@ void InitializeAnimations() {
 
 	std::map<float, std::string> img_imageWolf = {
 		{0.0f, "black_wolf_1"},
-		{0.2f, "black_wolf_2"},
-		{0.4f, "black_wolf_3"},
-		{0.6f, "black_wolf_4"}
+		{0.15f, "black_wolf_2"},
+		{0.3f, "black_wolf_3"},
+		{0.45f, "black_wolf_4"}
 	};
 
 	Animation key_default("key", false, 0.0f, key_positions, key_scales, key_image);
@@ -1356,7 +1356,7 @@ void InitializeAnimations() {
 	Animation Kitten_R_move("kitten_R_move", true, 0.8f, m_positions, m_scales, img_KittenMoveR);
 	Animation Kitten_L_move("kitten_L_move", true, 0.8f, m_positions, m_scales, img_KittenMoveL);
 	
-	Animation black_wolf_1_move("black_wolf_move", true, 0.8f, w_positions, w_scales, img_imageWolf);
+	Animation black_wolf_1_move("black_wolf_move", true, 0.6f, w_positions, w_scales, img_imageWolf);
 	
 
 	std::vector<AnimationController::Transition> transitions;
@@ -1603,20 +1603,20 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			static int wolfMoveMode = 0;   //강아지 이동방향
 			static float wolfSpeed = 0.0;   //강아지 이동속도 줄이기, 커질수록 줄어듦
 			static int wolfSpeedCount = 0;   //강아지 이동속도 줄어드는 효과가 몇초 지속될거냐?
-			
+
 			if (wolfMoveMode == 0) {
-				wolf.move2DPosition(0.5f - wolfSpeed, 0);
+				wolf.move2DPosition(1.0f - wolfSpeed, 0);
 				if (wolfPos.x > 205) {
 					wolfMoveMode = 1;
 				}
-				if (wolfPos.x>= playerPos.x && playerPos.y >= 90) {
-					player.set2DPosition(100,95);
+				if (wolfPos.x >= playerPos.x && playerPos.y >= 90) {
+					player.set2DPosition(100, 95);
 					wolf.set2DPosition(90, 95);
 					wolfMoveMode = 0;
 				}
 			}
 			else if (wolfMoveMode == 1) {
-				wolf.move2DPosition(0.5f, -0.5f - wolfSpeed);
+				wolf.move2DPosition(0.0f, -1.0f - wolfSpeed);
 				if (wolfPos.y < -25) {
 					wolfMoveMode = 2;
 				}
@@ -1627,7 +1627,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				}
 			}
 			else if (wolfMoveMode == 2) {
-				wolf.move2DPosition(-0.5f - wolfSpeed, 0.0);
+				wolf.move2DPosition(-0.9f - wolfSpeed, 0.0);
 				if (wolfPos.x < 105) {
 					wolfMoveMode = 3;
 				}
