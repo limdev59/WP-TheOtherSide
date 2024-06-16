@@ -8,7 +8,8 @@ class Mouse {
 public:
     Mouse();
     void OnMouseDown(WPARAM button, LPARAM lParam);
-    void OnMouseUp(WPARAM button, LPARAM lParam);
+    void OnMouseLUp(WPARAM button, LPARAM lParam);
+    void OnMouseRUp(WPARAM button, LPARAM lParam);
     void OnMouseMove(LPARAM lParam);
 
     bool IsLeftClick() const;

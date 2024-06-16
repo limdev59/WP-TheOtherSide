@@ -42,7 +42,8 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 3;    //1로 바꿔
+static int stage = 1;
+static bool canTake{ true };
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1196,7 +1197,7 @@ std::vector<Construction> stage3Walls = {
 };
 
 static AnimationController animationController("kitten_R_default");
-static AnimationController animationController2("shadow_A_default");
+static AnimationController animationController2("shadow_R_default");
 static AnimationController animationController3("black_wolf_move");
 
 // 초기화된 카메라와 객체
@@ -1213,6 +1214,12 @@ void InitializeAnimations() {
 		{0.0f, {0, 0}}
 	};
 	std::map<float, POINT> shadow_scales = {
+		{0.0f, {1, 1}}
+	};
+	std::map<float, POINT> shadow_positions2 = {
+		{0.0f, {0, 0}}
+	};
+	std::map<float, POINT> shadow_scales2 = {
 		{0.0f, {1, 1}}
 	};
 
@@ -1252,8 +1259,11 @@ void InitializeAnimations() {
 		{0.6f, {0, 0}},
 	};
 
+	std::map<float, std::string> shadow_imagesKittenL = {
+		{0.0f, "Shadow_L_default"}
+	};
 	std::map<float, std::string> shadow_imagesKittenR = {
-		{0.0f, "kitten_R_default_1"}
+		{0.0f, "Shadow_R_default"}
 	};
 
 	std::map<float, std::string> img_imagesKittenR = {
@@ -1284,7 +1294,8 @@ void InitializeAnimations() {
 		{0.6f, "black_wolf_4"}
 	};
 
-	Animation Shadow_A_default("shadow_A_default", false, 0.0f, shadow_positions, shadow_scales, shadow_imagesKittenR);
+	Animation Shadow_R_default("shadow_R_default", false, 0.0f, shadow_positions, shadow_scales, shadow_imagesKittenR);
+	Animation Shadow_L_default("shadow_L_default", false, 0.0f, shadow_positions2, shadow_scales2, shadow_imagesKittenL);
 
 	Animation Kitten_R_default("kitten_R_default", false, 0.0f, d_positions, d_scales, img_imagesKittenR);
 	Animation Kitten_L_default("kitten_L_default", false, 0.0f, d_positions, d_scales, img_imagesKittenL);
@@ -1298,7 +1309,8 @@ void InitializeAnimations() {
 	std::vector<AnimationController::Transition> transitions2;
 	std::vector<AnimationController::Transition> transitions3;
 
-	animationController2.addState("shadow_A_default", Shadow_A_default, transitions2);
+	animationController2.addState("shadow_R_default", Shadow_R_default, transitions2);
+	animationController2.addState("shadow_L_default", Shadow_L_default, transitions2);
 
 	animationController.addState("kitten_R_default", Kitten_R_default, transitions);
 	animationController.addState("kitten_L_default", Kitten_L_default, transitions);
@@ -1391,10 +1403,11 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 static void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseDown(wParam, lParam);
 	shadow.OnLButtonDown(mouse.getMousePosition(), camera);
+	canTake = false;
 }
 
 static void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	mouse.OnMouseUp(wParam, lParam);
+	mouse.OnMouseLUp(wParam, lParam);
 	shadow.OnLButtonUp(mouse.getMousePosition(), camera);
 }
 
@@ -1403,7 +1416,7 @@ static void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 }
 
 static void CALLBACK HandleRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	mouse.OnMouseUp(wParam, lParam);
+	mouse.OnMouseRUp(wParam, lParam);
 }
 
 static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1415,9 +1428,11 @@ static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	keyStates[wParam] = true;
 	if (keyStates['A'] && player.getAnimationController().getCurrentState() != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
+		shadow.getAnimationController().setCurrentState("shadow_L_default");
 	}
 	else if (keyStates['D'] && player.getAnimationController().getCurrentState() != "kitten_R_move") {
 		player.getAnimationController().setCurrentState("kitten_R_move");
+		shadow.getAnimationController().setCurrentState("shadow_R_default");
 	}
 }
 
@@ -1602,12 +1617,13 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	// player, camera 움직임 처리
 	{
-		if (keyStates[VK_SPACE]) {
+		if (keyStates[VK_SPACE] || canTake) {
+			canTake = true;
 			std::string st = player.getAnimationController().getCurrentState();
 			Vector3 playerPos = player.getPosition();
 			Vector3 shadowPos = shadow.getPosition();
 			Vector3 targetPos = {
-				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.0f : 0.0f),
+				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.2f : 0.2f),
 				playerPos.y,
 				playerPos.z
 			};
@@ -1622,7 +1638,6 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		}
 		shadow.Update(deltaTime);
 		mouse.UpdateMouse3DPosition(camera);
-		shadow.getAnimationController().setCurrentState("shadow_A_default");
 		shadow.getAnimationController().update(deltaTime);
 
 	}
@@ -1630,7 +1645,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
 			player.getAnimationController().update(deltaTime);
 		}
-		if (!keyStates[VK_SPACE]) {
+		if (!keyStates[VK_SPACE] && !mouse.IsLeftClick()) {
 			if (keyStates['A']) {
 				if (!cantMoveLeft) {
 					player.move2DPosition(-0.2f, 0);
