@@ -1464,12 +1464,12 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 static void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseDown(wParam, lParam);
 	shadow.OnLButtonDown(mouse.getMousePosition(), camera);
-	canTake = false;
 }
 
 static void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseLUp(wParam, lParam);
-	shadow.OnLButtonUp(mouse.getMousePosition(), camera);
+	shadow.OnLButtonUp(mouse.getMousePosition(), camera, canTake);
+	canTake = false;
 }
 
 static void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1687,6 +1687,10 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	// player, camera 움직임 처리
 	{
+
+		shadow.Update(deltaTime);
+		if (canTake)mouse.UpdateMouse3DPosition(camera);
+		shadow.getAnimationController().update(deltaTime);
 		if (keyStates[VK_SPACE] || canTake) {
 			canTake = true;
 			std::string st = player.getAnimationController().getCurrentState();
@@ -1702,13 +1706,11 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				shadowPos.y + (targetPos.y - shadowPos.y) * 0.5f,
 				shadowPos.z + (targetPos.z - shadowPos.z) * 0.5f
 				});
+			if (mouse.IsLeftClick()) {
+				shadow.Charge(deltaTime);
+			}
 		}
-		if (mouse.IsLeftClick()) {
-			shadow.Charge(deltaTime);
-		}
-		shadow.Update(deltaTime);
-		mouse.UpdateMouse3DPosition(camera);
-		shadow.getAnimationController().update(deltaTime);
+		
 
 	}
 	{

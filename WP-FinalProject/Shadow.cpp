@@ -12,8 +12,8 @@ void Shadow::OnLButtonDown(const POINT& mousePos, const Camera& camera) {
     startMousePos3D = Unproject2DTo3D(camera, mousePos, 0.0f);
 }
 
-void Shadow::OnLButtonUp(const POINT& mousePos, const Camera& camera) {
-    if (isCharging) {
+void Shadow::OnLButtonUp(const POINT& mousePos, const Camera& camera, bool canTake) {
+    if (isCharging && canTake) {
         Release(mousePos, camera);
     }
     isCharging = false;
