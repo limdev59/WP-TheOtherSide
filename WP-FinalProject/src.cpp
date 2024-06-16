@@ -25,8 +25,9 @@ constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34, 15, 33);
 constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
-Vector3 STAGE1_PLAYER_POSITION = Vector3(10.0f, 1.3f, 60.0f);
+Vector3 STAGE1_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f); //Vector3 STAGE1_PLAYER_POSITION = Vector3(10.0f, 1.3f, 60.0f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
+Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
 Vector3 WOLF_POSITION = Vector3(90.0f, 1.3f, 95.0f);
 
 // 전역 변수
@@ -41,7 +42,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 3;    //1로 바꿔
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1163,6 +1164,37 @@ std::vector<Construction> stage2Walls = {
 { { 112.5,4 ,-132.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 };
 
+std::vector<Construction> stage3Floors = {
+   
+   {{ 1000, 0, 10 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1010, 0, 10 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1020, 0, 10 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1000, 0, 20 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1010, 0, 20 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1020, 0, 20 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1000, 0, 30 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1010, 0, 30 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+   {{ 1020, 0, 30 }, { 10, 0, 10 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+};
+
+std::vector<Construction> stage3Walls = {
+	//위벽
+	{{1000,4 ,35}, { 10, 8, 0 }, RGB(255,255,255) ,WALL_INBRUSH_COLORREF},
+	{{1010,4 ,35}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{1020,4 ,35}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	//아래벽
+	/*{{1000,4 ,5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{1010,4 ,5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{1020,4 ,5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},*/
+	//세로벽
+	{{ 995, 4, 30}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 995, 4, 20}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 995, 4, 10}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 1025, 4, 30}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 1025, 4, 20}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 1025, 4, 10}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+};
+
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_A_default");
 static AnimationController animationController3("black_wolf_move");
@@ -1218,7 +1250,6 @@ void InitializeAnimations() {
 		{0.2f, {0, 0}},
 		{0.4f, {0, 0}},
 		{0.6f, {0, 0}},
-		
 	};
 
 	std::map<float, std::string> shadow_imagesKittenR = {
@@ -1335,6 +1366,14 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			wall.DrawObject3D(mDC, camera);
 		}
 	}
+	else if (stage == 3) {
+		for (auto& floor : stage3Floors) {
+			floor.DrawObject3D(mDC, camera);
+		}
+		for (auto& wall : stage3Walls) {
+			wall.DrawObject3D(mDC, camera);
+		}
+	}
 
 	if (stage == 2) {
 		wolf.DrawObject3D(mDC, camera);
@@ -1371,7 +1410,6 @@ static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	mouse.OnMouseMove(lParam);
 	shadow.OnMouseMove(mouse.getMousePosition(), camera);
 }
-
 
 static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = true;
@@ -1523,9 +1561,42 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					wolf.set2DPosition(90, 95);
 					wolfMoveMode = 0;
 				}
-				
+			}
+			if (playerPos.y < -120) {
+				stage = 3;
+				player.setPosition(STAGE3_PLAYER_POSITION);
+				camera.setPosition(STAGE3_PLAYER_POSITION);
 			}
 			
+		}
+		else if (stage == 3) {
+			for (const Construction& floor : stage3Floors) {
+				POINT playerPos = player.get2DPosition();
+				Vector3 pos = floor.getPosition();
+				Vector3 size = floor.getSize();
+				RECT bound = {
+					static_cast<LONG>(pos.x - size.x / 2),
+					static_cast<LONG>(pos.z - size.z / 2),
+					static_cast<LONG>(pos.x + size.x / 2),
+					static_cast<LONG>(pos.z + size.z / 2)
+				};
+				// 왼쪽 충돌 검사
+				if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveLeft = false;
+				}
+				// 오른쪽 충돌 검사
+				if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveRight = false;
+				}
+				// 위쪽 충돌 검사
+				if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveDown = false;
+				}
+				// 아래쪽 충돌 검사
+				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveUp = false;
+				}
+			}
 		}
 	}
 
