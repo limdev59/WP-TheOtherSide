@@ -17,13 +17,13 @@ public:
         return std::sqrt(x * x + y * y + z * z);
     }
 
-    // Normalize the vector (convert to unit vector)
-    Vector3 Normalize() const {
+    // 벡터의 정규화 (단위 벡터화)
+    Vector3 Normalized() const {
         float length = Length();
         if (length != 0)
             return Vector3(x / length, y / length, z / length);
         else
-            return Vector3(0, 0, 0); // Return zero vector if length is zero
+            return Vector3(0, 0, 0);
     }
 
     // Calculate the dot product of this vector and another vector
@@ -82,7 +82,7 @@ public:
 
     // Project this vector onto another vector
     Vector3 ProjectOnto(const Vector3& other) const {
-        Vector3 normalizedOther = other.Normalize();
+        Vector3 normalizedOther = other.Normalized();
         return normalizedOther * this->Dot(normalizedOther);
     }
 
