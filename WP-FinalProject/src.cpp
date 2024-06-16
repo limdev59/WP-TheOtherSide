@@ -4,6 +4,7 @@
 #include <mmsystem.h>
 #include <algorithm>
 #include <vector>
+#include <cmath>
 #include "Camera.h"
 #include "Object3D.h"
 #include "Construction.h"
@@ -25,10 +26,11 @@ constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34, 15, 33);
 constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
-Vector3 STAGE1_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f); //Vector3 STAGE1_PLAYER_POSITION = Vector3(10.0f, 1.3f, 60.0f);
+Vector3 STAGE1_PLAYER_POSITION = Vector3(10.0f, 1.3f, 60.0f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
 Vector3 WOLF_POSITION = Vector3(90.0f, 1.3f, 95.0f);
+Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -42,8 +44,9 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 3;
+static int stage = 1;
 static bool canTake{ true };
+static bool isKey = false;
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -242,10 +245,10 @@ std::vector<Construction> floors = {
 	{{ 110, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 115, 0, 55 }, { 5, 0, 5 }, 0xFFFFFF, FLOOR_OUTLINE_COLORREF},
 
-	{{ 100, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-	{{ 105, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+	{{ 100, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},////
+	{{ 105, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 100, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-	{{ 105, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 105, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 
 	{{ 80, 0, 40 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 85, 0, 40 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1212,7 +1215,6 @@ std::vector<Construction> stage3Floors = {
 {{ 1020, 0, 35 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1025, 0, 35 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF }
 };
-
 std::vector<Construction> stage3Walls = {
 	//위벽
 	{{1002.5,4 ,37.5}, { 10, 8, 0 }, RGB(255,255,255) ,WALL_INBRUSH_COLORREF},
@@ -1244,7 +1246,7 @@ static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 2.6f, 2.6f, 0.0f } };
-static Actor key{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Actor key{ KEY_POSITION, { 2.6f, 2.6f, 0.0f } };
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
@@ -1441,13 +1443,16 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			wall.DrawObject3D(mDC, camera);
 		}
 	}
-
+	if (stage == 1) {
+		if (isKey == false) {
+			key.DrawObject3D(mDC, camera);
+		}
+	}
 	if (stage == 2) {
 		wolf.DrawObject3D(mDC, camera);
 	}
 	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
-	key.DrawObject3D(mDC, camera);
 	
 
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
@@ -1544,12 +1549,21 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					cantMoveUp = false;
 				}
 
-				if (playerPos.x == 115.0f && playerPos.y == 53.0f) {
+				if (playerPos.x == 115.0f && playerPos.y == 53.0f && isKey == true) {
 					stage = 2;
 					player.setPosition(STAGE2_PLAYER_POSITION);
 					camera.setPosition(STAGE2_PLAYER_POSITION);
+					isKey = false;
 				}
 			}
+
+			Vector3 keyPos = key.getPosition();
+			Vector3 shadowPos = shadow.getPosition();
+			double distance = std::sqrt((keyPos.x - shadowPos.x) * (keyPos.x - shadowPos.x) + (keyPos.z - shadowPos.z) * (keyPos.z - shadowPos.z));
+			if (distance <= 3) {
+				isKey = true;
+			}
+			
 		}
 		else if (stage == 2) {
 			for (const Construction& floor : stage2Floors) {
