@@ -26,7 +26,7 @@ constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34, 15, 33);
 constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
-Vector3 STAGE1_PLAYER_POSITION = Vector3(10.0f, 1.3f, 60.0f);
+Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
 Vector3 WOLF_POSITION = Vector3(90.0f, 1.3f, 95.0f);
@@ -46,6 +46,7 @@ static RECT rt;
 static DWORD lastTime = timeGetTime();
 static int stage = 1;
 static bool canTake{ true };
+static bool heavy{ false };
 static bool isKey = false;
 
 // 함수 선언
@@ -55,8 +56,8 @@ std::vector<Construction> walls = {
 	//위벽
 	{{ 12.5, 4, 67.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 2.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-	{{ 22.5, 4, 7.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-	{{ 32.5, 4, 7.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 20, 4, 7.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 35, 4, 7.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 42.5, 4, -2.5 }, { 10, 4, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 42.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 42.5, 4, -2.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
@@ -125,15 +126,15 @@ std::vector<Construction> floors = {
 	{{ 10, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 15, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
-	{{ 10, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	{{ 15, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	{{ 10, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	{{ 15, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 11, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	//{{ 15, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 12, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	//{{ 15, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
-	{{ 10, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	{{ 15, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	{{ 10, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	{{ 15, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 14, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	//{{ 15, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 12, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	//{{ 15, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
 	{{ 10, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 15, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -155,10 +156,10 @@ std::vector<Construction> floors = {
 	{{ 10, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 15, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
-	{{ 0, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-	{{ 5, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-	{{ 0, 0, 35 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-	{{ 5, 0, 35 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+	{{ 2.5, 0, 32.5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+	//{{ 5, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+	//{{ 0, 0, 35 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+	//{{ 5, 0, 35 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 
 	{{ 20, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 25, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
@@ -172,7 +173,7 @@ std::vector<Construction> floors = {
 
 	{{ 20, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 25, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-	{{ 20, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+	//{{ 20, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 25, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 
 	{{ 30, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
@@ -1245,7 +1246,7 @@ static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
-static Actor wolf{ WOLF_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Actor wolf{ WOLF_POSITION, { 4.5f, 7.5f, 0.0f } };
 static Actor key{ KEY_POSITION, { 2.6f, 2.6f, 0.0f } };
 
 // 애니메이션 초기화 함수
@@ -1464,12 +1465,12 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 static void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseDown(wParam, lParam);
 	shadow.OnLButtonDown(mouse.getMousePosition(), camera);
-	canTake = false;
 }
 
 static void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseLUp(wParam, lParam);
-	shadow.OnLButtonUp(mouse.getMousePosition(), camera);
+	shadow.OnLButtonUp(mouse.getMousePosition(), camera, canTake);
+	canTake = false;
 }
 
 static void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1478,6 +1479,7 @@ static void CALLBACK HandleRButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 
 static void CALLBACK HandleRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseRUp(wParam, lParam);
+	std::wcout << mouse.getMouse3DPosition().x << ' ' << mouse.getMouse3DPosition().y << ' ' << mouse.getMouse3DPosition().z << '\n';
 }
 
 static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1603,7 +1605,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			static int wolfSpeedCount = 0;   //강아지 이동속도 줄어드는 효과가 몇초 지속될거냐?
 			
 			if (wolfMoveMode == 0) {
-				wolf.move2DPosition(1.0f - wolfSpeed, 0);
+				wolf.move2DPosition(0.5f - wolfSpeed, 0);
 				if (wolfPos.x > 205) {
 					wolfMoveMode = 1;
 				}
@@ -1614,7 +1616,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				}
 			}
 			else if (wolfMoveMode == 1) {
-				wolf.move2DPosition(0.0f, -1.0f - wolfSpeed);
+				wolf.move2DPosition(0.5f, -0.5f - wolfSpeed);
 				if (wolfPos.y < -25) {
 					wolfMoveMode = 2;
 				}
@@ -1625,7 +1627,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				}
 			}
 			else if (wolfMoveMode == 2) {
-				wolf.move2DPosition(-0.9f - wolfSpeed, 0.0);
+				wolf.move2DPosition(-0.5f - wolfSpeed, 0.0);
 				if (wolfPos.x < 105) {
 					wolfMoveMode = 3;
 				}
@@ -1687,7 +1689,11 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	// player, camera 움직임 처리
 	{
+
+		shadow.Update(deltaTime);
+		shadow.getAnimationController().update(deltaTime);
 		if (keyStates[VK_SPACE] || canTake) {
+			mouse.UpdateMouse3DPosition(camera);
 			canTake = true;
 			std::string st = player.getAnimationController().getCurrentState();
 			Vector3 playerPos = player.getPosition();
@@ -1702,13 +1708,25 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				shadowPos.y + (targetPos.y - shadowPos.y) * 0.5f,
 				shadowPos.z + (targetPos.z - shadowPos.z) * 0.5f
 				});
+			if (mouse.IsLeftClick()) {
+				shadow.Charge(deltaTime);
+			}
 		}
-		if (mouse.IsLeftClick()) {
-			shadow.Charge(deltaTime);
+		else if (keyStates['E'] && !canTake) {
+			Vector3 playerPos = player.getPosition();
+			Vector3 shadowPos = shadow.getPosition();
+			Vector3 targetPos = {
+				shadowPos.x,
+				shadowPos.y,
+				shadowPos.z
+			};
+			player.setPosition({
+				playerPos.x + (targetPos.x - playerPos.x) * 0.1f,
+				playerPos.y + (targetPos.y - playerPos.y) * 0.1f,
+				playerPos.z + (targetPos.z - playerPos.z) * 0.1f
+				});
 		}
-		shadow.Update(deltaTime);
-		mouse.UpdateMouse3DPosition(camera);
-		shadow.getAnimationController().update(deltaTime);
+		
 
 	}
 	{
