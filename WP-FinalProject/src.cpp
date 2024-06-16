@@ -41,7 +41,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 2;
+static int stage = 1;
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1480,18 +1480,57 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			POINT playerPos = player.get2DPosition();
 			POINT wolfPos = wolf.get2DPosition();
 			wolf.getAnimationController().update(deltaTime);
-			static int wolfMoveMode = 0;
-			static float wolfSpeed = 0.0;
-			static int wolfSpeedCount = 0;
+			static int wolfMoveMode = 0;   //강아지 이동방향
+			static float wolfSpeed = 0.0;   //강아지 이동속도 줄이기, 커질수록 줄어듦
+			static int wolfSpeedCount = 0;   //강아지 이동속도 줄어드는 효과가 몇초 지속될거냐?
+			
 			if (wolfMoveMode == 0) {
-				wolf.move2DPosition(0.4f - wolfSpeed, 0);
+				wolf.move2DPosition(1.0f - wolfSpeed, 0);
+				if (wolfPos.x > 205) {
+					wolfMoveMode = 1;
+				}
+				if (wolfPos.x>= playerPos.x && playerPos.y >= 90) {
+					player.set2DPosition(100,95);
+					wolf.set2DPosition(90, 95);
+					wolfMoveMode = 0;
+				}
 			}
 			else if (wolfMoveMode == 1) {
-				wolf.move2DPosition(0.0f - wolfSpeed, -0.4);
+				wolf.move2DPosition(0.0f, -1.0f - wolfSpeed);
+				if (wolfPos.y < -25) {
+					wolfMoveMode = 2;
+				}
+				if (wolfPos.y <= playerPos.y && playerPos.x >= 200) {
+					player.set2DPosition(100, 95);
+					wolf.set2DPosition(90, 95);
+					wolfMoveMode = 0;
+				}
 			}
 			else if (wolfMoveMode == 2) {
-				wolf.move2DPosition(-0.4f - wolfSpeed, 0.0);
+				wolf.move2DPosition(-0.9f - wolfSpeed, 0.0);
+				if (wolfPos.x < 105) {
+					wolfMoveMode = 3;
+				}
+				if (wolfPos.x <= playerPos.x && playerPos.y >= -35) {
+					player.set2DPosition(100, 95);
+					wolf.set2DPosition(90, 95);
+					wolfMoveMode = 0;
+				}
 			}
+
+			else if (wolfMoveMode == 3) {
+				wolf.move2DPosition(0.0f, -0.8f - wolfSpeed);
+				/*if (wolfPos.y < -135) {
+					wolfMoveMode = 4;
+				}*/
+				if (wolfPos.y <= playerPos.y) {
+					player.set2DPosition(100, 95);
+					wolf.set2DPosition(90, 95);
+					wolfMoveMode = 0;
+				}
+				
+			}
+			
 		}
 	}
 
