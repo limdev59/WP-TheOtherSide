@@ -168,6 +168,8 @@
     <Image Include="kitten_L_default_2.png" />
     <Image Include="kitten_R_default_1.png" />
     <Image Include="kitten_R_default_2.png" />
+    <Image Include="Shadow_L_default.png" />
+    <Image Include="Shadow_R_default.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
