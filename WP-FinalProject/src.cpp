@@ -1235,6 +1235,7 @@ std::vector<Construction> stage3Walls = {
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_R_default");
 static AnimationController animationController3("black_wolf_move");
+static AnimationController animationController4("key");
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
@@ -1243,15 +1244,24 @@ static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Actor key{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
+	std::map<float, POINT> key_positions = {
+		{0.0f, {0, 0}}
+	};
+	std::map<float, POINT> key_scales = {
+		{0.0f, {1, 1}}
+	};
+
 	std::map<float, POINT> shadow_positions = {
 		{0.0f, {0, 0}}
 	};
 	std::map<float, POINT> shadow_scales = {
 		{0.0f, {1, 1}}
 	};
+
 	std::map<float, POINT> shadow_positions2 = {
 		{0.0f, {0, 0}}
 	};
@@ -1295,6 +1305,9 @@ void InitializeAnimations() {
 		{0.6f, {0, 0}},
 	};
 
+	std::map<float, std::string> key_image = {
+		{0.0f, "key"}
+	};
 	std::map<float, std::string> shadow_imagesKittenL = {
 		{0.0f, "Shadow_L_default"}
 	};
@@ -1330,6 +1343,8 @@ void InitializeAnimations() {
 		{0.6f, "black_wolf_4"}
 	};
 
+	Animation key_default("key", false, 0.0f, key_positions, key_scales, key_image);
+
 	Animation Shadow_R_default("shadow_R_default", false, 0.0f, shadow_positions, shadow_scales, shadow_imagesKittenR);
 	Animation Shadow_L_default("shadow_L_default", false, 0.0f, shadow_positions2, shadow_scales2, shadow_imagesKittenL);
 
@@ -1344,6 +1359,7 @@ void InitializeAnimations() {
 	std::vector<AnimationController::Transition> transitions;
 	std::vector<AnimationController::Transition> transitions2;
 	std::vector<AnimationController::Transition> transitions3;
+	std::vector<AnimationController::Transition> transitions4;
 
 	animationController2.addState("shadow_R_default", Shadow_R_default, transitions2);
 	animationController2.addState("shadow_L_default", Shadow_L_default, transitions2);
@@ -1355,9 +1371,12 @@ void InitializeAnimations() {
 
 	animationController3.addState("black_wolf_move", black_wolf_1_move, transitions3);
 
+	animationController4.addState("key", key_default, transitions4);
+
 	player.setAnimationController(animationController);
 	shadow.setAnimationController(animationController2);
 	wolf.setAnimationController(animationController3);
+	key.setAnimationController(animationController4);
 }
 
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1428,6 +1447,7 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
+	key.DrawObject3D(mDC, camera);
 	
 
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
