@@ -26,7 +26,7 @@ constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42, 32, 50);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
 Vector3 STAGE1_PLAYER_POSITION = Vector3(10.0f, 1.3f, 60.0f);
-Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 100.0f);
+Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -41,7 +41,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 2;
+static int stage = 1;
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1103,7 +1103,9 @@ std::vector<Construction> stage2Walls = {
 { { 202.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 { { 212.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 //세로벽
-{{ 97.5,4 ,95}, { 0, 8, 15 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{{ 97.5,4 ,100}, { 0, 8, 5 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{{ 97.5,7 ,95}, { 0, 2, 5 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+{{ 97.5,4 ,90}, { 0, 8, 5 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 //
 {{ 217.5,4 ,97.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 { { 217.5,4 ,87.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
@@ -1165,8 +1167,8 @@ static AnimationController animationController2("shadow_A_default");
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
-static Shadow shadow{ STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0 } };
-static Player player(STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f });
+static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0 } };
+static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 
@@ -1368,65 +1370,68 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	bool cantMoveDown = true;
 
 	//각 바닥과의 충돌 검사
+	{
+		if (stage == 1) {
+			for (const Construction& floor : floors) {
+				POINT playerPos = player.get2DPosition();
+				Vector3 pos = floor.getPosition();
+				Vector3 size = floor.getSize();
+				RECT bound = {
+					static_cast<LONG>(pos.x - size.x / 2),
+					static_cast<LONG>(pos.z - size.z / 2),
+					static_cast<LONG>(pos.x + size.x / 2),
+					static_cast<LONG>(pos.z + size.z / 2)
+				};
 
-	if (stage == 1) {
-		for (const Construction& floor : floors) {
-			POINT playerPos = player.get2DPosition();
-			Vector3 pos = floor.getPosition();
-			Vector3 size = floor.getSize();
-			RECT bound = {
-				static_cast<LONG>(pos.x - size.x / 2),
-				static_cast<LONG>(pos.z - size.z / 2),
-				static_cast<LONG>(pos.x + size.x / 2),
-				static_cast<LONG>(pos.z + size.z / 2)
-			};
-
-		// 왼쪽 충돌 검사
-		if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-			cantMoveLeft = false;
+				// 왼쪽 충돌 검사
+				if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveLeft = false;
+				}
+				// 오른쪽 충돌 검사
+				if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveRight = false;
+				}
+				// 위쪽 충돌 검사
+				if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveDown = false;
+				}
+				// 아래쪽 충돌 검사
+				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveUp = false;
+				}
+			}
 		}
-		// 오른쪽 충돌 검사
-		if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-			cantMoveRight = false;
-		}
-		// 위쪽 충돌 검사
-		if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-			cantMoveDown = false;
-		}
-		// 아래쪽 충돌 검사
-		if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-			cantMoveUp = false;
+		else if (stage == 2) {
+			for (const Construction& floor : stage2Floors) {
+				POINT playerPos = player.get2DPosition();
+				Vector3 pos = floor.getPosition();
+				Vector3 size = floor.getSize();
+				RECT bound = {
+					static_cast<LONG>(pos.x - size.x / 2),
+					static_cast<LONG>(pos.z - size.z / 2),
+					static_cast<LONG>(pos.x + size.x / 2),
+					static_cast<LONG>(pos.z + size.z / 2)
+				};
+				// 왼쪽 충돌 검사
+				if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveLeft = false;
+				}
+				// 오른쪽 충돌 검사
+				if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveRight = false;
+				}
+				// 위쪽 충돌 검사
+				if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveDown = false;
+				}
+				// 아래쪽 충돌 검사
+				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveUp = false;
+				}
+			}
 		}
 	}
-	} else if (stage == 2) {
-		for (const Construction& floor : stage2Floors) {
-			POINT playerPos = player.get2DPosition();
-			Vector3 pos = floor.getPosition();
-			Vector3 size = floor.getSize();
-			RECT bound = {
-				static_cast<LONG>(pos.x - size.x / 2),
-				static_cast<LONG>(pos.z - size.z / 2),
-				static_cast<LONG>(pos.x + size.x / 2),
-				static_cast<LONG>(pos.z + size.z / 2)
-			};
-			// 왼쪽 충돌 검사
-			if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-				cantMoveLeft = false;
-			}
-			// 오른쪽 충돌 검사
-			if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
-				cantMoveRight = false;
-			}
-			// 위쪽 충돌 검사
-			if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-				cantMoveDown = false;
-			}
-			// 아래쪽 충돌 검사
-			if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
-				cantMoveUp = false;
-			}
-		}
-	}
+
 	// player, camera 움직임 처리
 	{
 		if (keyStates[VK_SPACE]) {
