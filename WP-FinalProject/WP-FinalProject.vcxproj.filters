@@ -120,5 +120,17 @@
     <Image Include="kitten_R_default_2.png">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="black_wolf_1.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_2.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_3.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_4.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

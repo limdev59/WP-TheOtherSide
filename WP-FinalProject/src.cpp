@@ -27,6 +27,7 @@ constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24, 24, 40);
 constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24, 15, 33);
 Vector3 STAGE1_PLAYER_POSITION = Vector3(10.0f, 1.3f, 60.0f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
+Vector3 WOLF_POSITION = Vector3(90.0f, 1.3f, 95.0f);
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -111,7 +112,8 @@ std::vector<Construction> walls = {
 	{{ 117.5, 4, 22.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 117.5, 4, 32.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 117.5, 4, 42.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-	{{ 117.5, 4, 52.5 }, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF}
+	{{ 117.5, 4, 50 }, { 0, 8, 5 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 117.5, 4, 55 }, { 0, 8, 5 }, RGB(255,255,255), WALL_INBRUSH_COLORREF}
 };
 std::vector<Construction> floors = {
 	{{ 10, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -237,7 +239,7 @@ std::vector<Construction> floors = {
 	{{ 110, 0, 50 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 115, 0, 50 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 110, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-	{{ 115, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+	{{ 115, 0, 55 }, { 5, 0, 5 }, 0xFFFFFF, FLOOR_OUTLINE_COLORREF},
 
 	{{ 100, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 105, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
@@ -1164,13 +1166,15 @@ std::vector<Construction> stage2Walls = {
 
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_A_default");
+static AnimationController animationController3("black_wolf_move");
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
-static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0 } };
+static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
+static Actor wolf{ WOLF_POSITION, { 2.6f, 2.6f, 0.0f } };
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
@@ -1203,6 +1207,21 @@ void InitializeAnimations() {
 		{0.8f, {1, 1}}
 	};
 
+	std::map<float, POINT> w_positions = {
+		{0.0f, {0, 0}},
+		{0.2f, {0, 0}},
+		{0.4f, {0, 0}},
+		{0.6f, {0, 0}},
+		
+	};
+	std::map<float, POINT> w_scales = {
+		{0.0f, {0, 0}},
+		{0.2f, {0, 0}},
+		{0.4f, {0, 0}},
+		{0.6f, {0, 0}},
+		
+	};
+
 	std::map<float, std::string> shadow_imagesKittenR = {
 		{0.0f, "kitten_R_default_1"}
 	};
@@ -1228,15 +1247,26 @@ void InitializeAnimations() {
 		{0.8f, "kitten_L_default_1"}
 	};
 
+	std::map<float, std::string> img_imageWolf = {
+		{0.0f, "black_wolf_1"},
+		{0.2f, "black_wolf_2"},
+		{0.4f, "black_wolf_3"},
+		{0.6f, "black_wolf_4"}
+	};
+
 	Animation Shadow_A_default("shadow_A_default", false, 0.0f, shadow_positions, shadow_scales, shadow_imagesKittenR);
 
 	Animation Kitten_R_default("kitten_R_default", false, 0.0f, d_positions, d_scales, img_imagesKittenR);
 	Animation Kitten_L_default("kitten_L_default", false, 0.0f, d_positions, d_scales, img_imagesKittenL);
 	Animation Kitten_R_move("kitten_R_move", true, 0.8f, m_positions, m_scales, img_KittenMoveR);
 	Animation Kitten_L_move("kitten_L_move", true, 0.8f, m_positions, m_scales, img_KittenMoveL);
+	
+	Animation black_wolf_1_move("black_wolf_move", true, 0.8f, w_positions, w_scales, img_imageWolf);
+	
 
 	std::vector<AnimationController::Transition> transitions;
 	std::vector<AnimationController::Transition> transitions2;
+	std::vector<AnimationController::Transition> transitions3;
 
 	animationController2.addState("shadow_A_default", Shadow_A_default, transitions2);
 
@@ -1245,8 +1275,11 @@ void InitializeAnimations() {
 	animationController.addState("kitten_R_move", Kitten_R_move, transitions);
 	animationController.addState("kitten_L_move", Kitten_L_move, transitions);
 
+	animationController3.addState("black_wolf_move", black_wolf_1_move, transitions3);
+
 	player.setAnimationController(animationController);
 	shadow.setAnimationController(animationController2);
+	wolf.setAnimationController(animationController3);
 }
 
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1303,8 +1336,12 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		}
 	}
 
+	if (stage == 2) {
+		wolf.DrawObject3D(mDC, camera);
+	}
 	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
+	
 
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
 	DeleteDC(mDC);
@@ -1369,6 +1406,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	bool cantMoveUp = true;
 	bool cantMoveDown = true;
 
+	
 	//각 바닥과의 충돌 검사
 	{
 		if (stage == 1) {
@@ -1399,6 +1437,12 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 					cantMoveUp = false;
 				}
+
+				if (playerPos.x == 115.0f && playerPos.y == 53.0f) {
+					stage = 2;
+					player.setPosition(STAGE2_PLAYER_POSITION);
+					camera.setPosition(STAGE2_PLAYER_POSITION);
+				}
 			}
 		}
 		else if (stage == 2) {
@@ -1428,6 +1472,23 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 					cantMoveUp = false;
 				}
+			}
+
+			//강아지 뛰어오기
+			POINT playerPos = player.get2DPosition();
+			POINT wolfPos = wolf.get2DPosition();
+			wolf.getAnimationController().update(deltaTime);
+			static int wolfMoveMode = 0;
+			static float wolfSpeed = 0.0;
+			static int wolfSpeedCount = 0;
+			if (wolfMoveMode == 0) {
+				wolf.move2DPosition(0.4f - wolfSpeed, 0);
+			}
+			else if (wolfMoveMode == 1) {
+				wolf.move2DPosition(0.0f - wolfSpeed, -0.4);
+			}
+			else if (wolfMoveMode == 2) {
+				wolf.move2DPosition(-0.4f - wolfSpeed, 0.0);
 			}
 		}
 	}

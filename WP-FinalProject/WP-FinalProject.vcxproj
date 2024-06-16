@@ -159,6 +159,10 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="black_wolf_1.png" />
+    <Image Include="black_wolf_2.png" />
+    <Image Include="black_wolf_3.png" />
+    <Image Include="black_wolf_4.png" />
     <Image Include="Horror_background.jpg" />
     <Image Include="kitten_L_default_1.png" />
     <Image Include="kitten_L_default_2.png" />
