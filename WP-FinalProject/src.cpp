@@ -34,14 +34,13 @@ HINSTANCE g_hInst;
 LPCTSTR lpszClass = L"Window Class Name";
 LPCTSTR lpszWindowName = L"windows program";
 
-
 static HDC hDC, mDC;
 static PAINTSTRUCT ps;
 static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 2;
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -728,9 +727,9 @@ std::vector<Construction> stage2Floors = {
 	{ { 100,0 ,-125}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 105,0 ,-125}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 110,0 ,-125}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	};
+};
 std::vector<Construction> stage2Ceilings = {
-    { { 100,8 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 100,8 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 105,8 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 110,8 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 100,8 ,95}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -979,7 +978,7 @@ std::vector<Construction> stage2Ceilings = {
 	{ { 100,8 ,-20}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 105,8 ,-20}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 110,8 ,-20}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	
+
 	{ { 100,8 ,-45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 105,8 ,-45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 110,8 ,-45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1122,17 +1121,17 @@ std::vector<Construction> stage2Walls = {
 { { 217.5,4 ,-25}, { 0, 8, 15 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 /////////////////////////////////////////////
-    { { 202.5,4 ,82.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,77.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,67.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,57.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,47.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,37.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,27.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,17.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,7.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,-2.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-    { { 202.5,4 ,-12.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,82.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,77.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,67.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,57.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,47.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,37.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,27.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,17.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,7.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,-2.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{ { 202.5,4 ,-12.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	///
 	{ { 97.5,4 ,-22.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 { { 97.5,4 ,-32.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
@@ -1167,8 +1166,8 @@ static AnimationController animationController2("shadow_A_default");
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
-static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0 } };
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
+static Shadow shadow{ STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0 } };
+static Player player{ STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 
@@ -1251,9 +1250,9 @@ void InitializeAnimations() {
 
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	GetClientRect(hWnd, &rt);
-	
+
 	std::sort(walls.begin(), walls.end(), compareByZ);
-	
+
 	std::sort(stage2Walls.begin(), stage2Walls.end(), compareByZ);
 
 	if (FAILED(image.Load(TEXT("Horror_background.jpg")))) {
@@ -1291,7 +1290,8 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		for (auto& wall : walls) {
 			wall.DrawObject3D(mDC, camera);
 		}
-	} else if (stage == 2) {
+	}
+	else if (stage == 2) {
 		for (auto& floor : stage2Floors) {
 			floor.DrawObject3D(mDC, camera);
 		}
@@ -1320,7 +1320,7 @@ static void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 static void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseUp(wParam, lParam);
 	shadow.setLeftDown(false);
-	Vector3 a = (Unproject2DTo3D(camera, { mouse.getMousePosition().x + 10, mouse.getMousePosition().y }, 1.3f) - player.getPosition());
+	Vector3 a = Unproject2DTo3D(camera, { mouse.getMousePosition().x + 10, mouse.getMousePosition().y }, 1.3f) - player.getPosition();
 	shadow.setDirection(a);
 	std::cout << shadow.getPosition().x << ' ' << shadow.getPosition().y << ' ' << shadow.getPosition().z << std::endl;
 }
@@ -1337,7 +1337,9 @@ static void CALLBACK HandleRButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseMove(lParam);
+	shadow.onMouseMove(lParam);
 }
+
 
 static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = true;
@@ -1450,7 +1452,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				});
 		}
 		//mouse.getMouse3DPosition(camera);
-		shadow.update(deltaTime, mouse.getMousePosition());
+		shadow.update(deltaTime, mouse.getMousePosition(),player.getPosition());
 		shadow.getAnimationController().setCurrentState("shadow_A_default");
 		shadow.getAnimationController().update(deltaTime);
 	}
@@ -1497,7 +1499,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				cameraPos.x + (targetPos.x - cameraPos.x) * cameraFollowSpeed,
 				cameraPos.y + (targetPos.y - cameraPos.y) * cameraFollowSpeed,
 				cameraPos.z + (targetPos.z - cameraPos.z) * cameraFollowSpeed
-				});
+			});
 			float imsi = -0.5f;
 			Vector3 cameraRot = camera.getRotation();
 			Vector3 targetRot = {
@@ -1509,11 +1511,9 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				cameraRot.x + (targetRot.x - cameraRot.x) * cameraFollowSpeed,
 				cameraRot.y + (targetRot.y - cameraRot.y) * cameraFollowSpeed,
 				cameraRot.z + (targetRot.z - cameraRot.z) * cameraFollowSpeed
-				});
+			});
 		}
 	}
-
-	//{ 85, 0, 65 }, { 5, 0, 5 }
 
 	InvalidateRect(hWnd, NULL, FALSE);
 }

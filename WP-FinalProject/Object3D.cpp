@@ -6,6 +6,7 @@
 Object3D::Object3D() : position3D{ 0, 0, 0 }, size{ 1, 1, 1 } {}
 Object3D::Object3D(Vector3 position3D, Vector3 size)
     : position3D(position3D), size(size) {}
+
 Vector3 Object3D::getPosition() const {
     return position3D;
 }
