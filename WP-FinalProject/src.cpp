@@ -1246,7 +1246,7 @@ static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
-static Actor wolf{ WOLF_POSITION, { 7.5f, 13.9f, 0.0f } };
+static Actor wolf{ WOLF_POSITION, { 7.5f, 12.9f, 0.0f } };
 static Actor key{ KEY_POSITION, { 2.6f, 2.6f, 0.0f } };
 
 // 애니메이션 초기화 함수
