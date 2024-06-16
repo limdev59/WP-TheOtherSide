@@ -1547,7 +1547,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				});
 		}
 		if (mouse.IsLeftClick()) {
-			shadow.Charge();
+			shadow.Charge(deltaTime);
 		}
 		shadow.Update(deltaTime);
 		mouse.UpdateMouse3DPosition(camera);
