@@ -10,7 +10,7 @@ public:
 
     // 마우스 조작 관련 메서드
     void OnLButtonDown(const POINT& mousePos, const Camera& camera);
-    void OnLButtonUp(const POINT& mousePos, const Camera& camera);
+    void OnLButtonUp(const POINT& mousePos, const Camera& camera, bool canTake);
     void OnMouseMove(const POINT& mousePos, const Camera& camera);
 
     // 이동 및 충전 관련 메서드
