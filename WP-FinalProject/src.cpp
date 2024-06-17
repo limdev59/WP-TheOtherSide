@@ -1558,6 +1558,7 @@ static FMOD::Channel* channel = 0;
 static FMOD::Channel* channel2 = 0;
 static FMOD::Channel* channel3 = 0; // 추가 채널
 static FMOD::Channel* channel4 = 0;
+static FMOD::Channel* channel5 = 0;
 static FMOD_RESULT result;
 static void* extradriverdata = 0;
 static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound, * dog_grrrrr, * key_sound, * throw_sound;
@@ -1574,8 +1575,8 @@ static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		exit(0);
 	ssystem->init(32, FMOD_INIT_NORMAL, extradriverdata); // 사운드 시스템 초기화
 	ssystem->createSound("mainTheme.mp3", FMOD_LOOP_NORMAL, 0, &mainTheme_sound);
-	ssystem->createSound("100bpm.mp3", FMOD_LOOP_OFF, 0, &bpm100_sound);
-	ssystem->createSound("140bpm.mp3", FMOD_LOOP_OFF, 0, &bpm140_sound);
+	ssystem->createSound("100bpm.mp3", FMOD_LOOP_NORMAL, 0, &bpm100_sound);
+	ssystem->createSound("140bpm.mp3", FMOD_LOOP_NORMAL, 0, &bpm140_sound);
 	ssystem->createSound("door.mp3", FMOD_LOOP_OFF, 0, &door_sound);
 	ssystem->createSound("dog_grrrrr.wav", FMOD_LOOP_NORMAL, 0, &dog_grrrrr);
 	ssystem->createSound("key.mp3", FMOD_LOOP_OFF, 0, &key_sound);
@@ -1802,24 +1803,18 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					player.setPosition(STAGE2_PLAYER_POSITION);
 					camera.setPosition(STAGE2_PLAYER_POSITION);
 				}
-
 				//개소리 충돌체크
 				if (playerPos.x >= 77.5f && playerPos.x <= 87.5f && playerPos.y >= 45) {
-					isOnGaesorry = true;
-				} else {
-					isOnGaesorry = false;
+					if (!isOnGaesorry) {
+						ssystem->playSound(dog_grrrrr, 0, false, &channel5);
+						isOnGaesorry = true;
+					}
 				}
-
-				if (isOnGaesorry == true) {
+				else {
 					isOnGaesorry = false;
-					channel->stop();
-					ssystem->playSound(dog_grrrrr, 0, false, &channel);
+					channel5->stop();
 				}
-
-				/*{ { 80, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 85, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 80, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 85, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF }*/
+				
 			}
 
 
@@ -2228,6 +2223,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			}
 		}
 		else if (stage == 4) {
+			channel->stop();
 			for (const Construction& floor : stage4Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();
