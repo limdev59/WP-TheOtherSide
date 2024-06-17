@@ -34,7 +34,7 @@ Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
 Vector3 STAGE4_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 12.5f);
-Vector3 WOLF_POSITION = Vector3(60.0f, 1.3f, 97.5f);
+Vector3 WOLF_POSITION = Vector3(60.0f, 5.45f, 97.5f);
 Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
 Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 19.5f);
@@ -1299,7 +1299,7 @@ std::vector<Construction> stage4Floors = {
 
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_R_default");
-static AnimationController animationController3("black_wolf_move_R");
+static AnimationController animationController3("black_wolf_move");
 static AnimationController animationController4("key");
 static AnimationController object1_animationController("object1");
 static AnimationController object2_animationController("object2");
@@ -1607,6 +1607,8 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	image.Draw(mDC, 0, 0, rt.right, rt.bottom);
 
 	if (stage == 1) {
+		wolf.setPosition({ 82,1.3,65 });
+		wolf.DrawObject3D(mDC, camera);
 		for (auto& floor : floors) {
 			floor.DrawObject3D(mDC, camera);
 		}
