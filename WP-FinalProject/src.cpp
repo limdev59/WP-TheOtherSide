@@ -2214,6 +2214,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			}
 		}
 		else if (stage == 4) {
+			channel->stop();
 			for (const Construction& floor : stage4Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();
