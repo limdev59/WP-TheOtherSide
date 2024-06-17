@@ -1298,7 +1298,7 @@ static AnimationController object8_animationController("object8");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
