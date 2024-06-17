@@ -177,5 +177,14 @@
     <Image Include="black_wolf_R_move_6.png">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="bookshelf.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="dresser.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="wooden_crate.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>
