@@ -15,6 +15,9 @@
 #include "Mouse.h"
 #include "Shadow.h"
 #include "Vector3.h"
+#include "fmod.hpp"
+#include "fmod_errors.h"
+#pragma comment (lib, "fmod_vc.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(linker,"/entry:WinMainCRTStartup /subsystem:console")
 #define KEY_UP_CONDITION(KEY) (!keyStates[KEY] && KEY == wParam)
