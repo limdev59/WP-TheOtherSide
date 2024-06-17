@@ -58,7 +58,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 3;
+static int stage = 1;
 
 static bool canTake{ true };
 static bool heavy{ false };
@@ -1298,7 +1298,7 @@ static AnimationController object8_animationController("object8");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
-static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1539,7 +1539,7 @@ static FMOD::System* ssystem;
 static FMOD::Channel* channel = 0;
 static FMOD_RESULT result;
 static void* extradriverdata = 0;
-static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound;
+static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound, * dog_grrrrr, * key_sound;
 
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
@@ -1556,9 +1556,8 @@ static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	ssystem->createSound("100bpm.mp3", FMOD_LOOP_OFF, 0, &bpm100_sound);
 	ssystem->createSound("140bpm.mp3", FMOD_LOOP_OFF, 0, &bpm140_sound);
 	ssystem->createSound("door.mp3", FMOD_LOOP_OFF, 0, &door_sound);
-	channel->stop();
-	channel->setVolume(0.01f);
-	channel->stop();
+	ssystem->createSound("dog_grrrrr.wav", FMOD_LOOP_NORMAL, 0, &dog_grrrrr);
+	ssystem->createSound("key.mp3", FMOD_LOOP_OFF, 0, &key_sound);
 	ssystem->playSound(mainTheme_sound, 0, false, &channel);
 	ssystem->playSound(door_sound, 0, false, &channel);
 
@@ -1774,16 +1773,26 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			double distance = std::sqrt((keyPos.x - shadowPos.x) * (keyPos.x - shadowPos.x) + (keyPos.z - shadowPos.z) * (keyPos.z - shadowPos.z));
 			if (distance <= 3) {
 				isKey = false;
+				static bool a = true;
+				if(a)ssystem->playSound(key_sound, 0, false, &channel);
+				a = false;
 			}
 			//key1 충돌체크
 			distance = std::sqrt((key2Pos.x - shadowPos.x) * (key2Pos.x - shadowPos.x) + (key2Pos.z - shadowPos.z) * (key2Pos.z - shadowPos.z));
 			if (distance <= 3) {
 				isKey2 = false;
+				static bool a = true;
+				if (a)ssystem->playSound(key_sound, 0, false, &channel);
+				a = false;
 			}
 			//key1 충돌체크
 			distance = std::sqrt((key3Pos.x - shadowPos.x) * (key3Pos.x - shadowPos.x) + (key3Pos.z - shadowPos.z) * (key3Pos.z - shadowPos.z));
 			if (distance <= 3) {
 				isKey3 = false;
+
+				static bool a = true;
+				if (a)ssystem->playSound(key_sound, 0, false, &channel);
+				a = false;
 			}
 
 
@@ -1809,6 +1818,9 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			}
 		}
 		else if (stage == 2) {
+			static bool grrrrr{ true };
+			if(grrrrr) ssystem->playSound(dog_grrrrr, 0, false, &channel);
+			grrrrr = false;
 			for (const Construction& floor : stage2Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();
@@ -2027,6 +2039,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 		}
 		else if (stage == 3) {
+			channel->stop();
 			for (const Construction& floor : stage3Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();
@@ -2073,7 +2086,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			if (player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
 				isOpening = true;
 				if (keyStates[ 'D' ]) {
-					doingOpen = doingOpen + 0.2;
+					doingOpen = doingOpen + 0.2f;
 				}
 			}
 			else {
