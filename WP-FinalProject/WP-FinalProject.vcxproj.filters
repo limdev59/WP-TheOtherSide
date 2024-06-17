@@ -212,5 +212,8 @@
     <Media Include="mainTheme.mp3">
       <Filter>리소스 파일</Filter>
     </Media>
+    <Media Include="key.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
   </ItemGroup>
 </Project>

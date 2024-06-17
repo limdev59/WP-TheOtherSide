@@ -29,7 +29,7 @@ constexpr float cameraFollowSpeed = 0.2f; // 카메라가 플레이어를 따라
 constexpr COLORREF FLOOR_OUTLINE_COLORREF = RGB(34 / 2, 15 / 2, 33 / 2);
 constexpr COLORREF FLOOR_INBRUSH_COLORREF = RGB(42 / 2, 32 / 2, 50 / 2);
 constexpr COLORREF WALL_OUTLINE_COLORREF = RGB(24 / 2, 24 / 2, 40 / 2);
-constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24/ 5, 15 / 5, 33 / 5);
+constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24 / 5, 15 / 5, 33 / 5);
 Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
@@ -38,13 +38,13 @@ Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
 Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 19.5f);
 Vector3 OBJECT_POSITION1 = Vector3(195.0f, 1.3f, 67.5f);      //stage2 가벼운 물건 1
-Vector3 OBJECT_POSITION2= Vector3(137.5f, 1.3f, -35.0f);        //stage2 가벼운 물건 2
+Vector3 OBJECT_POSITION2 = Vector3(137.5f, 1.3f, -35.0f);        //stage2 가벼운 물건 2
 Vector3 OBJECT_POSITION3 = Vector3(170.0f, 1.3f, 100.0f);        //stage2 무거운 물건 
 Vector3 OBJECT_POSITION4 = Vector3(25.0f, 1.3f, 14.5f);     // stage1 위 무거운 물건 1
 Vector3 OBJECT_POSITION5 = Vector3(30.5f, 1.3f, 7.5f);    ///stage 1아래 무거운 물건 2
 
 // 전역 변수
-bool keyStates[256] = { 0 };
+bool keyStates[ 256 ] = { 0 };
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = L"Window Class Name";
 LPCTSTR lpszWindowName = L"windows program";
@@ -73,7 +73,9 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 std::vector<Construction> walls = {
 	//위벽
+	{{ 11, 3, 67.49 }, { 1, 1, 0 }, FLOOR_OUTLINE_COLORREF ,FLOOR_INBRUSH_COLORREF},
 	{{ 12.5, 4, 67.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 12.5, 3.5, 67.5 }, { 5, 7, 0 }, WALL_INBRUSH_COLORREF ,WALL_OUTLINE_COLORREF},
 	{{ 2.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 20, 4, 7.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 35, 4, 7.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
@@ -1208,7 +1210,7 @@ std::vector<Construction> stage2Walls = {
 
 Construction door = { { 1027.5, 4, 22.5}, { 0, 8, 10 }, RGB(255, 255, 255), RGB(255, 255, 255) };
 std::vector<Construction> stage3Floors = {
-   
+
    {{ 1000, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1005, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1000, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1287,8 +1289,8 @@ static AnimationController object5_animationController("object5");
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
-static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
+static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1298,8 +1300,8 @@ static Actor key3{ KEY3_POSITION, { 2.6f, 2.6f, 0.0f } };
 static Actor object1{ OBJECT_POSITION1, { 2.6f, 2.6f, 0.0f } };
 static Actor object2{ OBJECT_POSITION2, { 2.6f, 2.6f, 0.0f } };
 static Actor object3{ {170.0f, 4.0f, 100.0f}, { 6.0f, 8.0f, 0.0f } };   //드레서
-static Actor object4{ {25.0f, 2.0f, 14.5f}, {6.0f, 8.0f, 0.0f} };   //무거운거 2 시계
-static Actor object5{ {30.5f, 2.0f, 7.5f}, {6.0f, 4.0f, 0.0f}};   //무거운거 1 서랍
+static Actor object4{ {25.0f, 4.0f, 14.5f}, {6.0f, 8.0f, 0.0f} };   //무거운거 2 시계
+static Actor object5{ {30.5f, 2.0f, 7.5f}, {6.0f, 4.0f, 0.0f} };   //무거운거 1 서랍
 
 
 
@@ -1360,7 +1362,7 @@ void InitializeAnimations() {
 		{0.2f, {0, 0}},
 		{0.4f, {0, 0}},
 		{0.6f, {0, 0}},
-		
+
 	};
 	std::map<float, POINT> w_scales = {
 		{0.0f, {0, 0}},
@@ -1423,7 +1425,7 @@ void InitializeAnimations() {
 		{0.3f, "black_wolf_3"},
 		{0.45f, "black_wolf_4"}
 	};
-	
+
 	std::map<float, std::string> img_imageWolf_L = {
 		{0.0f, "black_wolf_L_move_1"},
 		{0.1f, "black_wolf_L_move_2"},
@@ -1455,11 +1457,11 @@ void InitializeAnimations() {
 	Animation Kitten_L_default("kitten_L_default", false, 0.0f, d_positions, d_scales, img_imagesKittenL);
 	Animation Kitten_R_move("kitten_R_move", true, 0.8f, m_positions, m_scales, img_KittenMoveR);
 	Animation Kitten_L_move("kitten_L_move", true, 0.8f, m_positions, m_scales, img_KittenMoveL);
-	
+
 	Animation black_wolf_1_move("black_wolf_move", true, 0.6f, w_positions, w_scales, img_imageWolf);
 	Animation black_wolf_L_move("black_wolf_move_L", true, 0.6f, w_positions, w_scales, img_imageWolf_L);
 	Animation black_wolf_R_move("black_wolf_move_R", true, 0.6f, w_positions, w_scales, img_imageWolf_R);
-	
+
 	std::vector<AnimationController::Transition> transitions;
 	std::vector<AnimationController::Transition> transitions2;
 	std::vector<AnimationController::Transition> transitions3;
@@ -1489,7 +1491,7 @@ void InitializeAnimations() {
 	object3_animationController.addState("object3", object3_default, object3_transition);
 	object4_animationController.addState("object4", object4_default, object4_transition);
 	object5_animationController.addState("object5", object5_default, object5_transition);
-	
+
 	player.setAnimationController(animationController);
 	shadow.setAnimationController(animationController2);
 	wolf.setAnimationController(animationController3);
@@ -1524,7 +1526,7 @@ static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	ssystem->createSound("100bpm.mp3", FMOD_LOOP_OFF, 0, &bpm100_sound);
 	ssystem->createSound("140bpm.mp3", FMOD_LOOP_OFF, 0, &bpm140_sound);
 	ssystem->createSound("door.mp3", FMOD_LOOP_OFF, 0, &door_sound);
-	channel->stop(); 
+	channel->stop();
 	channel->setVolume(0.01f);
 	channel->stop();
 	ssystem->playSound(mainTheme_sound, 0, false, &channel);
@@ -1564,8 +1566,15 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			ceiling.DrawObject3D(mDC, camera);
 		}
 		for (auto& wall : walls) {
+
 			wall.DrawObject3D(mDC, camera);
 		}
+		object1.DrawObject3D(mDC, camera);
+		object4.DrawObject3D(mDC, camera);
+		object5.DrawObject3D(mDC, camera);
+		if (isKey == true)key.DrawObject3D(mDC, camera);
+		if (isKey2 == true)key2.DrawObject3D(mDC, camera);
+		if (isKey3 == true)key3.DrawObject3D(mDC, camera);
 	}
 	else if (stage == 2) {
 		for (auto& floor : stage2Floors) {
@@ -1577,6 +1586,16 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		for (auto& wall : stage2Walls) {
 			wall.DrawObject3D(mDC, camera);
 		}
+
+		wolf.DrawObject3D(mDC, camera);
+		object3.DrawObject3D(mDC, camera);
+		if (isObject1 != 0) {
+			object1.DrawObject3D(mDC, camera);
+		}
+		if (isObject2 != 0) {
+			object2.DrawObject3D(mDC, camera);
+		}
+
 	}
 	else if (stage == 3) {
 		for (auto& floor : stage3Floors) {
@@ -1589,32 +1608,12 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 
 	if (stage == 1) {
-		object1.DrawObject3D(mDC, camera);
-		if (isKey== true) {
-			key.DrawObject3D(mDC, camera);
-		}
-		if (isKey2 == true) {
-			key2.DrawObject3D(mDC, camera);
-		}
-		if (isKey3 == true) {
-			key3.DrawObject3D(mDC, camera);
-		}
-		object4.DrawObject3D(mDC, camera);
-		object5.DrawObject3D(mDC, camera);
+
 	}
-	if (stage == 2) {
-		wolf.DrawObject3D(mDC, camera);
-		object3.DrawObject3D(mDC, camera);
-		if (isObject1 != 0) {
-			object1.DrawObject3D(mDC, camera);
-		}
-		if (isObject2 != 0) {
-			object2.DrawObject3D(mDC, camera);
-		}
-	}
-	shadow.DrawObject3D(mDC, camera);
+	if (stage == 2)
+		shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
-	
+
 
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
 	DeleteDC(mDC);
@@ -1648,20 +1647,20 @@ static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 }
 
 static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	keyStates[wParam] = true;
+	keyStates[ wParam ] = true;
 	std::string current = player.getAnimationController().getCurrentState();
-	if (keyStates['A'] && current != "kitten_L_move") {
+	if (keyStates[ 'A' ] && current != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
 		shadow.getAnimationController().setCurrentState("shadow_L_default");
 	}
-	else if (keyStates['D'] && current != "kitten_R_move") {
+	else if (keyStates[ 'D' ] && current != "kitten_R_move") {
 		player.getAnimationController().setCurrentState("kitten_R_move");
 		shadow.getAnimationController().setCurrentState("shadow_R_default");
-	} 
-	else if (keyStates['W'] && (current == "kitten_L_move" || current == "kitten_L_default")) {
+	}
+	else if (keyStates[ 'W' ] && (current == "kitten_L_move" || current == "kitten_L_default")) {
 		player.getAnimationController().setCurrentState("kitten_L_move");
 	}
-	else if (keyStates['S'] && (current == "kitten_R_move" || current == "kitten_R_default")) {
+	else if (keyStates[ 'S' ] && (current == "kitten_R_move" || current == "kitten_R_default")) {
 		player.getAnimationController().setCurrentState("kitten_R_move");
 	}
 	else if (keyStates[ 'W' ] && (current == "kitten_R_move" || current == "kitten_R_default")) {
@@ -1673,7 +1672,7 @@ static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 }
 
 static void CALLBACK HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	keyStates[wParam] = false;
+	keyStates[ wParam ] = false;
 	if (KEY_UP_CONDITION('A')) {
 		player.getAnimationController().setCurrentState("kitten_L_move");
 	}
@@ -1692,7 +1691,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	bool cantMoveUp = true;
 	bool cantMoveDown = true;
 
-	
+
 	//각 바닥과의 충돌 검사
 	{
 		if (stage == 1) {
@@ -1701,10 +1700,10 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				Vector3 pos = floor.getPosition();
 				Vector3 size = floor.getSize();
 				RECT bound = {
-					static_cast<LONG>(pos.x - size.x / 2),
-					static_cast<LONG>(pos.z - size.z / 2),
-					static_cast<LONG>(pos.x + size.x / 2),
-					static_cast<LONG>(pos.z + size.z / 2)
+					static_cast< LONG >(pos.x - size.x / 2),
+					static_cast< LONG >(pos.z - size.z / 2),
+					static_cast< LONG >(pos.x + size.x / 2),
+					static_cast< LONG >(pos.z + size.z / 2)
 				};
 
 				// 왼쪽 충돌 검사
@@ -1724,7 +1723,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					cantMoveUp = false;
 				}
 				//key 3개 먹어야 열림
-				if (playerPos.x == 115.0f && playerPos.y == 53.0f && isKey ==false && isKey2 == false && isKey3 == false) {
+				if (playerPos.x == 115.0f && playerPos.y == 53.0f && isKey == false && isKey2 == false && isKey3 == false) {
 					stage = 2;
 					player.setPosition(STAGE2_PLAYER_POSITION);
 					camera.setPosition(STAGE2_PLAYER_POSITION);
@@ -1741,7 +1740,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			Vector3 shadowPos = shadow.getPosition();
 			Vector3 playerPos = player.getPosition();
 
-			
+
 
 			//key1 충돌체크
 			double distance = std::sqrt((keyPos.x - shadowPos.x) * (keyPos.x - shadowPos.x) + (keyPos.z - shadowPos.z) * (keyPos.z - shadowPos.z));
@@ -1765,7 +1764,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			double pTOs = std::sqrt((playerPos.x - shadowPos.x) * (playerPos.x - shadowPos.x) + (playerPos.z - shadowPos.z) * (playerPos.z - shadowPos.z));
 
 			distance = std::sqrt((Object4Pos.x - shadowPos.x) * (Object4Pos.x - shadowPos.x) + (Object4Pos.z - shadowPos.z) * (Object4Pos.z - shadowPos.z));
-			if (pTOs >= 1.5){
+			if (pTOs >= 1.5) {
 				if (distance <= 1.5)heavy = true;
 			}
 			else {
@@ -1777,7 +1776,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			if (pTOs > 2) {
 				if (distance <= 1.5) heavy = true;
 			}
-			else{
+			else {
 				heavy = false;
 			}
 		}
@@ -1787,10 +1786,10 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				Vector3 pos = floor.getPosition();
 				Vector3 size = floor.getSize();
 				RECT bound = {
-					static_cast<LONG>(pos.x - size.x / 2),
-					static_cast<LONG>(pos.z - size.z / 2),
-					static_cast<LONG>(pos.x + size.x / 2),
-					static_cast<LONG>(pos.z + size.z / 2)
+					static_cast< LONG >(pos.x - size.x / 2),
+					static_cast< LONG >(pos.z - size.z / 2),
+					static_cast< LONG >(pos.x + size.x / 2),
+					static_cast< LONG >(pos.z + size.z / 2)
 				};
 				// 왼쪽 충돌 검사
 				if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
@@ -1811,46 +1810,46 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			}
 			//강아지 관련코드
 			{
-			POINT playerPos = player.get2DPosition();
-			POINT wolfPos = wolf.get2DPosition();
-			static POINT object1Pos = object1.get2DPosition();
-			static POINT object2Pos = object2.get2DPosition();
-			static POINT object3Pos = object3.get2DPosition();
-			POINT shadowPos = shadow.get2DPosition();
+				POINT playerPos = player.get2DPosition();
+				POINT wolfPos = wolf.get2DPosition();
+				static POINT object1Pos = object1.get2DPosition();
+				static POINT object2Pos = object2.get2DPosition();
+				static POINT object3Pos = object3.get2DPosition();
+				POINT shadowPos = shadow.get2DPosition();
 
-			//object 충돌처리
-			if (isObject1 == 2) {
-				double distance = std::sqrt((object1Pos.x - shadowPos.x) * (object1Pos.x - shadowPos.x) + (object1Pos.y - shadowPos.y) * (object1Pos.y - shadowPos.y));
-				if (distance <= 3.0) {
-					isObject1 = 1;
-					object1.set2DPosition(playerPos.x+5, playerPos.y);
+				//object 충돌처리
+				if (isObject1 == 2) {
+					double distance = std::sqrt((object1Pos.x - shadowPos.x) * (object1Pos.x - shadowPos.x) + (object1Pos.y - shadowPos.y) * (object1Pos.y - shadowPos.y));
+					if (distance <= 3.0) {
+						isObject1 = 1;
+						object1.set2DPosition(playerPos.x + 5, playerPos.y);
+					}
 				}
-			}
-			if (isObject2 == 2) {
-				double distance = std::sqrt((object2Pos.x - shadowPos.x) * (object2Pos.x - shadowPos.x) + (object2Pos.y - shadowPos.y) * (object2Pos.y - shadowPos.y));
-				if (distance <= 3.0) {
-					isObject2 = 1;
-					object2.set2DPosition(playerPos.x, playerPos.y+5);
+				if (isObject2 == 2) {
+					double distance = std::sqrt((object2Pos.x - shadowPos.x) * (object2Pos.x - shadowPos.x) + (object2Pos.y - shadowPos.y) * (object2Pos.y - shadowPos.y));
+					if (distance <= 3.0) {
+						isObject2 = 1;
+						object2.set2DPosition(playerPos.x, playerPos.y + 5);
+					}
 				}
-			}
 
-			 static double distance = 10;  //숫자 pTOs보다 크기만 하면 됨 그냥 10 아무거나 넣은거
-			double pTOs = std::sqrt((playerPos.x - shadowPos.x) * (playerPos.x - shadowPos.x) + (playerPos.y - shadowPos.y) * (playerPos.y - shadowPos.y));
+				static double distance = 10;  //숫자 pTOs보다 크기만 하면 됨 그냥 10 아무거나 넣은거
+				double pTOs = std::sqrt((playerPos.x - shadowPos.x) * (playerPos.x - shadowPos.x) + (playerPos.y - shadowPos.y) * (playerPos.y - shadowPos.y));
 
-			distance = std::sqrt((object3Pos.x - shadowPos.x) * (object3Pos.x - shadowPos.x) + (object3Pos.y - shadowPos.y) * (object3Pos.y - shadowPos.y));
-			if (pTOs >= 1.5) {
-				if (distance <= 1.5)heavy = true;
-			}
-			else {
-				heavy = false;
-			}
-			wolf.getAnimationController().update(deltaTime);
-			static int wolfMoveMode = 0;   //강아지 이동방향
-			static float wolfSpeed = 0.0;   //강아지 이동속도 줄이기, 커질수록 줄어듦
-			static int wolfSpeedCount = 0;   //강아지 이동속도 줄어드는 효과가 몇초 지속될거냐?
+				distance = std::sqrt((object3Pos.x - shadowPos.x) * (object3Pos.x - shadowPos.x) + (object3Pos.y - shadowPos.y) * (object3Pos.y - shadowPos.y));
+				if (pTOs >= 1.5) {
+					if (distance <= 1.5)heavy = true;
+				}
+				else {
+					heavy = false;
+				}
+				wolf.getAnimationController().update(deltaTime);
+				static int wolfMoveMode = 0;   //강아지 이동방향
+				static float wolfSpeed = 0.0;   //강아지 이동속도 줄이기, 커질수록 줄어듦
+				static int wolfSpeedCount = 0;   //강아지 이동속도 줄어드는 효과가 몇초 지속될거냐?
 
-			//강아지 속도 조절 코드
-			
+				//강아지 속도 조절 코드
+
 				if (wolfSpeedCount > 0.0) {
 					wolfSpeedCount = wolfSpeedCount - 1;
 					wolfSpeed = 0.3f;
@@ -1896,7 +1895,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					//animation변경
 					static bool aniwolf = true;
 					if (aniwolf) {
-						wolf.getAnimationController().setCurrentState("black_wolf_move"); 
+						wolf.getAnimationController().setCurrentState("black_wolf_move");
 						wolf.setSize({ 6.5f, 10.9f, 0.0f });
 						aniwolf = false;
 					}
@@ -1956,7 +1955,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					if (wolfPos.x <= object2Pos.x && isObject2 == 1) {
 						wolfSpeedCount = 150;
 						isObject2 = 0;
-					}	
+					}
 				}
 				else if (wolfMoveMode == 3) {
 					//animation변경
@@ -1995,9 +1994,9 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					player.setPosition(STAGE3_PLAYER_POSITION);
 					camera.setPosition(STAGE3_PLAYER_POSITION);
 				}
-				
+
 			}
-			
+
 		}
 		else if (stage == 3) {
 			for (const Construction& floor : stage3Floors) {
@@ -2005,10 +2004,10 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				Vector3 pos = floor.getPosition();
 				Vector3 size = floor.getSize();
 				RECT bound = {
-					static_cast<LONG>(pos.x - size.x / 2),
-					static_cast<LONG>(pos.z - size.z / 2),
-					static_cast<LONG>(pos.x + size.x / 2),
-					static_cast<LONG>(pos.z + size.z / 2)
+					static_cast< LONG >(pos.x - size.x / 2),
+					static_cast< LONG >(pos.z - size.z / 2),
+					static_cast< LONG >(pos.x + size.x / 2),
+					static_cast< LONG >(pos.z + size.z / 2)
 				};
 				// 왼쪽 충돌 검사
 				if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
@@ -2028,7 +2027,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				}
 			}
 			//문열기
-			if (keyStates['D'] && player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
+			if (keyStates[ 'D' ] && player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
 				doingOpen = doingOpen + 0.2;
 			}
 			door.setSize({ 0, 8, doingOpen / 10 });
@@ -2041,7 +2040,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		//cantake 
 		shadow.Update(deltaTime);
 		shadow.getAnimationController().update(deltaTime);
-		if (keyStates[ VK_SPACE ]||canTake) {
+		if (keyStates[ VK_SPACE ] || canTake) {
 			if (heavy == false) {
 				mouse.UpdateMouse3DPosition(camera);
 				canTake = true;
@@ -2061,7 +2060,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				if (mouse.IsLeftClick()) {
 					shadow.Charge(deltaTime);
 				}
-			}  
+			}
 			else if (heavy == true) {
 				canTake = true;
 
@@ -2082,32 +2081,32 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	}
 	{
-		if (keyStates['A'] || keyStates['D'] || keyStates['W'] || keyStates['S']) {
+		if (keyStates[ 'A' ] || keyStates[ 'D' ] || keyStates[ 'W' ] || keyStates[ 'S' ]) {
 			player.getAnimationController().update(deltaTime);
 		}
-		if (!keyStates[VK_SPACE] && !mouse.IsLeftClick()) {
-			if (keyStates['A']) {
+		if (!keyStates[ VK_SPACE ] && !mouse.IsLeftClick()) {
+			if (keyStates[ 'A' ]) {
 				if (!cantMoveLeft) {
 					player.move2DPosition(-0.2f + ((stage == 2) ? -0.2f : 0), 0);
-					if (keyStates[VK_SHIFT]) player.move2DPosition(-1.0f, 0);
+					if (keyStates[ VK_SHIFT ]) player.move2DPosition(-1.0f, 0);
 				}
 			}
-			if (keyStates['D']) {
+			if (keyStates[ 'D' ]) {
 				if (!cantMoveRight) {
 					player.move2DPosition(0.2f + ((stage == 2) ? 0.2f : 0), 0);
-					if (keyStates[VK_SHIFT]) player.move2DPosition(1.0f, 0);
+					if (keyStates[ VK_SHIFT ]) player.move2DPosition(1.0f, 0);
 				}
 			}
-			if (keyStates['W']) {
+			if (keyStates[ 'W' ]) {
 				if (!cantMoveUp) {
 					player.move2DPosition(0, 0.2f + ((stage == 2) ? 0.2f : 0)); // 일반 이동
-					if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // 쉬프트 키 누르면 빠른 이동
+					if (keyStates[ VK_SHIFT ]) player.move2DPosition(0, 1.0f); // 쉬프트 키 누르면 빠른 이동
 				}
 			}
-			if (keyStates['S']) {
+			if (keyStates[ 'S' ]) {
 				if (!cantMoveDown) {
 					player.move2DPosition(0, -0.2f + ((stage == 2) ? -0.2f : 0)); // 일반 이동
-					if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
+					if (keyStates[ VK_SHIFT ]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
 				}
 			}
 		}
@@ -2116,9 +2115,9 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			Vector3 playerPos = player.getPosition();
 			Vector3 cameraPos = camera.getPosition();
 			Vector3 targetPos = {
-				playerPos.x + (keyStates['A'] && !cantMoveLeft ? -1.0f : (keyStates['D'] && !cantMoveRight ? 1.0f : 0.0f)),
-				playerPos.y + 3.0f + (keyStates['W'] ? 0.1f : (keyStates['S'] ? -0.1f : 0.0f)),
-				playerPos.z - 5.8f + (keyStates['W'] ? 0.5f : (keyStates['S'] ? -1.5f : 0.0f))
+				playerPos.x + (keyStates[ 'A' ] && !cantMoveLeft ? -1.0f : (keyStates[ 'D' ] && !cantMoveRight ? 1.0f : 0.0f)),
+				playerPos.y + 3.0f + (keyStates[ 'W' ] ? 0.1f : (keyStates[ 'S' ] ? -0.1f : 0.0f)),
+				playerPos.z - 5.8f + (keyStates[ 'W' ] ? 0.5f : (keyStates[ 'S' ] ? -1.5f : 0.0f))
 			};
 			camera.setPosition({
 				cameraPos.x + (targetPos.x - cameraPos.x) * cameraFollowSpeed,
@@ -2129,8 +2128,8 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			Vector3 cameraRot = camera.getRotation();
 			Vector3 targetRot = {
 				cameraRot.x,
-				(keyStates['W'] ? imsi + 0.1f : (keyStates['S'] ? imsi - 0.1f : imsi)),
-				(keyStates['A'] ? 0.025f : (keyStates['D'] ? -0.025f : 0.0f))
+				(keyStates[ 'W' ] ? imsi + 0.1f : (keyStates[ 'S' ] ? imsi - 0.1f : imsi)),
+				(keyStates[ 'A' ] ? 0.025f : (keyStates[ 'D' ] ? -0.025f : 0.0f))
 			};
 			camera.setRotation({
 				cameraRot.x + (targetRot.x - cameraRot.x) * cameraFollowSpeed,
@@ -2199,14 +2198,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	WndClass.hInstance = hInstance;
 	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	WndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	WndClass.hbrBackground = ( HBRUSH ) (COLOR_WINDOW + 1);
 	WndClass.lpszMenuName = NULL;
 	WndClass.lpszClassName = lpszClass;
 
 	RegisterClass(&WndClass);
 
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, -10, 0,
-		1600, 900, NULL, (HMENU)NULL, hInstance, NULL);
+		1600, 900, NULL, ( HMENU ) NULL, hInstance, NULL);
 
 	ShowWindow(hWnd, nCmdShow);
 
@@ -2214,5 +2213,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		TranslateMessage(&Message);
 		DispatchMessage(&Message);
 	}
-	return (int)Message.wParam;
+	return ( int ) Message.wParam;
 }
