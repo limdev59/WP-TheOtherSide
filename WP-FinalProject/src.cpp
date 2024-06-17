@@ -31,6 +31,13 @@ Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
 Vector3 WOLF_POSITION = Vector3(90.0f, 1.3f, 95.0f);
 Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
+Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
+Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 17.5f);
+Vector3 OBJECT_POSITION1 = Vector3(25.5f, 1.3f, 17.5f);
+Vector3 OBJECT_POSITION2= Vector3(25.5f, 1.3f, 17.5f);
+Vector3 OBJECT_POSITION3 = Vector3(27.5f, 1.3f, 17.5f);
+Vector3 OBJECT_POSITION4 = Vector3(27.5f, 1.3f, 17.5f);
+Vector3 OBJECT_POSITION5 = Vector3(27.5f, 1.3f, 17.5f);
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -47,7 +54,9 @@ static DWORD lastTime = timeGetTime();
 static int stage = 1;
 static bool canTake{ true };
 static bool heavy{ false };
-static bool isKey = false;
+static bool isKey = true;
+static bool isKey2 = true;
+static bool isKey3 = true;
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1237,8 +1246,13 @@ std::vector<Construction> stage3Walls = {
 
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_R_default");
-static AnimationController animationController3("black_wolf_move");
+static AnimationController animationController3("black_wolf_move_L");
 static AnimationController animationController4("key");
+static AnimationController object1_animationController("object1");
+static AnimationController object2_animationController("object2");
+static AnimationController object3_animationController("object3");
+static AnimationController object4_animationController("object4");
+static AnimationController object5_animationController("object5");
 
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
@@ -1248,6 +1262,14 @@ static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
 static Actor key{ KEY_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Actor key2{ KEY2_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Actor key3{ KEY3_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Actor object1{ OBJECT_POSITION1, { 2.6f, 2.6f, 0.0f } };
+static Actor object2{ OBJECT_POSITION2, { 2.6f, 2.6f, 0.0f } };
+static Actor object3{ OBJECT_POSITION3, { 2.6f, 2.6f, 0.0f } };
+static Actor object4{ OBJECT_POSITION4, { 2.6f, 2.6f, 0.0f } };
+static Actor object5{ OBJECT_POSITION5, { 2.6f, 2.6f, 0.0f } };
+
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
@@ -1255,6 +1277,13 @@ void InitializeAnimations() {
 		{0.0f, {0, 0}}
 	};
 	std::map<float, POINT> key_scales = {
+		{0.0f, {1, 1}}
+	};
+
+	std::map<float, POINT> object_positions = {
+		{0.0f, {0, 0}}
+	};
+	std::map<float, POINT> object_scales = {
 		{0.0f, {1, 1}}
 	};
 
@@ -1311,6 +1340,23 @@ void InitializeAnimations() {
 	std::map<float, std::string> key_image = {
 		{0.0f, "key"}
 	};
+
+	std::map<float, std::string> object1_image = {
+		{0.0f, "Shadow_L_default"}
+	};
+	std::map<float, std::string> object2_image = {
+		{0.0f, "key"}
+	};
+	std::map<float, std::string> object3_image = {
+		{0.0f, "key"}
+	};
+	std::map<float, std::string> object4_image = {
+		{0.0f, "key"}
+	};
+	std::map<float, std::string> object5_image = {
+		{0.0f, "key"}
+	};
+
 	std::map<float, std::string> shadow_imagesKittenL = {
 		{0.0f, "Shadow_L_default"}
 	};
@@ -1345,8 +1391,22 @@ void InitializeAnimations() {
 		{0.3f, "black_wolf_3"},
 		{0.45f, "black_wolf_4"}
 	};
+	
+	std::map<float, std::string> img_imageWolf_L = {
+		{0.0f, "black_wolf_L_move_1"},
+		{0.1f, "black_wolf_L_move_2"},
+		{0.2f, "black_wolf_L_move_3"},
+		{0.3f, "black_wolf_L_move_4"},
+		{0.4f, "black_wolf_L_move_5"},
+		{0.5f, "black_wolf_L_move61"}
+	};
 
 	Animation key_default("key", false, 0.0f, key_positions, key_scales, key_image);
+	Animation object1_default("object1", false, 0.0f, object_positions, object_scales, object1_image);
+	Animation object2_default("object2", false, 0.0f, object_positions, object_scales, object2_image);
+	Animation object3_default("object3", false, 0.0f, object_positions, object_scales, object3_image);
+	Animation object4_default("object4", false, 0.0f, object_positions, object_scales, object4_image);
+	Animation object5_default("object5", false, 0.0f, object_positions, object_scales, object5_image);
 
 	Animation Shadow_R_default("shadow_R_default", false, 0.0f, shadow_positions, shadow_scales, shadow_imagesKittenR);
 	Animation Shadow_L_default("shadow_L_default", false, 0.0f, shadow_positions2, shadow_scales2, shadow_imagesKittenL);
@@ -1357,12 +1417,17 @@ void InitializeAnimations() {
 	Animation Kitten_L_move("kitten_L_move", true, 0.8f, m_positions, m_scales, img_KittenMoveL);
 	
 	Animation black_wolf_1_move("black_wolf_move", true, 0.6f, w_positions, w_scales, img_imageWolf);
+	Animation black_wolf_L_move("black_wolf_move_L", true, 0.6f, w_positions, w_scales, img_imageWolf_L);
 	
-
 	std::vector<AnimationController::Transition> transitions;
 	std::vector<AnimationController::Transition> transitions2;
 	std::vector<AnimationController::Transition> transitions3;
-	std::vector<AnimationController::Transition> transitions4;
+	std::vector<AnimationController::Transition> key_transition;
+	std::vector<AnimationController::Transition> object1_transition;
+	std::vector<AnimationController::Transition> object2_transition;
+	std::vector<AnimationController::Transition> object3_transition;
+	std::vector<AnimationController::Transition> object4_transition;
+	std::vector<AnimationController::Transition> object5_transition;
 
 	animationController2.addState("shadow_R_default", Shadow_R_default, transitions2);
 	animationController2.addState("shadow_L_default", Shadow_L_default, transitions2);
@@ -1373,13 +1438,27 @@ void InitializeAnimations() {
 	animationController.addState("kitten_L_move", Kitten_L_move, transitions);
 
 	animationController3.addState("black_wolf_move", black_wolf_1_move, transitions3);
+	animationController3.addState("black_wolf_move_L", black_wolf_1_move, transitions3);
 
-	animationController4.addState("key", key_default, transitions4);
+	animationController4.addState("key", key_default, key_transition);
 
+	object1_animationController.addState("object1", object1_default, object1_transition);
+	object2_animationController.addState("object2", object2_default, object2_transition);
+	object3_animationController.addState("object3", object3_default, object3_transition);
+	object4_animationController.addState("object4", object4_default, object4_transition);
+	object5_animationController.addState("object5", object5_default, object5_transition);
+	
 	player.setAnimationController(animationController);
 	shadow.setAnimationController(animationController2);
 	wolf.setAnimationController(animationController3);
 	key.setAnimationController(animationController4);
+	key2.setAnimationController(animationController4);
+	key3.setAnimationController(animationController4);
+	object1.setAnimationController(object1_animationController);
+	object2.setAnimationController(object2_animationController);
+	object3.setAnimationController(object3_animationController);
+	object4.setAnimationController(object4_animationController);
+	object5.setAnimationController(object5_animationController);
 }
 
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -1444,9 +1523,17 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			wall.DrawObject3D(mDC, camera);
 		}
 	}
+
 	if (stage == 1) {
-		if (isKey == false) {
+		object1.DrawObject3D(mDC, camera);
+		if (isKey== true) {
 			key.DrawObject3D(mDC, camera);
+		}
+		if (isKey2 == true) {
+			key2.DrawObject3D(mDC, camera);
+		}
+		if (isKey3 == true) {
+			key3.DrawObject3D(mDC, camera);
 		}
 	}
 	if (stage == 2) {
@@ -1550,22 +1637,34 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 					cantMoveUp = false;
 				}
-
-				if (playerPos.x == 115.0f && playerPos.y == 53.0f && isKey == true) {
+				//key 3개 먹어야 열림
+				if (playerPos.x == 115.0f && playerPos.y == 53.0f && isKey ==false && isKey2 == false && isKey3 == false) {
 					stage = 2;
 					player.setPosition(STAGE2_PLAYER_POSITION);
 					camera.setPosition(STAGE2_PLAYER_POSITION);
-					isKey = false;
 				}
 			}
 
+
+			//키 충돌체크
 			Vector3 keyPos = key.getPosition();
+			Vector3 key2Pos = key2.getPosition();
+			Vector3 key3Pos = key3.getPosition();
+
 			Vector3 shadowPos = shadow.getPosition();
+
 			double distance = std::sqrt((keyPos.x - shadowPos.x) * (keyPos.x - shadowPos.x) + (keyPos.z - shadowPos.z) * (keyPos.z - shadowPos.z));
 			if (distance <= 3) {
-				isKey = true;
+				isKey = false;
 			}
-			
+			distance = std::sqrt((key2Pos.x - shadowPos.x) * (key2Pos.x - shadowPos.x) + (key2Pos.z - shadowPos.z) * (key2Pos.z - shadowPos.z));
+			if (distance <= 3) {
+				isKey2 = false;
+			}
+			distance = std::sqrt((key3Pos.x - shadowPos.x) * (key3Pos.x - shadowPos.x) + (key3Pos.z - shadowPos.z) * (key3Pos.z - shadowPos.z));
+			if (distance <= 3) {
+				isKey3 = false;
+			}
 		}
 		else if (stage == 2) {
 			for (const Construction& floor : stage2Floors) {

@@ -132,5 +132,32 @@
     <Image Include="black_wolf_4.png">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="key.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Shadow_L_default.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Shadow_R_default.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_L_move_6.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_L_move_1.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_L_move_2.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_L_move_3.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_L_move_4.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="black_wolf_L_move_5.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

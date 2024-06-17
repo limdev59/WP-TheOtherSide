@@ -163,6 +163,12 @@
     <Image Include="black_wolf_2.png" />
     <Image Include="black_wolf_3.png" />
     <Image Include="black_wolf_4.png" />
+    <Image Include="black_wolf_L_move_1.png" />
+    <Image Include="black_wolf_L_move_2.png" />
+    <Image Include="black_wolf_L_move_3.png" />
+    <Image Include="black_wolf_L_move_4.png" />
+    <Image Include="black_wolf_L_move_5.png" />
+    <Image Include="black_wolf_L_move_6.png" />
     <Image Include="Horror_background.jpg" />
     <Image Include="key.png" />
     <Image Include="kitten_L_default_1.png" />
