@@ -41,6 +41,9 @@ Vector3 OBJECT_POSITION2= Vector3(137.5f, 1.3f, -35.0f);        //stage2 가벼�
 Vector3 OBJECT_POSITION3 = Vector3(170.0f, 1.3f, 100.0f);        //stage2 무거운 물건 
 Vector3 OBJECT_POSITION4 = Vector3(25.0f, 1.3f, 14.5f);     // stage1 위 무거운 물건 1
 Vector3 OBJECT_POSITION5 = Vector3(30.5f, 1.3f, 7.5f);    ///stage 1아래 무거운 물건 2
+Vector3 OBJECT_POSITION6 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 1아래 무거운 물건 2
+Vector3 OBJECT_POSITION7 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 1아래 무거운 물건 2
+Vector3 OBJECT_POSITION8 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 1아래 무거운 물건 2
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -54,18 +57,22 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 3;
 
 static bool canTake{ true };
 static bool heavy{ false };
 static bool isKey = true;
 static bool isKey2 = true;
 static bool isKey3 = true;
-static int isObject1 = 2;  //2는 기본배치되있는 상태, 1은 그랩해서 능력 활성화 상태, 0은 사라진상태
-static int isObject2 = 2;
+//2는 기본배치되있는 상태, 1은 그랩해서 능력 활성화 상태, 0은 사라진상태
+static int isObject1 = 2;   //사용
+static int isObject2 = 2;    //사용
 static int isObject3 = 2;
 static int isObject4 = 2;
 static int isObject5 = 2;
+static int isObject6 = 2;
+static int isObject7 = 2;
+static int isObject8 = 2;
 float doingOpen = 0;
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1287,7 +1294,7 @@ static AnimationController object5_animationController("object5");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
+static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
