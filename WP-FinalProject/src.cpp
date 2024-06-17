@@ -1802,7 +1802,6 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					player.setPosition(STAGE2_PLAYER_POSITION);
 					camera.setPosition(STAGE2_PLAYER_POSITION);
 				}
-
 				//개소리 충돌체크
 				if (playerPos.x >= 77.5f && playerPos.x <= 87.5f && playerPos.y >= 45) {
 					isOnGaesorry = true;
@@ -1815,11 +1814,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					channel->stop();
 					ssystem->playSound(dog_grrrrr, 0, false, &channel);
 				}
-
-				/*{ { 80, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 85, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 80, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 85, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF }*/
+				
 			}
 
 
@@ -2228,6 +2223,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			}
 		}
 		else if (stage == 4) {
+			channel->stop();
 			for (const Construction& floor : stage4Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();
