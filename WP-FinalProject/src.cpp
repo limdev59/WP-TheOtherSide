@@ -1314,6 +1314,12 @@ static Actor object6{ OBJECT_POSITION6, { 2.6f, 2.6f, 0.0f } };
 static Actor object7{ OBJECT_POSITION7, { 2.6f, 2.6f, 0.0f } };
 static Actor object8{ OBJECT_POSITION8, { 2.6f, 2.6f, 0.0f } };
 
+static Actor object4{ {25.0f, 4.0f, 14.5f}, {6.0f, 8.0f, 0.0f} };   //무거운거 2 시계
+static Actor object5{ {30.5f, 2.0f, 7.5f}, {6.0f, 4.0f, 0.0f} };   //무거운거 1 서랍
+
+
+>>>>>>>>> Temporary merge branch 2
+
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
 	std::map<float, POINT> key_positions = {
