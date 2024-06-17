@@ -54,7 +54,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 2;
+static int stage = 1;
 
 static bool canTake{ true };
 static bool heavy{ false };
@@ -1287,7 +1287,7 @@ static AnimationController object5_animationController("object5");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
-static Player player{ STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
+static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1296,9 +1296,9 @@ static Actor key2{ KEY2_POSITION, { 2.6f, 2.6f, 0.0f } };
 static Actor key3{ KEY3_POSITION, { 2.6f, 2.6f, 0.0f } };
 static Actor object1{ OBJECT_POSITION1, { 2.6f, 2.6f, 0.0f } };
 static Actor object2{ OBJECT_POSITION2, { 2.6f, 2.6f, 0.0f } };
-static Actor object3{ OBJECT_POSITION3, { 2.6f, 2.6f, 0.0f } };
-static Actor object4{ OBJECT_POSITION4, { 2.6f, 2.6f, 0.0f } };   //무거운거 2
-static Actor object5{ OBJECT_POSITION5, { 2.6f, 2.6f, 0.0f } };   //무거운거 1
+static Actor object3{ {170.0f, 4.0f, 100.0f}, { 6.0f, 8.0f, 0.0f } };   //드레서
+static Actor object4{ {25.0f, 2.0f, 14.5f}, {6.0f, 8.0f, 0.0f} };   //무거운거 2 시계
+static Actor object5{ {30.5f, 2.0f, 7.5f}, {6.0f, 4.0f, 0.0f}};   //무거운거 1 서랍
 
 
 
@@ -1373,19 +1373,19 @@ void InitializeAnimations() {
 	};
 
 	std::map<float, std::string> object1_image = {
-		{0.0f, "key"}
+		{0.0f, "piggy_bank"}
 	};
 	std::map<float, std::string> object2_image = {
-		{0.0f, "key"}
+		{0.0f, "ship_in_a_bottle"}
 	};
 	std::map<float, std::string> object3_image = {
-		{0.0f, "key"}
+		{0.0f, "bookshelf"}
 	};
 	std::map<float, std::string> object4_image = {
-		{0.0f, "Shadow_L_default"}
+		{0.0f, "grandfather_clocks"}
 	};
 	std::map<float, std::string> object5_image = {
-		{0.0f, "Shadow_L_default"}
+		{0.0f, "dresser"}
 	};
 
 	std::map<float, std::string> shadow_imagesKittenL = {
@@ -1799,16 +1799,16 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			//object 충돌처리
 			if (isObject1 == 2) {
 				double distance = std::sqrt((object1Pos.x - shadowPos.x) * (object1Pos.x - shadowPos.x) + (object1Pos.y - shadowPos.y) * (object1Pos.y - shadowPos.y));
-				if (distance <= 1.5) {
+				if (distance <= 3.0) {
 					isObject1 = 1;
 					object1.set2DPosition(playerPos.x+5, playerPos.y);
 				}
 			}
 			if (isObject2 == 2) {
 				double distance = std::sqrt((object2Pos.x - shadowPos.x) * (object2Pos.x - shadowPos.x) + (object2Pos.y - shadowPos.y) * (object2Pos.y - shadowPos.y));
-				if (distance <= 1.5) {
+				if (distance <= 3.0) {
 					isObject2 = 1;
-					object2.set2DPosition(playerPos.x, playerPos.y);
+					object2.set2DPosition(playerPos.x, playerPos.y+5);
 				}
 			}
 
@@ -1831,11 +1831,12 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			
 				if (wolfSpeedCount > 0.0) {
 					wolfSpeedCount = wolfSpeedCount - 1;
-					wolfSpeed = 0.4f;
+					wolfSpeed = 0.3f;
 				}
 				else {
 					wolfSpeed = 0.0f;
 				}
+
 				if (wolfMoveMode == 0) {
 					static bool aniwolf = true;
 					//animation변경
@@ -1844,7 +1845,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						wolf.setSize({ 10.9f, 5.5f, 0.0f });
 						aniwolf = false;
 					}
-					wolf.move2DPosition(0.45f - wolfSpeed, 0);
+					wolf.move2DPosition(0.4f - wolfSpeed, 0);
 					//늑대move모드 선언으로 이동방향 정해주기
 					if (wolfPos.x > 209) {
 						wolfMoveMode = 1;
@@ -1877,7 +1878,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						wolf.setSize({ 6.5f, 10.9f, 0.0f });
 						aniwolf = false;
 					}
-					wolf.move2DPosition(0.0f, -0.5f + wolfSpeed);
+					wolf.move2DPosition(0.0f, -0.45f + wolfSpeed);
 					//늑대move모드 선언으로 이동방향 정해주기
 					if (wolfPos.y < -20) {
 						wolfMoveMode = 2;
@@ -1931,17 +1932,16 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					}
 					//object와 늑대 충돌시, 느려지기
 					if (wolfPos.x <= object2Pos.x && isObject2 == 1) {
-						wolfSpeedCount = 100;
+						wolfSpeedCount = 150;
 						isObject2 = 0;
-					}
-					
+					}	
 				}
 				else if (wolfMoveMode == 3) {
 					//animation변경
 					static bool aniwolf = true;
 					if (aniwolf) {
 						wolf.getAnimationController().setCurrentState("black_wolf_move");
-						wolf.setSize({ 6.5f, 10.9f, 0.0f });
+						wolf.setSize({ 5.5f, 10.9f, 0.0f });
 						aniwolf = false;
 					}
 					wolf.move2DPosition(0.0f, -0.55f + wolfSpeed);
@@ -1964,7 +1964,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						wolf.getAnimationController().setCurrentState("black_wolf_move_R");
 					}//object2와 늑대 충돌시, 느려지기
 					if (object2Pos.y <= object2Pos.y && isObject2 == 1) {
-						wolfSpeedCount = 100;
+						wolfSpeedCount = 150;
 						isObject2 = 0;
 					}
 				}
