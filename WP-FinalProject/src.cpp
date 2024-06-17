@@ -1626,13 +1626,26 @@ static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[wParam] = true;
-	if (keyStates['A'] && player.getAnimationController().getCurrentState() != "kitten_L_move") {
+	std::string current = player.getAnimationController().getCurrentState();
+	if (keyStates['A'] && current != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
 		shadow.getAnimationController().setCurrentState("shadow_L_default");
 	}
-	else if (keyStates['D'] && player.getAnimationController().getCurrentState() != "kitten_R_move") {
+	else if (keyStates['D'] && current != "kitten_R_move") {
 		player.getAnimationController().setCurrentState("kitten_R_move");
 		shadow.getAnimationController().setCurrentState("shadow_R_default");
+	} 
+	else if (keyStates['W'] && (current == "kitten_L_move" || current == "kitten_L_default")) {
+		player.getAnimationController().setCurrentState("kitten_L_move");
+	}
+	else if (keyStates['S'] && (current == "kitten_R_move" || current == "kitten_R_default")) {
+		player.getAnimationController().setCurrentState("kitten_R_move");
+	}
+	else if (keyStates[ 'W' ] && (current == "kitten_R_move" || current == "kitten_R_default")) {
+		player.getAnimationController().setCurrentState("kitten_R_move");
+	}
+	else if (keyStates[ 'S' ] && (current == "kitten_L_move" || current == "kitten_L_default")) {
+		player.getAnimationController().setCurrentState("kitten_L_move");
 	}
 }
 
