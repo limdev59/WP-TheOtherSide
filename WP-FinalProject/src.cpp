@@ -1794,11 +1794,20 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					cantMoveUp = false;
 				}
 				//key 3개 먹어야 열림
-				if (playerPos.x == 115.0f && playerPos.y == 53.0f && isKey == false && isKey2 == false && isKey3 == false) {
+				if (playerPos.x >= 112.5f && playerPos.y >= 52.5f && isKey == false && isKey2 == false && isKey3 == false) {
 					stage = 2;
 					player.setPosition(STAGE2_PLAYER_POSITION);
 					camera.setPosition(STAGE2_PLAYER_POSITION);
 				}
+
+				//개소리 충돌체크
+				if (playerPos.x >= 77.5f && playerPos.x <= 87.5f && playerPos.y >= 45) {
+					
+				}
+				/*{ { 80, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+				{ { 85, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+				{ { 80, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+				{ { 85, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF }*/
 			}
 
 
