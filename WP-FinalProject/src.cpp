@@ -43,8 +43,8 @@ Vector3 OBJECT_POSITION3 = Vector3(170.0f, 1.3f, 100.0f);        //stage2 무거
 Vector3 OBJECT_POSITION4 = Vector3(25.0f, 1.3f, 14.5f);     // stage1 위 무거운 물건 1
 Vector3 OBJECT_POSITION5 = Vector3(30.5f, 1.3f, 7.5f);    ///stage 1아래 무거운 물건 2
 Vector3 OBJECT_POSITION6 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 3
-Vector3 OBJECT_POSITION7 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 3
-Vector3 OBJECT_POSITION8 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 3
+Vector3 OBJECT_POSITION7 = Vector3(1010.0f, 1.3f, 30.0f);    ///stage 3
+Vector3 OBJECT_POSITION8 = Vector3(1020.0f, 1.3f, 30.0f);    ///stage 3
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -2059,21 +2059,57 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					cantMoveUp = false;
 				}
 
-				
 				static POINT object6Pos = object6.get2DPosition();
 				static POINT object7Pos = object7.get2DPosition();
 				static POINT object8Pos = object8.get2DPosition();
 				POINT shadowPos = shadow.get2DPosition();
+
+				static int doorTime = 30000;       // doorTime = 0되면 죽음
+				static int boxTime = 0;
 
 				//object 충돌처리
 				if (isObject6 == 2) {
 					double distance = std::sqrt((object6Pos.x - shadowPos.x) * (object6Pos.x - shadowPos.x) + (object6Pos.y - shadowPos.y) * (object6Pos.y - shadowPos.y));
 					if (distance <= 3.0) {
 						isObject6 = 1;
-						object6.set2DPosition(playerPos.x + 5, playerPos.y);
+						boxTime = 10000;
+						object6.set2DPosition(1000, 1000);
 					}
 				}
+				
+				if (boxTime <= 0) {
+					boxTime = 0;
+					doorTime--;
+0;					if (isObject6 == 1) {
+						isObject6 == 0;
+					}
+					if (isObject7 == 1) {
+						isObject7 == 0;
+					}
+					if (isObject8 == 1) {
+						isObject8 == 0;
+					}
+					if (doorTime == 0) {
+						//초기화
+						player.setPosition(STAGE3_PLAYER_POSITION);
+						camera.setPosition(STAGE3_PLAYER_POSITION);
+						isObject6 = 2;
+						isObject7 = 2;
+						isObject8 = 2;
+						object6.setPosition(OBJECT_POSITION6);
+						object7.setPosition(OBJECT_POSITION7);
+						object8.setPosition(OBJECT_POSITION8);
+						doingOpen = 0;
+						doorTime = 30000;
+						boxTime = 0;
+					}
+				}
+				else {
+					boxTime--;
+				}
 			}
+			
+
 			//문열기
 			if (keyStates['D'] && player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
 				doingOpen = doingOpen + 0.2;
