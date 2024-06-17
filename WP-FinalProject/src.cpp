@@ -1799,15 +1799,11 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					player.setPosition(STAGE2_PLAYER_POSITION);
 					camera.setPosition(STAGE2_PLAYER_POSITION);
 				}
-
 				//개소리 충돌체크
 				if (playerPos.x >= 77.5f && playerPos.x <= 87.5f && playerPos.y >= 45) {
 					
 				}
-				/*{ { 80, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 85, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 80, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-				{ { 85, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF }*/
+				
 			}
 
 
