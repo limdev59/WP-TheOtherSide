@@ -29,11 +29,11 @@ constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24/ 5, 15 / 5, 33 / 5);
 Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
-Vector3 WOLF_POSITION = Vector3(60.0f, 1.3f, 100.0f);
+Vector3 WOLF_POSITION = Vector3(60.0f, 1.3f, 97.5f);
 Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
 Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 17.5f);
-Vector3 OBJECT_POSITION1 = Vector3(140.0f, 1.3f, 95.0f);
+Vector3 OBJECT_POSITION1 = Vector3(195.0f, 1.3f, 67.5f);
 Vector3 OBJECT_POSITION2= Vector3(25.5f, 1.3f, 17.5f);
 Vector3 OBJECT_POSITION3 = Vector3(27.5f, 1.3f, 17.5f);
 Vector3 OBJECT_POSITION4 = Vector3(27.5f, 1.3f, 17.5f);
@@ -51,7 +51,8 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 3;
+
 static bool canTake{ true };
 static bool heavy{ false };
 static bool isKey = true;
@@ -62,7 +63,7 @@ static int isObject2 = 2;
 static int isObject3 = 2;
 static int isObject4 = 2;
 static int isObject5 = 2;
-
+float doingOpen = 0;
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -534,7 +535,7 @@ std::vector<Construction> stage2Floors = {
 	{ { 198,0 ,70}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 195,0 ,65}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 198,0 ,65}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-	
+	//
 	{ { 205,0 ,45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 210,0 ,45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 215,0 ,45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1189,6 +1190,7 @@ std::vector<Construction> stage2Walls = {
 { { 112.5,4 ,-132.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 };
 
+Construction door = { { 1027.5, 4, 22.5}, { 0, 8, 10 }, RGB(255, 255, 255), RGB(255, 255, 255) };
 std::vector<Construction> stage3Floors = {
    
    {{ 1000, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1216,10 +1218,10 @@ std::vector<Construction> stage3Floors = {
 {{ 1010, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1015, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
-{{ 1020, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{{ 1025, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{{ 1020, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
+{{ 1025, 0, 20 }, { 5, 0, 5 }, RGB(255,255,255), FLOOR_OUTLINE_COLORREF },
 {{ 1020, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
-{{ 1025, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{{ 1025, 0, 25 }, { 5, 0, 5 }, RGB(255,255,255), FLOOR_OUTLINE_COLORREF },
 
 {{ 1000, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1005, 0, 30 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1238,8 +1240,8 @@ std::vector<Construction> stage3Floors = {
 };
 std::vector<Construction> stage3Walls = {
 	//위벽
-	{{1002.5,4 ,37.5}, { 10, 8, 0 }, RGB(255,255,255) ,WALL_INBRUSH_COLORREF},
-	{{1012.5,4 ,37.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{1002.5,4 ,37.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF,WALL_INBRUSH_COLORREF},
+	{{1012.5,4 ,37.5}, { 10, 8, 0 }, RGB(255,255,255) ,WALL_INBRUSH_COLORREF},
 	{{1022.5,4 ,37.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 	//아래벽
@@ -1255,6 +1257,8 @@ std::vector<Construction> stage3Walls = {
 	{{ 1027.5, 4, 12.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 };
 
+
+
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_R_default");
 static AnimationController animationController3("black_wolf_move_R");
@@ -1268,7 +1272,7 @@ static AnimationController object5_animationController("object5");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
+static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1280,6 +1284,7 @@ static Actor object2{ OBJECT_POSITION2, { 2.6f, 2.6f, 0.0f } };
 static Actor object3{ OBJECT_POSITION3, { 2.6f, 2.6f, 0.0f } };
 static Actor object4{ OBJECT_POSITION4, { 2.6f, 2.6f, 0.0f } };
 static Actor object5{ OBJECT_POSITION5, { 2.6f, 2.6f, 0.0f } };
+
 
 
 // 애니메이션 초기화 함수
@@ -1543,6 +1548,7 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		for (auto& wall : stage3Walls) {
 			wall.DrawObject3D(mDC, camera);
 		}
+		door.DrawObject3D(mDC, camera);
 	}
 
 	if (stage == 1) {
@@ -1748,9 +1754,16 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					wolfSpeed = 0.0f;
 				}
 				if (wolfMoveMode == 0) {
+					static bool aniwolf = true;
+					//animation변경
+					if (aniwolf) {
+						wolf.getAnimationController().setCurrentState("black_wolf_move_R");
+						wolf.setSize({ 10.9f, 5.5f, 0.0f });
+						aniwolf = false;
+					}
 					wolf.move2DPosition(0.45f - wolfSpeed, 0);
-					//늑대movbe모드 선언으로 이동방향 정해주기
-					if (wolfPos.x > 205) {
+					//늑대move모드 선언으로 이동방향 정해주기
+					if (wolfPos.x > 209) {
 						wolfMoveMode = 1;
 					}
 					//플레이어 늑대 충돌시, 처음으로 되돌리기
@@ -1765,16 +1778,25 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						wolfMoveMode = 0;
 					}
 					//object와 늑대 충돌시, 느려지기
-					if (wolfPos.x >= object1Pos.x && object1Pos.y >= 90 && isObject1 == 1) {
+					if (wolfPos.x >= object1Pos.x && object1Pos.y >= 85 && isObject1 == 1) {
 						wolfSpeedCount = 100;
 						isObject1 = 0;
 					}
 				}
 				else if (wolfMoveMode == 1) {
+					//animation변경
+					static bool aniwolf = true;
+					if (aniwolf) {
+						wolf.getAnimationController().setCurrentState("black_wolf_move"); 
+						wolf.setSize({ 6.5f, 10.9f, 0.0f });
+						aniwolf = false;
+					}
 					wolf.move2DPosition(0.0f, -0.5f + wolfSpeed);
-					if (wolfPos.y < -15) {
+					//늑대move모드 선언으로 이동방향 정해주기
+					if (wolfPos.y < -20) {
 						wolfMoveMode = 2;
 					}
+					//플레이어 늑대 충돌시, 처음으로 되돌리기
 					if (wolfPos.y <= playerPos.y && playerPos.x >= 200) {
 						player.set2DPosition(100, 95);
 						wolf.set2DPosition(60, 100);
@@ -1785,12 +1807,26 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						isObject5 = 2;
 						wolfMoveMode = 0;
 					}
+					//object와 늑대 충돌시, 느려지기
+					if (wolfPos.y <= playerPos.y && playerPos.x >= 200 && isObject1 == 1) {
+						wolfSpeedCount = 100;
+						isObject1 = 0;
+					}
 				}
 				else if (wolfMoveMode == 2) {
+					//animation변경
+					static bool aniwolf = true;
+					if (aniwolf) {
+						wolf.getAnimationController().setCurrentState("black_wolf_move_L");
+						wolf.setSize({ 10.9f, 5.5f, 0.0f });
+						aniwolf = false;
+					}
 					wolf.move2DPosition(-0.5f + wolfSpeed, 0.0);
+					//늑대move모드 선언으로 이동방향 정해주기
 					if (wolfPos.x < 105) {
 						wolfMoveMode = 3;
 					}
+					//플레이어 늑대 충돌시, 처음으로 되돌리기
 					if (wolfPos.x <= playerPos.x && playerPos.y >= -35) {
 						player.set2DPosition(100, 95);
 						wolf.set2DPosition(60, 100);
@@ -1801,16 +1837,34 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						isObject5 = 2;
 						wolfMoveMode = 0;
 					}
+					//object와 늑대 충돌시, 느려지기
+					if (wolfPos.x <= playerPos.x && playerPos.y >= -35 && isObject1 == 1) {
+						wolfSpeedCount = 100;
+						isObject1 = 0;
+					}
 				}
 				else if (wolfMoveMode == 3) {
+					//animation변경
+					static bool aniwolf = true;
+					if (aniwolf) {
+						wolf.getAnimationController().setCurrentState("black_wolf_move");
+						wolf.setSize({ 6.5f, 10.9f, 0.0f });
+						aniwolf = false;
+					}
 					wolf.move2DPosition(0.0f, -0.55f + wolfSpeed);
+					//늑대move모드 선언으로 이동방향 정해주기
 					/*if (wolfPos.y < -135) {
 						wolfMoveMode = 4;
 					}*/
+					//플레이어 늑대 충돌시, 처음으로 되돌리기
 					if (wolfPos.y <= playerPos.y) {
 						player.set2DPosition(100, 95);
 						wolf.set2DPosition(60, 100);
 						wolfMoveMode = 0;
+					}//object와 늑대 충돌시, 느려지기
+					if (wolfPos.y <= playerPos.y && isObject1 == 1) {
+						wolfSpeedCount = 100;
+						isObject1 = 0;
 					}
 				}
 				if (playerPos.y < -120) {
@@ -1849,6 +1903,12 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					cantMoveUp = false;
 				}
 			}
+			//문열기
+			if (keyStates['D'] && player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
+				doingOpen = doingOpen + 0.2;
+			}
+			door.setSize({ 0, 8, doingOpen / 10 });
+			door.setPosition({ 1027.5, 4, 22.5 });
 		}
 	}
 
