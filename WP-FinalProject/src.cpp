@@ -59,7 +59,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 3;
+static int stage = 1;
 
 static bool canTake{ true };
 static bool heavy{ false };
@@ -1308,7 +1308,7 @@ static AnimationController object8_animationController("object8");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
-static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -2003,7 +2003,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						wolf.setSize({ 10.9f, 5.5f, 0.0f });
 						aniwolf = false;
 					}
-					wolf.move2DPosition(-0.5f + wolfSpeed, 0.0);
+					wolf.move2DPosition(-0.6f + wolfSpeed, 0.0);
 					//늑대move모드 선언으로 이동방향 정해주기
 					if (wolfPos.x < 105) {
 						wolfMoveMode = 3;
@@ -2036,7 +2036,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						wolf.setSize({ 5.5f, 10.9f, 0.0f });
 						aniwolf = false;
 					}
-					wolf.move2DPosition(0.0f, -0.55f + wolfSpeed);
+					wolf.move2DPosition(0.0f, -0.6f + wolfSpeed);
 					//늑대move모드 선언으로 이동방향 정해주기
 					/*if (wolfPos.y < -135) {
 						wolfMoveMode = 4;
