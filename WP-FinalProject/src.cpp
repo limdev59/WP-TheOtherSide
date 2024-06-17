@@ -59,7 +59,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 3;
+static int stage = 1;
 
 static bool canTake{ true };
 static bool heavy{ false };
@@ -102,7 +102,10 @@ std::vector<Construction> walls = {
 	{{ 72.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 92.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 102.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-	{{ 82.5, 4, 67.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	
+	{{ 80, 4, 67.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 86, 4, 67.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+
 	{{ 112.5, 4, 57.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 	//아래벽
@@ -284,7 +287,7 @@ std::vector<Construction> floors = {
 	{{ 110, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 115, 0, 55 }, { 5, 0, 5 }, 0xFFFFFF, FLOOR_OUTLINE_COLORREF},
 
-	{{ 100, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},////
+	{{ 100, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 105, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 100, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 105, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
@@ -299,6 +302,7 @@ std::vector<Construction> floors = {
 	{{ 80, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 85, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
+	//개소리 좌표
 	{{ 80, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 85, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 80, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1309,7 +1313,7 @@ static AnimationController object8_animationController("object8");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
-static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
