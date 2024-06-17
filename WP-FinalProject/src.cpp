@@ -34,7 +34,7 @@ Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
 Vector3 STAGE4_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 12.5f);
-Vector3 WOLF_POSITION = Vector3(60.0f, 5.45f, 97.5f);
+Vector3 WOLF_POSITION = Vector3(60.0f, 1.45f, 97.5f);
 Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
 Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 19.5f);
@@ -1559,9 +1559,10 @@ static FMOD::Channel* channel2 = 0;
 static FMOD::Channel* channel3 = 0; // 추가 채널
 static FMOD::Channel* channel4 = 0;
 static FMOD::Channel* channel5 = 0;
+static FMOD::Channel* channel6 = 0;
 static FMOD_RESULT result;
 static void* extradriverdata = 0;
-static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound, * dog_grrrrr, * key_sound, * throw_sound;
+static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound, * dog_grrrrr, * key_sound, * throw_sound, * door2_sound;
 
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
@@ -1581,6 +1582,7 @@ static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	ssystem->createSound("dog_grrrrr.wav", FMOD_LOOP_NORMAL, 0, &dog_grrrrr);
 	ssystem->createSound("key.mp3", FMOD_LOOP_OFF, 0, &key_sound);
 	ssystem->createSound("throw.mp3", FMOD_LOOP_OFF, 0, &throw_sound);
+	ssystem->createSound("door2.mp3", FMOD_LOOP_NORMAL, 0, &door2_sound);
 	ssystem->playSound(mainTheme_sound, 0, false, &channel);
 
 	if (FAILED(image.Load(TEXT("Horror_background.jpg")))) {
@@ -1879,7 +1881,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		}
 		else if (stage == 2) {
 			static bool grrrrr{ true };
-			if(grrrrr) ssystem->playSound(dog_grrrrr, 0, false, &channel);
+			if(grrrrr) ssystem->playSound(dog_grrrrr, 0, false, &channel5);
 			grrrrr = false;
 			for (const Construction& floor : stage2Floors) {
 				POINT playerPos = player.get2DPosition();
@@ -1964,6 +1966,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					if (aniwolf) {
 						wolf.getAnimationController().setCurrentState("black_wolf_move_R");
 						wolf.setSize({ 10.9f, 5.5f, 0.0f });
+						wolf.setPosition(WOLF_POSITION);
 						aniwolf = false;
 					}
 					wolf.move2DPosition(0.4f - wolfSpeed, 0);
@@ -2099,6 +2102,11 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 		}
 		else if (stage == 3) {
+			static bool aniwolf = true;
+			if (aniwolf) {
+				ssystem->playSound(door2_sound, 0, false, &channel6);
+				aniwolf = false;
+			}
 			for (const Construction& floor : stage3Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();
@@ -2223,7 +2231,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			}
 		}
 		else if (stage == 4) {
-			channel->stop();
+			channel5->stop();
 			for (const Construction& floor : stage4Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();

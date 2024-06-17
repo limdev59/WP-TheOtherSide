@@ -218,5 +218,8 @@
     <Media Include="throw.mp3">
       <Filter>리소스 파일</Filter>
     </Media>
+    <Media Include="door2.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
   </ItemGroup>
 </Project>
