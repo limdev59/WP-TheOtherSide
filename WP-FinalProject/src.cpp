@@ -75,6 +75,7 @@ static int isObject5 = 2;
 static int isObject6 = 2;
 static int isObject7 = 2;
 static int isObject8 = 2;
+bool isWalking = false;
 bool isOpening = false;
 bool wolfAttack = false;
 float doingOpen = 0;
@@ -101,7 +102,10 @@ std::vector<Construction> walls = {
 	{{ 72.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 92.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{{ 102.5, 4, 37.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-	{{ 82.5, 4, 67.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	
+	{{ 80, 4, 67.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	{{ 86, 4, 67.5 }, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+
 	{{ 112.5, 4, 57.5 }, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 	//아래벽
@@ -283,7 +287,7 @@ std::vector<Construction> floors = {
 	{{ 110, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 115, 0, 55 }, { 5, 0, 5 }, 0xFFFFFF, FLOOR_OUTLINE_COLORREF},
 
-	{{ 100, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},////
+	{{ 100, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 105, 0, 20 }, { 5, 0, 3 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 100, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 105, 0, 25 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
@@ -298,6 +302,7 @@ std::vector<Construction> floors = {
 	{{ 80, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 85, 0, 55 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
+	//개소리 좌표
 	{{ 80, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 85, 0, 60 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{{ 80, 0, 65 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1707,6 +1712,10 @@ static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	std::string current = player.getAnimationController().getCurrentState();
 	if(keyStates[ VK_SPACE ])
 		ssystem->playSound(throw_sound, 0, false, &channel3);
+	if (!isWalking &&(keyStates[ 'A' ] || keyStates[ 'D' ] || keyStates[ 'W' ] || keyStates[ 'S' ])) {
+		ssystem->playSound(bpm140_sound, 0, false, &channel4);
+		isWalking = true;
+	}
 	if (keyStates[ 'A' ] && current != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
 		shadow.getAnimationController().setCurrentState("shadow_L_default");
@@ -1736,6 +1745,10 @@ static void CALLBACK HandleKeyUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 	else if (KEY_UP_CONDITION('D')) {
 		player.getAnimationController().setCurrentState("kitten_R_move");
+	}
+	if (!(keyStates[ 'A' ] || keyStates[ 'D' ] || keyStates[ 'W' ] || keyStates[ 'S' ])) {
+		isWalking = false;
+		channel4->stop();
 	}
 }
 
