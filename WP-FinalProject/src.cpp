@@ -42,6 +42,9 @@ Vector3 OBJECT_POSITION2 = Vector3(137.5f, 1.3f, -35.0f);        //stage2 가벼
 Vector3 OBJECT_POSITION3 = Vector3(170.0f, 1.3f, 100.0f);        //stage2 무거운 물건 
 Vector3 OBJECT_POSITION4 = Vector3(25.0f, 1.3f, 14.5f);     // stage1 위 무거운 물건 1
 Vector3 OBJECT_POSITION5 = Vector3(30.5f, 1.3f, 7.5f);    ///stage 1아래 무거운 물건 2
+Vector3 OBJECT_POSITION6 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 3
+Vector3 OBJECT_POSITION7 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 3
+Vector3 OBJECT_POSITION8 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 3
 
 // 전역 변수
 bool keyStates[ 256 ] = { 0 };
@@ -55,18 +58,23 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 3;
 
 static bool canTake{ true };
 static bool heavy{ false };
 static bool isKey = true;
 static bool isKey2 = true;
 static bool isKey3 = true;
-static int isObject1 = 2;  //2는 기본배치되있는 상태, 1은 그랩해서 능력 활성화 상태, 0은 사라진상태
-static int isObject2 = 2;
+//2는 기본배치되있는 상태, 1은 그랩해서 능력 활성화 상태, 0은 사라진상태
+static int isObject1 = 2;   //사용
+static int isObject2 = 2;    //사용
 static int isObject3 = 2;
 static int isObject4 = 2;
 static int isObject5 = 2;
+static int isObject6 = 2;
+static int isObject7 = 2;
+static int isObject8 = 2;
+bool isOpening = false;
 float doingOpen = 0;
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1275,8 +1283,6 @@ std::vector<Construction> stage3Walls = {
 	{{ 1027.5, 4, 12.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 };
 
-
-
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_R_default");
 static AnimationController animationController3("black_wolf_move_R");
@@ -1286,11 +1292,13 @@ static AnimationController object2_animationController("object2");
 static AnimationController object3_animationController("object3");
 static AnimationController object4_animationController("object4");
 static AnimationController object5_animationController("object5");
-
+static AnimationController object6_animationController("object6");
+static AnimationController object7_animationController("object7");
+static AnimationController object8_animationController("object8");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1301,9 +1309,10 @@ static Actor object1{ OBJECT_POSITION1, { 2.6f, 2.6f, 0.0f } };
 static Actor object2{ OBJECT_POSITION2, { 2.6f, 2.6f, 0.0f } };
 static Actor object3{ {170.0f, 4.0f, 100.0f}, { 6.0f, 8.0f, 0.0f } };   //드레서
 static Actor object4{ {25.0f, 4.0f, 14.5f}, {6.0f, 8.0f, 0.0f} };   //무거운거 2 시계
-static Actor object5{ {30.5f, 2.0f, 7.5f}, {6.0f, 4.0f, 0.0f} };   //무거운거 1 서랍
-
-
+static Actor object5{ {30.5f, 2.0f, 7.5f}, {6.0f, 4.0f, 0.0f}};   //무거운거 1 서랍
+static Actor object6{ OBJECT_POSITION6, { 2.6f, 2.6f, 0.0f } };
+static Actor object7{ OBJECT_POSITION7, { 2.6f, 2.6f, 0.0f } };
+static Actor object8{ OBJECT_POSITION8, { 2.6f, 2.6f, 0.0f } };
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
@@ -1390,6 +1399,15 @@ void InitializeAnimations() {
 	std::map<float, std::string> object5_image = {
 		{0.0f, "dresser"}
 	};
+	std::map<float, std::string> object6_image = {
+		{0.0f, "wooden_crate"}
+	};
+	std::map<float, std::string> object7_image = {
+		{0.0f, "wooden_crate"}
+	};
+	std::map<float, std::string> object8_image = {
+		{0.0f, "wooden_crate"}
+	};
 
 	std::map<float, std::string> shadow_imagesKittenL = {
 		{0.0f, "Shadow_L_default"}
@@ -1449,6 +1467,9 @@ void InitializeAnimations() {
 	Animation object3_default("object3", false, 0.0f, object_positions, object_scales, object3_image);
 	Animation object4_default("object4", false, 0.0f, object_positions, object_scales, object4_image);
 	Animation object5_default("object5", false, 0.0f, object_positions, object_scales, object5_image);
+	Animation object6_default("object6", false, 0.0f, object_positions, object_scales, object6_image);
+	Animation object7_default("object7", false, 0.0f, object_positions, object_scales, object7_image);
+	Animation object8_default("object8", false, 0.0f, object_positions, object_scales, object8_image);
 
 	Animation Shadow_R_default("shadow_R_default", false, 0.0f, shadow_positions, shadow_scales, shadow_imagesKittenR);
 	Animation Shadow_L_default("shadow_L_default", false, 0.0f, shadow_positions2, shadow_scales2, shadow_imagesKittenL);
@@ -1471,6 +1492,9 @@ void InitializeAnimations() {
 	std::vector<AnimationController::Transition> object3_transition;
 	std::vector<AnimationController::Transition> object4_transition;
 	std::vector<AnimationController::Transition> object5_transition;
+	std::vector<AnimationController::Transition> object6_transition;
+	std::vector<AnimationController::Transition> object7_transition;
+	std::vector<AnimationController::Transition> object8_transition;
 
 	animationController2.addState("shadow_R_default", Shadow_R_default, transitions2);
 	animationController2.addState("shadow_L_default", Shadow_L_default, transitions2);
@@ -1491,7 +1515,10 @@ void InitializeAnimations() {
 	object3_animationController.addState("object3", object3_default, object3_transition);
 	object4_animationController.addState("object4", object4_default, object4_transition);
 	object5_animationController.addState("object5", object5_default, object5_transition);
-
+	object6_animationController.addState("object6", object6_default, object6_transition);
+	object7_animationController.addState("object7", object7_default, object7_transition);
+	object8_animationController.addState("object8", object8_default, object8_transition);
+	
 	player.setAnimationController(animationController);
 	shadow.setAnimationController(animationController2);
 	wolf.setAnimationController(animationController3);
@@ -1503,6 +1530,9 @@ void InitializeAnimations() {
 	object3.setAnimationController(object3_animationController);
 	object4.setAnimationController(object4_animationController);
 	object5.setAnimationController(object5_animationController);
+	object6.setAnimationController(object6_animationController);
+	object7.setAnimationController(object7_animationController);
+	object8.setAnimationController(object8_animationController);
 }
 
 static FMOD::System* ssystem;
@@ -1604,14 +1634,12 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		for (auto& wall : stage3Walls) {
 			wall.DrawObject3D(mDC, camera);
 		}
+		object6.DrawObject3D(mDC, camera);
+		object7.DrawObject3D(mDC, camera);
+		object8.DrawObject3D(mDC, camera);
 		door.DrawObject3D(mDC, camera);
 	}
-
-	if (stage == 1) {
-
-	}
-	if (stage == 2)
-		shadow.DrawObject3D(mDC, camera);
+	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
 
 
@@ -2025,10 +2053,31 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 					cantMoveUp = false;
 				}
+
+				
+				static POINT object6Pos = object6.get2DPosition();
+				static POINT object7Pos = object7.get2DPosition();
+				static POINT object8Pos = object8.get2DPosition();
+				POINT shadowPos = shadow.get2DPosition();
+
+				//object 충돌처리
+				if (isObject6 == 2) {
+					double distance = std::sqrt((object6Pos.x - shadowPos.x) * (object6Pos.x - shadowPos.x) + (object6Pos.y - shadowPos.y) * (object6Pos.y - shadowPos.y));
+					if (distance <= 3.0) {
+						isObject6 = 1;
+						object6.set2DPosition(playerPos.x + 5, playerPos.y);
+					}
+				}
 			}
 			//문열기
-			if (keyStates[ 'D' ] && player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
-				doingOpen = doingOpen + 0.2;
+			if (player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
+				isOpening = true;
+				if (keyStates[ 'D' ]) {
+					doingOpen = doingOpen + 0.2;
+				}
+			}
+			else {
+				isOpening = false;
 			}
 			door.setSize({ 0, 8, doingOpen / 10 });
 			door.setPosition({ 1027.5, 4, 22.5 });
@@ -2115,7 +2164,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			Vector3 playerPos = player.getPosition();
 			Vector3 cameraPos = camera.getPosition();
 			Vector3 targetPos = {
-				playerPos.x + (keyStates[ 'A' ] && !cantMoveLeft ? -1.0f : (keyStates[ 'D' ] && !cantMoveRight ? 1.0f : 0.0f)),
+				playerPos.x + ((isOpening) ? -5.5f : 0.0f) + (keyStates[ 'A' ] && !cantMoveLeft ? -1.0f : (keyStates[ 'D' ] && !cantMoveRight ? 1.0f : 0.0f)),
 				playerPos.y + 3.0f + (keyStates[ 'W' ] ? 0.1f : (keyStates[ 'S' ] ? -0.1f : 0.0f)),
 				playerPos.z - 5.8f + (keyStates[ 'W' ] ? 0.5f : (keyStates[ 'S' ] ? -1.5f : 0.0f))
 			};
@@ -2127,7 +2176,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			float imsi = -0.5f;
 			Vector3 cameraRot = camera.getRotation();
 			Vector3 targetRot = {
-				cameraRot.x,
+				((isOpening) ? 0.5f:0.0f),
 				(keyStates[ 'W' ] ? imsi + 0.1f : (keyStates[ 'S' ] ? imsi - 0.1f : imsi)),
 				(keyStates[ 'A' ] ? 0.025f : (keyStates[ 'D' ] ? -0.025f : 0.0f))
 			};
