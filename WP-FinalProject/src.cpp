@@ -29,11 +29,11 @@ constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24/ 5, 15 / 5, 33 / 5);
 Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
-Vector3 WOLF_POSITION = Vector3(90.0f, 1.3f, 95.0f);
+Vector3 WOLF_POSITION = Vector3(60.0f, 1.3f, 100.0f);
 Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
 Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 17.5f);
-Vector3 OBJECT_POSITION1 = Vector3(25.5f, 1.3f, 17.5f);
+Vector3 OBJECT_POSITION1 = Vector3(140.0f, 1.3f, 95.0f);
 Vector3 OBJECT_POSITION2= Vector3(25.5f, 1.3f, 17.5f);
 Vector3 OBJECT_POSITION3 = Vector3(27.5f, 1.3f, 17.5f);
 Vector3 OBJECT_POSITION4 = Vector3(27.5f, 1.3f, 17.5f);
@@ -57,6 +57,11 @@ static bool heavy{ false };
 static bool isKey = true;
 static bool isKey2 = true;
 static bool isKey3 = true;
+static int isObject1 = 2;  //2는 기본배치되있는 상태, 1은 그랩해서 능력 활성화 상태, 0은 사라진상태
+static int isObject2 = 2;
+static int isObject3 = 2;
+static int isObject4 = 2;
+static int isObject5 = 2;
 
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -424,7 +429,7 @@ std::vector<Construction> ceilings = {
 };
 
 std::vector<Construction> stage2Floors = {
-		{ { 100,0 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 100,0 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 105,0 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 110,0 ,90}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 100,0 ,95}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -524,6 +529,12 @@ std::vector<Construction> stage2Floors = {
 	{ { 210,0 ,70}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 215,0 ,70}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
+	//아이템 바닥
+	{ { 195,0 ,70}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 198,0 ,70}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 195,0 ,65}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 198,0 ,65}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	
 	{ { 205,0 ,45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 210,0 ,45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 215,0 ,45}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1095,29 +1106,29 @@ std::vector<Construction> stage2Walls = {
 { { 112.5,4 ,-17.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 
 //아래벽
-{ { 102.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 112.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 122.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 132.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 142.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 152.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 162.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 172.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 182.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 195 ,4 ,87.5}, { 15, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-
-
-{ { 115,4 ,-32.5}, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 122.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 132.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 142.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 152.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 162.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 172.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 182.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 192.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 202.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-{ { 212.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 102.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 112.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 122.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 132.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 142.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 152.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 162.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 172.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 182.5,4 ,87.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 195 ,4 ,87.5}, { 15, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//
+//
+//{ { 115,4 ,-32.5}, { 5, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 122.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 132.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 142.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 152.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 162.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 172.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 182.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 192.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 202.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+//{ { 212.5,4 ,-32.5}, { 10, 8, 0 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 //세로벽
 {{ 97.5,4 ,100}, { 0, 8, 5 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 {{ 97.5,7 ,95}, { 0, 2, 5 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
@@ -1140,7 +1151,7 @@ std::vector<Construction> stage2Walls = {
 /////////////////////////////////////////////
 	{ { 202.5,4 ,82.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{ { 202.5,4 ,77.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
-	{ { 202.5,4 ,67.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
+	/*{ { 202.5,4 ,67.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},*/
 	{ { 202.5,4 ,57.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{ { 202.5,4 ,47.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 	{ { 202.5,4 ,37.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
@@ -1398,7 +1409,7 @@ void InitializeAnimations() {
 		{0.2f, "black_wolf_L_move_3"},
 		{0.3f, "black_wolf_L_move_4"},
 		{0.4f, "black_wolf_L_move_5"},
-		{0.5f, "black_wolf_L_move61"}
+		{0.5f, "black_wolf_L_move_6"}
 	};
 
 	Animation key_default("key", false, 0.0f, key_positions, key_scales, key_image);
@@ -1438,7 +1449,7 @@ void InitializeAnimations() {
 	animationController.addState("kitten_L_move", Kitten_L_move, transitions);
 
 	animationController3.addState("black_wolf_move", black_wolf_1_move, transitions3);
-	animationController3.addState("black_wolf_move_L", black_wolf_1_move, transitions3);
+	animationController3.addState("black_wolf_move_L", black_wolf_L_move, transitions3);
 
 	animationController4.addState("key", key_default, key_transition);
 
@@ -1538,6 +1549,9 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 	if (stage == 2) {
 		wolf.DrawObject3D(mDC, camera);
+		if (isObject1 != 0) {
+			object1.DrawObject3D(mDC, camera);
+		}
 	}
 	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
@@ -1694,64 +1708,106 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					cantMoveUp = false;
 				}
 			}
-
-			//강아지 뛰어오기
+			//강아지 관련코드
+			{
 			POINT playerPos = player.get2DPosition();
 			POINT wolfPos = wolf.get2DPosition();
+			static POINT object1Pos = object1.get2DPosition();
+			POINT shadowPos = shadow.get2DPosition();
+
+			//object 충돌처리
+			if (isObject1 == 2) {
+				double distance = std::sqrt((object1Pos.x - shadowPos.x) * (object1Pos.x - shadowPos.x) + (object1Pos.y - shadowPos.y) * (object1Pos.y - shadowPos.y));
+				if (distance <= 3) {
+					isObject1 = 1;
+					object1.set2DPosition(playerPos.x, playerPos.y);
+				}
+			}
 			wolf.getAnimationController().update(deltaTime);
 			static int wolfMoveMode = 0;   //강아지 이동방향
 			static float wolfSpeed = 0.0;   //강아지 이동속도 줄이기, 커질수록 줄어듦
 			static int wolfSpeedCount = 0;   //강아지 이동속도 줄어드는 효과가 몇초 지속될거냐?
 
-			if (wolfMoveMode == 0) {
-				wolf.move2DPosition(1.0f - wolfSpeed, 0);
-				if (wolfPos.x > 205) {
-					wolfMoveMode = 1;
+			//강아지 속도 조절 코드
+			
+				if (wolfSpeedCount > 0) {
+					wolfSpeedCount = wolfSpeedCount - 1;
+					wolfSpeed = 0.2f;
 				}
-				if (wolfPos.x >= playerPos.x && playerPos.y >= 90) {
-					player.set2DPosition(100, 95);
-					wolf.set2DPosition(90, 95);
-					wolfMoveMode = 0;
+				else {
+					wolfSpeed = 0.0f;
 				}
-			}
-			else if (wolfMoveMode == 1) {
-				wolf.move2DPosition(0.0f, -1.0f - wolfSpeed);
-				if (wolfPos.y < -25) {
-					wolfMoveMode = 2;
+				if (wolfMoveMode == 0) {
+					wolf.move2DPosition(0.45f - wolfSpeed, 0);
+					//늑대movbe모드 선언으로 이동방향 정해주기
+					if (wolfPos.x > 205) {
+						wolfMoveMode = 1;
+					}
+					//플레이어 늑대 충돌시, 처음으로 되돌리기
+					if (wolfPos.x >= playerPos.x && playerPos.y >= 85) {
+						player.set2DPosition(100, 95);
+						wolf.set2DPosition(60, 100);
+						isObject1 = 2;
+						isObject2 = 2;
+						isObject3 = 2;
+						isObject4 = 2;
+						isObject5 = 2;
+						wolfMoveMode = 0;
+					}
+					//object와 늑대 충돌시, 느려지기
+					if (wolfPos.x >= object1Pos.x && object1Pos.y >= 90 && isObject1 == 1) {
+						wolfSpeedCount = 100;
+						isObject1 = 0;
+					}
 				}
-				if (wolfPos.y <= playerPos.y && playerPos.x >= 200) {
-					player.set2DPosition(100, 95);
-					wolf.set2DPosition(90, 95);
-					wolfMoveMode = 0;
+				else if (wolfMoveMode == 1) {
+					wolf.move2DPosition(0.0f, -0.5f + wolfSpeed);
+					if (wolfPos.y < -15) {
+						wolfMoveMode = 2;
+					}
+					if (wolfPos.y <= playerPos.y && playerPos.x >= 200) {
+						player.set2DPosition(100, 95);
+						wolf.set2DPosition(60, 100);
+						isObject1 = 2;
+						isObject2 = 2;
+						isObject3 = 2;
+						isObject4 = 2;
+						isObject5 = 2;
+						wolfMoveMode = 0;
+					}
 				}
-			}
-			else if (wolfMoveMode == 2) {
-				wolf.move2DPosition(-0.9f - wolfSpeed, 0.0);
-				if (wolfPos.x < 105) {
-					wolfMoveMode = 3;
+				else if (wolfMoveMode == 2) {
+					wolf.move2DPosition(-0.5f + wolfSpeed, 0.0);
+					if (wolfPos.x < 105) {
+						wolfMoveMode = 3;
+					}
+					if (wolfPos.x <= playerPos.x && playerPos.y >= -35) {
+						player.set2DPosition(100, 95);
+						wolf.set2DPosition(60, 100);
+						isObject1 = 2;
+						isObject2 = 2;
+						isObject3 = 2;
+						isObject4 = 2;
+						isObject5 = 2;
+						wolfMoveMode = 0;
+					}
 				}
-				if (wolfPos.x <= playerPos.x && playerPos.y >= -35) {
-					player.set2DPosition(100, 95);
-					wolf.set2DPosition(90, 95);
-					wolfMoveMode = 0;
+				else if (wolfMoveMode == 3) {
+					wolf.move2DPosition(0.0f, -0.55f + wolfSpeed);
+					/*if (wolfPos.y < -135) {
+						wolfMoveMode = 4;
+					}*/
+					if (wolfPos.y <= playerPos.y) {
+						player.set2DPosition(100, 95);
+						wolf.set2DPosition(60, 100);
+						wolfMoveMode = 0;
+					}
 				}
-			}
-
-			else if (wolfMoveMode == 3) {
-				wolf.move2DPosition(0.0f, -0.8f - wolfSpeed);
-				/*if (wolfPos.y < -135) {
-					wolfMoveMode = 4;
-				}*/
-				if (wolfPos.y <= playerPos.y) {
-					player.set2DPosition(100, 95);
-					wolf.set2DPosition(90, 95);
-					wolfMoveMode = 0;
+				if (playerPos.y < -120) {
+					stage = 3;
+					player.setPosition(STAGE3_PLAYER_POSITION);
+					camera.setPosition(STAGE3_PLAYER_POSITION);
 				}
-			}
-			if (playerPos.y < -120) {
-				stage = 3;
-				player.setPosition(STAGE3_PLAYER_POSITION);
-				camera.setPosition(STAGE3_PLAYER_POSITION);
 			}
 			
 		}
@@ -1835,25 +1891,25 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		if (!keyStates[VK_SPACE] && !mouse.IsLeftClick()) {
 			if (keyStates['A']) {
 				if (!cantMoveLeft) {
-					player.move2DPosition(-0.2f, 0);
+					player.move2DPosition(-0.2f + ((stage == 2) ? -0.2f : 0), 0);
 					if (keyStates[VK_SHIFT]) player.move2DPosition(-1.0f, 0);
 				}
 			}
 			if (keyStates['D']) {
 				if (!cantMoveRight) {
-					player.move2DPosition(0.2f, 0);
+					player.move2DPosition(0.2f + ((stage == 2) ? 0.2f : 0), 0);
 					if (keyStates[VK_SHIFT]) player.move2DPosition(1.0f, 0);
 				}
 			}
 			if (keyStates['W']) {
 				if (!cantMoveUp) {
-					player.move2DPosition(0, 0.2f); // 일반 이동
+					player.move2DPosition(0, 0.2f + ((stage == 2) ? 0.2f : 0)); // 일반 이동
 					if (keyStates[VK_SHIFT]) player.move2DPosition(0, 1.0f); // 쉬프트 키 누르면 빠른 이동
 				}
 			}
 			if (keyStates['S']) {
 				if (!cantMoveDown) {
-					player.move2DPosition(0, -0.2f); // 일반 이동
+					player.move2DPosition(0, -0.2f + ((stage == 2) ? -0.2f : 0)); // 일반 이동
 					if (keyStates[VK_SHIFT]) player.move2DPosition(0, -1.0f); // 쉬프트 키 누르면 빠른 이동
 				}
 			}
