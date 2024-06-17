@@ -196,4 +196,21 @@
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="dog_grrrrr.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="100bpm.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="140bpm.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="door.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="mainTheme.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

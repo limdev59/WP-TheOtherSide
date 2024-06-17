@@ -200,6 +200,13 @@
     <Image Include="ship_in_a_bottle.png" />
     <Image Include="wooden_crate.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="100bpm.mp3" />
+    <Media Include="140bpm.mp3" />
+    <Media Include="dog_grrrrr.wav" />
+    <Media Include="door.mp3" />
+    <Media Include="mainTheme.mp3" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

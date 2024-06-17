@@ -91,4 +91,3 @@ public:
         return *this - normal * 2.0f * this->Dot(normal);
     }
 };
-

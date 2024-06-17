@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <cmath>
+#include<utility>
 #include "Camera.h"
 #include "Object3D.h"
 #include "Construction.h"
@@ -1495,12 +1496,33 @@ void InitializeAnimations() {
 	object5.setAnimationController(object5_animationController);
 }
 
+static FMOD::System* ssystem;
+static FMOD::Channel* channel = 0;
+static FMOD_RESULT result;
+static void* extradriverdata = 0;
+static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound;
+
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
 	GetClientRect(hWnd, &rt);
-
 	std::sort(walls.begin(), walls.end(), compareByZ);
-
 	std::sort(stage2Walls.begin(), stage2Walls.end(), compareByZ);
+	std::sort(stage3Walls.begin(), stage3Walls.end(), compareByZ);
+
+	result = FMOD::System_Create(&ssystem); // 사운드 시스템 생성
+	if (result != FMOD_OK)
+		exit(0);
+	ssystem->init(32, FMOD_INIT_NORMAL, extradriverdata); // 사운드 시스템 초기화
+	ssystem->createSound("mainTheme.mp3", FMOD_LOOP_NORMAL, 0, &mainTheme_sound);
+	ssystem->createSound("100bpm.mp3", FMOD_LOOP_NORMAL, 0, &bpm100_sound);
+	ssystem->createSound("140bpm.mp3", FMOD_LOOP_NORMAL, 0, &bpm140_sound);
+	ssystem->createSound("door.mp3", FMOD_LOOP_NORMAL, 0, &door_sound);
+	channel->stop(); 
+	channel->setVolume(0.01f);
+	channel->stop();
+	ssystem->playSound(mainTheme_sound, 0, false, &channel);
+	ssystem->playSound(door_sound, 0, false, &channel);
+
 
 	if (FAILED(image.Load(TEXT("Horror_background.jpg")))) {
 		MessageBox(hWnd, TEXT("Failed to load image"), TEXT("Error"), MB_OK);
