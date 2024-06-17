@@ -1257,7 +1257,7 @@ std::vector<Construction> stage3Walls = {
 
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_R_default");
-static AnimationController animationController3("black_wolf_move_L");
+static AnimationController animationController3("black_wolf_move_R");
 static AnimationController animationController4("key");
 static AnimationController object1_animationController("object1");
 static AnimationController object2_animationController("object2");
@@ -1411,6 +1411,14 @@ void InitializeAnimations() {
 		{0.4f, "black_wolf_L_move_5"},
 		{0.5f, "black_wolf_L_move_6"}
 	};
+	std::map<float, std::string> img_imageWolf_R = {
+		{0.0f, "black_wolf_R_move_1"},
+		{0.1f, "black_wolf_R_move_2"},
+		{0.2f, "black_wolf_R_move_3"},
+		{0.3f, "black_wolf_R_move_4"},
+		{0.4f, "black_wolf_R_move_5"},
+		{0.5f, "black_wolf_R_move_6"}
+	};
 
 	Animation key_default("key", false, 0.0f, key_positions, key_scales, key_image);
 	Animation object1_default("object1", false, 0.0f, object_positions, object_scales, object1_image);
@@ -1429,6 +1437,7 @@ void InitializeAnimations() {
 	
 	Animation black_wolf_1_move("black_wolf_move", true, 0.6f, w_positions, w_scales, img_imageWolf);
 	Animation black_wolf_L_move("black_wolf_move_L", true, 0.6f, w_positions, w_scales, img_imageWolf_L);
+	Animation black_wolf_R_move("black_wolf_move_R", true, 0.6f, w_positions, w_scales, img_imageWolf_R);
 	
 	std::vector<AnimationController::Transition> transitions;
 	std::vector<AnimationController::Transition> transitions2;
@@ -1450,6 +1459,7 @@ void InitializeAnimations() {
 
 	animationController3.addState("black_wolf_move", black_wolf_1_move, transitions3);
 	animationController3.addState("black_wolf_move_L", black_wolf_L_move, transitions3);
+	animationController3.addState("black_wolf_move_R", black_wolf_R_move, transitions3);
 
 	animationController4.addState("key", key_default, key_transition);
 
