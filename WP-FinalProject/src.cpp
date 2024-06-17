@@ -58,7 +58,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 3;
 
 static bool canTake{ true };
 static bool heavy{ false };
@@ -1298,7 +1298,7 @@ static AnimationController object8_animationController("object8");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
+static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1537,9 +1537,12 @@ void InitializeAnimations() {
 
 static FMOD::System* ssystem;
 static FMOD::Channel* channel = 0;
+static FMOD::Channel* channel2 = 0;
+static FMOD::Channel* channel3 = 0; // 추가 채널
+static FMOD::Channel* channel4 = 0;
 static FMOD_RESULT result;
 static void* extradriverdata = 0;
-static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound, * dog_grrrrr, * key_sound;
+static FMOD::Sound* mainTheme_sound, * bpm100_sound, * bpm140_sound, * door_sound, * dog_grrrrr, * key_sound, * throw_sound;
 
 static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
@@ -1558,9 +1561,8 @@ static void CALLBACK HandleCreate(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	ssystem->createSound("door.mp3", FMOD_LOOP_OFF, 0, &door_sound);
 	ssystem->createSound("dog_grrrrr.wav", FMOD_LOOP_NORMAL, 0, &dog_grrrrr);
 	ssystem->createSound("key.mp3", FMOD_LOOP_OFF, 0, &key_sound);
+	ssystem->createSound("throw.mp3", FMOD_LOOP_OFF, 0, &throw_sound);
 	ssystem->playSound(mainTheme_sound, 0, false, &channel);
-	ssystem->playSound(door_sound, 0, false, &channel);
-
 
 	if (FAILED(image.Load(TEXT("Horror_background.jpg")))) {
 		MessageBox(hWnd, TEXT("Failed to load image"), TEXT("Error"), MB_OK);
@@ -1656,6 +1658,7 @@ static void CALLBACK HandleLButtonDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 static void CALLBACK HandleLButtonUp(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	mouse.OnMouseLUp(wParam, lParam);
 	shadow.OnLButtonUp(mouse.getMousePosition(), camera, canTake);
+	ssystem->playSound(throw_sound, 0, false, &channel2);
 	canTake = false;
 }
 
@@ -1676,6 +1679,8 @@ static void CALLBACK HandleMouseMove(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	keyStates[ wParam ] = true;
 	std::string current = player.getAnimationController().getCurrentState();
+	if(keyStates[ VK_SPACE ])
+		ssystem->playSound(throw_sound, 0, false, &channel3);
 	if (keyStates[ 'A' ] && current != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");
 		shadow.getAnimationController().setCurrentState("shadow_L_default");
@@ -2039,7 +2044,6 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 		}
 		else if (stage == 3) {
-			channel->stop();
 			for (const Construction& floor : stage3Floors) {
 				POINT playerPos = player.get2DPosition();
 				Vector3 pos = floor.getPosition();

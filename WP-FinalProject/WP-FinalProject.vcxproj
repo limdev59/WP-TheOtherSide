@@ -207,6 +207,7 @@
     <Media Include="door.mp3" />
     <Media Include="key.mp3" />
     <Media Include="mainTheme.mp3" />
+    <Media Include="throw.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
