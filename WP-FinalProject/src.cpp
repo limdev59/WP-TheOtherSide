@@ -35,12 +35,12 @@ Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
 Vector3 WOLF_POSITION = Vector3(60.0f, 1.3f, 97.5f);
 Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
-Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 17.5f);
-Vector3 OBJECT_POSITION1 = Vector3(195.0f, 1.3f, 67.5f);
-Vector3 OBJECT_POSITION2= Vector3(25.5f, 1.3f, 17.5f);
+Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 19.5f);
+Vector3 OBJECT_POSITION1 = Vector3(195.0f, 1.3f, 67.5f);      //stage2 가벼운 물건 1
+Vector3 OBJECT_POSITION2= Vector3(137.5f, 1.3f, -35.0f);        //stage2 가벼운 물건 2
 Vector3 OBJECT_POSITION3 = Vector3(27.5f, 1.3f, 17.5f);
-Vector3 OBJECT_POSITION4 = Vector3(27.5f, 1.3f, 15.5f);
-Vector3 OBJECT_POSITION5 = Vector3(27.5f, 1.3f, 15.5f);
+Vector3 OBJECT_POSITION4 = Vector3(25.0f, 1.3f, 14.5f);     // stage1 위 무거운 물건
+Vector3 OBJECT_POSITION5 = Vector3(30.5f, 1.3f, 7.5f);    ///stage 1아래 무거운 물건
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -54,7 +54,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 1;
+static int stage = 2;
 
 static bool canTake{ true };
 static bool heavy{ false };
@@ -194,11 +194,12 @@ std::vector<Construction> floors = {
 	//{{ 20, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 25, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 
+	// 아이템 바닥
 	{{ 25, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 30, 0, 20 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 25, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 30, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
-
+	//
 	{{ 30, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 35, 0, 0 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
 	{{ 30, 0, 5 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF},
@@ -664,6 +665,12 @@ std::vector<Construction> stage2Floors = {
 	{ { 135,0 ,-20}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 140,0 ,-20}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 
+	//아이템 바닥
+	{ { 135,0 ,-37}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 140,0 ,-37}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 135,0 ,-40}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{ { 140,0 ,-40}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	//
 	{ { 115,0 ,-30}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 120,0 ,-30}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 	{ { 125,0 ,-30}, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1280,7 +1287,7 @@ static AnimationController object5_animationController("object5");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
-static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
+static Player player{ STAGE2_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1570,12 +1577,16 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		if (isKey3 == true) {
 			key3.DrawObject3D(mDC, camera);
 		}
+		object4.DrawObject3D(mDC, camera);
 		object5.DrawObject3D(mDC, camera);
 	}
 	if (stage == 2) {
 		wolf.DrawObject3D(mDC, camera);
 		if (isObject1 != 0) {
 			object1.DrawObject3D(mDC, camera);
+		}
+		if (isObject2 != 0) {
+			object2.DrawObject3D(mDC, camera);
 		}
 	}
 	shadow.DrawObject3D(mDC, camera);
@@ -1767,14 +1778,22 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			POINT playerPos = player.get2DPosition();
 			POINT wolfPos = wolf.get2DPosition();
 			static POINT object1Pos = object1.get2DPosition();
+			static POINT object2Pos = object2.get2DPosition();
 			POINT shadowPos = shadow.get2DPosition();
 
 			//object 충돌처리
 			if (isObject1 == 2) {
 				double distance = std::sqrt((object1Pos.x - shadowPos.x) * (object1Pos.x - shadowPos.x) + (object1Pos.y - shadowPos.y) * (object1Pos.y - shadowPos.y));
-				if (distance <= 3) {
+				if (distance <= 1.5) {
 					isObject1 = 1;
-					object1.set2DPosition(playerPos.x, playerPos.y);
+					object1.set2DPosition(playerPos.x+5, playerPos.y);
+				}
+			}
+			if (isObject2 == 2) {
+				double distance = std::sqrt((object2Pos.x - shadowPos.x) * (object2Pos.x - shadowPos.x) + (object2Pos.y - shadowPos.y) * (object2Pos.y - shadowPos.y));
+				if (distance <= 1.5) {
+					isObject2 = 1;
+					object2.set2DPosition(playerPos.x, playerPos.y);
 				}
 			}
 			wolf.getAnimationController().update(deltaTime);
@@ -1784,9 +1803,9 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 			//강아지 속도 조절 코드
 			
-				if (wolfSpeedCount > 0) {
+				if (wolfSpeedCount > 0.0) {
 					wolfSpeedCount = wolfSpeedCount - 1;
-					wolfSpeed = 0.2f;
+					wolfSpeed = 0.4f;
 				}
 				else {
 					wolfSpeed = 0.0f;
@@ -1808,12 +1827,15 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					if (wolfPos.x >= playerPos.x && playerPos.y >= 85) {
 						player.set2DPosition(100, 95);
 						wolf.set2DPosition(60, 100);
+						object1.set2DPosition(195, 67.5);
+						object2.set2DPosition(137.5, -35);
+						wolfMoveMode = 0;
 						isObject1 = 2;
 						isObject2 = 2;
 						isObject3 = 2;
 						isObject4 = 2;
 						isObject5 = 2;
-						wolfMoveMode = 0;
+						
 					}
 					//object와 늑대 충돌시, 느려지기
 					if (wolfPos.x >= object1Pos.x && object1Pos.y >= 85 && isObject1 == 1) {
@@ -1838,15 +1860,18 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					if (wolfPos.y <= playerPos.y && playerPos.x >= 200) {
 						player.set2DPosition(100, 95);
 						wolf.set2DPosition(60, 100);
+						object1.set2DPosition(195, 67.5);
+						object2.set2DPosition(137.5, -35);
+						wolfMoveMode = 0;
 						isObject1 = 2;
 						isObject2 = 2;
 						isObject3 = 2;
 						isObject4 = 2;
 						isObject5 = 2;
-						wolfMoveMode = 0;
+						
 					}
-					//object와 늑대 충돌시, 느려지기
-					if (wolfPos.y <= playerPos.y && playerPos.x >= 200 && isObject1 == 1) {
+					//object1와 늑대 충돌시, 느려지기
+					if (wolfPos.y <= object1Pos.y /* && object1Pos.x >= 200*/ && isObject1 == 1) {
 						wolfSpeedCount = 100;
 						isObject1 = 0;
 					}
@@ -1868,23 +1893,22 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					if (wolfPos.x <= playerPos.x && playerPos.y >= -35) {
 						player.set2DPosition(100, 95);
 						wolf.set2DPosition(60, 100);
+						object1.set2DPosition(195, 67.5);
+						object2.set2DPosition(137.5, -35);
+						wolfMoveMode = 0;
 						isObject1 = 2;
 						isObject2 = 2;
 						isObject3 = 2;
 						isObject4 = 2;
 						isObject5 = 2;
-						wolfMoveMode = 0;
+						
 					}
 					//object와 늑대 충돌시, 느려지기
-					if (wolfPos.x <= playerPos.x && playerPos.y >= -35 && isObject1 == 1) {
+					if (wolfPos.x <= object2Pos.x && isObject2 == 1) {
 						wolfSpeedCount = 100;
-						isObject1 = 0;
+						isObject2 = 0;
 					}
-					if (playerPos.y < -120) {
-						stage = 3;
-						player.setPosition(STAGE3_PLAYER_POSITION);
-						camera.setPosition(STAGE3_PLAYER_POSITION);
-					}
+					
 				}
 				else if (wolfMoveMode == 3) {
 					//animation변경
@@ -1902,13 +1926,25 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					//플레이어 늑대 충돌시, 처음으로 되돌리기
 					if (wolfPos.y <= playerPos.y) {
 						player.set2DPosition(100, 95);
-						wolf.set2DPosition(60, 100);
+						wolf.set2DPosition(60, 97.5);
+						object1.set2DPosition(195, 67.5);
+						object2.set2DPosition(137.5, -35);
+						isObject1 = 2;
+						isObject2 = 2;
+						isObject3 = 2;
+						isObject4 = 2;
+						isObject5 = 2;
 						wolfMoveMode = 0;
 					}//object와 늑대 충돌시, 느려지기
-					if (wolfPos.y <= playerPos.y && isObject1 == 1) {
+					if (object2Pos.y <= object2Pos.y && isObject2 == 1) {
 						wolfSpeedCount = 100;
-						isObject1 = 0;
+						isObject2 = 0;
 					}
+				}
+				if (playerPos.y < -120) {
+					stage = 3;
+					player.setPosition(STAGE3_PLAYER_POSITION);
+					camera.setPosition(STAGE3_PLAYER_POSITION);
 				}
 				
 			}
