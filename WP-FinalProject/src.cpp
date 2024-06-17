@@ -33,6 +33,7 @@ constexpr COLORREF WALL_INBRUSH_COLORREF = RGB(24 / 5, 15 / 5, 33 / 5);
 Vector3 STAGE1_PLAYER_POSITION = Vector3(12.5f, 1.3f, 62.5f);
 Vector3 STAGE2_PLAYER_POSITION = Vector3(100.0f, 1.3f, 95.0f);
 Vector3 STAGE3_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 30.0f);
+Vector3 STAGE4_PLAYER_POSITION = Vector3(1000.0f, 1.3f, 12.5f);
 Vector3 WOLF_POSITION = Vector3(60.0f, 1.3f, 97.5f);
 Vector3 KEY_POSITION = Vector3(102.5f, 1.3f, 19.0f);
 Vector3 KEY2_POSITION = Vector3(2.5f, 1.3f, 32.5f);
@@ -42,9 +43,9 @@ Vector3 OBJECT_POSITION2 = Vector3(137.5f, 1.3f, -35.0f);        //stage2 가벼
 Vector3 OBJECT_POSITION3 = Vector3(170.0f, 1.3f, 100.0f);        //stage2 무거운 물건 
 Vector3 OBJECT_POSITION4 = Vector3(25.0f, 1.3f, 14.5f);     // stage1 위 무거운 물건 1
 Vector3 OBJECT_POSITION5 = Vector3(30.5f, 1.3f, 7.5f);    ///stage 1아래 무거운 물건 2
-Vector3 OBJECT_POSITION6 = Vector3(1000.0f, 1.3f, 30.0f);    ///stage 3
-Vector3 OBJECT_POSITION7 = Vector3(1010.0f, 1.3f, 30.0f);    ///stage 3
-Vector3 OBJECT_POSITION8 = Vector3(1020.0f, 1.3f, 30.0f);    ///stage 3
+Vector3 OBJECT_POSITION6 = Vector3(1020.0f, 1.3f, 35.0f);    ///stage 3
+Vector3 OBJECT_POSITION7 = Vector3(1025.0f, 1.3f, 35.0f);    ///stage 3
+Vector3 OBJECT_POSITION8 = Vector3(1025.0f, 1.3f, 30.0f);    ///stage 3
 
 // 전역 변수
 bool keyStates[ 256 ] = { 0 };
@@ -75,6 +76,7 @@ static int isObject6 = 2;
 static int isObject7 = 2;
 static int isObject8 = 2;
 bool isOpening = false;
+bool wolfAttack = false;
 float doingOpen = 0;
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -1219,7 +1221,7 @@ std::vector<Construction> stage2Walls = {
 Construction door = { { 1027.5, 4, 22.5}, { 0, 8, 10 }, RGB(255, 255, 255), RGB(255, 255, 255) };
 std::vector<Construction> stage3Floors = {
 
-   {{ 1000, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+{{ 1000, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1005, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1000, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
 {{ 1005, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
@@ -1283,6 +1285,13 @@ std::vector<Construction> stage3Walls = {
 	{{ 1027.5, 4, 12.5}, { 0, 8, 10 }, WALL_OUTLINE_COLORREF ,WALL_INBRUSH_COLORREF},
 };
 
+std::vector<Construction> stage4Floors = {
+	{{ 1000, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 1005, 0, 10 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 1000, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+	{{ 1005, 0, 15 }, { 5, 0, 5 }, FLOOR_INBRUSH_COLORREF, FLOOR_OUTLINE_COLORREF },
+};
+
 static AnimationController animationController("kitten_R_default");
 static AnimationController animationController2("shadow_R_default");
 static AnimationController animationController3("black_wolf_move_R");
@@ -1295,6 +1304,7 @@ static AnimationController object5_animationController("object5");
 static AnimationController object6_animationController("object6");
 static AnimationController object7_animationController("object7");
 static AnimationController object8_animationController("object8");
+
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f } };
@@ -1314,11 +1324,7 @@ static Actor object6{ OBJECT_POSITION6, { 2.6f, 2.6f, 0.0f } };
 static Actor object7{ OBJECT_POSITION7, { 2.6f, 2.6f, 0.0f } };
 static Actor object8{ OBJECT_POSITION8, { 2.6f, 2.6f, 0.0f } };
 
-static Actor object4{ {25.0f, 4.0f, 14.5f}, {6.0f, 8.0f, 0.0f} };   //무거운거 2 시계
-static Actor object5{ {30.5f, 2.0f, 7.5f}, {6.0f, 4.0f, 0.0f} };   //무거운거 1 서랍
 
-
->>>>>>>>> Temporary merge branch 2
 
 // 애니메이션 초기화 함수
 void InitializeAnimations() {
@@ -1640,10 +1646,24 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		for (auto& wall : stage3Walls) {
 			wall.DrawObject3D(mDC, camera);
 		}
-		object6.DrawObject3D(mDC, camera);
-		object7.DrawObject3D(mDC, camera);
-		object8.DrawObject3D(mDC, camera);
+		if (isObject6 != 0) {
+			object6.DrawObject3D(mDC, camera);
+		}
+		if (isObject7 != 0) {
+			object7.DrawObject3D(mDC, camera);
+		}
+		if (isObject8 != 0) {
+			object8.DrawObject3D(mDC, camera);
+		}
+		if (wolfAttack == true) {
+			wolf.DrawObject3D(mDC, camera);
+		}
 		door.DrawObject3D(mDC, camera);
+	}
+	else if (stage == 4) {
+		for (auto& floor : stage4Floors) {
+			floor.DrawObject3D(mDC, camera);
+		}
 	}
 	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
@@ -2059,70 +2079,131 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
 					cantMoveUp = false;
 				}
+			}
 
-				static POINT object6Pos = object6.get2DPosition();
-				static POINT object7Pos = object7.get2DPosition();
-				static POINT object8Pos = object8.get2DPosition();
-				POINT shadowPos = shadow.get2DPosition();
+			static POINT object6Pos = object6.get2DPosition();
+			static POINT object7Pos = object7.get2DPosition();
+			static POINT object8Pos = object8.get2DPosition();
+			POINT shadowPos = shadow.get2DPosition();
 
-				static int doorTime = 30000;       // doorTime = 0되면 죽음
-				static int boxTime = 0;
+			static int doorTime = 500;       // doorTime = 0되면 죽음
+			static int boxTime = 0;
 
-				//object 충돌처리
-				if (isObject6 == 2) {
-					double distance = std::sqrt((object6Pos.x - shadowPos.x) * (object6Pos.x - shadowPos.x) + (object6Pos.y - shadowPos.y) * (object6Pos.y - shadowPos.y));
-					if (distance <= 3.0) {
-						isObject6 = 1;
-						boxTime = 10000;
-						object6.set2DPosition(1000, 1000);
-					}
+			//object 충돌처리
+			if (isObject6 == 2) {
+				double distance = std::sqrt((object6Pos.x - shadowPos.x) * (object6Pos.x - shadowPos.x) + (object6Pos.y - shadowPos.y) * (object6Pos.y - shadowPos.y));
+				if (distance <= 3.0) {
+					isObject6 = 1;
+					boxTime = 300;
+					object6.set2DPosition(1012.0f, 35.0f);
+			    }
+			}
+			if (isObject7 == 2) {
+				double distance = std::sqrt((object7Pos.x - shadowPos.x) * (object7Pos.x - shadowPos.x) + (object7Pos.y - shadowPos.y) * (object7Pos.y - shadowPos.y));
+				if (distance <= 3.0) {
+					isObject7 = 1;
+					boxTime = 300;
+					object7.set2DPosition(1012.0f, 35.0f);
 				}
+			}
+			if (isObject8 == 2) {
+				double distance = std::sqrt((object8Pos.x - shadowPos.x) * (object8Pos.x - shadowPos.x) + (object8Pos.y - shadowPos.y) * (object8Pos.y - shadowPos.y));
+				if (distance <= 3.0) {
+					isObject8 = 1;
+					boxTime = 300;
+					object8.set2DPosition(1012.0f, 35.0f);
+				}
+			}
 				
-				if (boxTime <= 0) {
-					boxTime = 0;
-					doorTime--;
-0;					if (isObject6 == 1) {
-						isObject6 == 0;
-					}
-					if (isObject7 == 1) {
-						isObject7 == 0;
-					}
-					if (isObject8 == 1) {
-						isObject8 == 0;
-					}
-					if (doorTime == 0) {
-						//초기화
-						player.setPosition(STAGE3_PLAYER_POSITION);
-						camera.setPosition(STAGE3_PLAYER_POSITION);
-						isObject6 = 2;
-						isObject7 = 2;
-						isObject8 = 2;
-						object6.setPosition(OBJECT_POSITION6);
-						object7.setPosition(OBJECT_POSITION7);
-						object8.setPosition(OBJECT_POSITION8);
-						doingOpen = 0;
-						doorTime = 30000;
-						boxTime = 0;
+			if (boxTime == 0) {
+				doorTime--;
+0;				if (isObject6 == 1) {
+					isObject6 = 0;
+				}
+				if (isObject7 == 1) {
+					isObject7 = 0;
+				}
+				if (isObject8 == 1) {
+					isObject8 = 0;
+				}
+				if (doorTime < 30) {
+					wolfAttack = true;
+					wolf.set2DPosition(1015, 37.0);
+					static bool movingWolf{ true };
+					if (movingWolf) {
+						movingWolf = false;
+						wolf.getAnimationController().setCurrentState("black_wolf_move");
 					}
 				}
-				else {
-					boxTime--;
+				if (doorTime == 0) {
+					//초기화
+					player.setPosition(STAGE3_PLAYER_POSITION);
+					camera.setPosition(STAGE3_PLAYER_POSITION);
+					isObject6 = 2;
+					isObject7 = 2;
+					isObject8 = 2;
+					object6.setPosition(OBJECT_POSITION6);
+					object7.setPosition(OBJECT_POSITION7);
+					object8.setPosition(OBJECT_POSITION8);
+					doingOpen = 0;
+					wolfAttack = false;
+					doorTime = 500;
+					boxTime = 0;
+				}
+			}
+			else {
+				wolfAttack = false;
+				boxTime--;
+				if (boxTime < 0) {
+					boxTime = 0;
 				}
 			}
 			
-
 			//문열기
 			if (player.get2DPosition().x > 1020 && player.get2DPosition().y < 27.5 && player.get2DPosition().y >17.5) {
 				isOpening = true;
 				if (keyStates[ 'D' ]) {
-					doingOpen = doingOpen + 0.2;
+					doingOpen = doingOpen + 10;
 				}
 			}
 			else {
 				isOpening = false;
 			}
-			door.setSize({ 0, 8, doingOpen / 10 });
+			door.setSize({ 0, 8, doingOpen / 1000 });
 			door.setPosition({ 1027.5, 4, 22.5 });
+			if (doingOpen >= 10000) {
+				player.setPosition(STAGE4_PLAYER_POSITION);
+				stage = 4;
+			}
+		}
+		else if (stage == 4) {
+			for (const Construction& floor : stage4Floors) {
+				POINT playerPos = player.get2DPosition();
+				Vector3 pos = floor.getPosition();
+				Vector3 size = floor.getSize();
+				RECT bound = {
+					static_cast< LONG >(pos.x - size.x / 2),
+					static_cast< LONG >(pos.z - size.z / 2),
+					static_cast< LONG >(pos.x + size.x / 2),
+					static_cast< LONG >(pos.z + size.z / 2)
+				};
+				// 왼쪽 충돌 검사
+				if (playerPos.x - 0.2f >= bound.left && playerPos.x <= bound.right && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveLeft = false;
+				}
+				// 오른쪽 충돌 검사
+				if (playerPos.x + 0.2f <= bound.right && playerPos.x >= bound.left && playerPos.y >= bound.top && playerPos.y <= bound.bottom) {
+					cantMoveRight = false;
+				}
+				// 위쪽 충돌 검사
+				if (playerPos.y - 0.2f >= bound.top && playerPos.y <= bound.bottom && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveDown = false;
+				}
+				// 아래쪽 충돌 검사
+				if (playerPos.y + 0.2f <= bound.bottom && playerPos.y >= bound.top && playerPos.x >= bound.left && playerPos.x <= bound.right) {
+					cantMoveUp = false;
+				}
+			}
 		}
 	}
 
@@ -2169,7 +2250,6 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				});
 			}
 		}
-
 	}
 	{
 		if (keyStates[ 'A' ] || keyStates[ 'D' ] || keyStates[ 'W' ] || keyStates[ 'S' ]) {
