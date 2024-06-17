@@ -39,8 +39,8 @@ Vector3 KEY3_POSITION = Vector3(27.5f, 1.3f, 17.5f);
 Vector3 OBJECT_POSITION1 = Vector3(195.0f, 1.3f, 67.5f);
 Vector3 OBJECT_POSITION2= Vector3(25.5f, 1.3f, 17.5f);
 Vector3 OBJECT_POSITION3 = Vector3(27.5f, 1.3f, 17.5f);
-Vector3 OBJECT_POSITION4 = Vector3(27.5f, 1.3f, 17.5f);
-Vector3 OBJECT_POSITION5 = Vector3(27.5f, 1.3f, 17.5f);
+Vector3 OBJECT_POSITION4 = Vector3(27.5f, 1.3f, 15.5f);
+Vector3 OBJECT_POSITION5 = Vector3(27.5f, 1.3f, 15.5f);
 
 // 전역 변수
 bool keyStates[256] = { 0 };
@@ -54,7 +54,7 @@ static HBITMAP hBitmap;
 static RECT rt;
 
 static DWORD lastTime = timeGetTime();
-static int stage = 3;
+static int stage = 1;
 
 static bool canTake{ true };
 static bool heavy{ false };
@@ -1275,7 +1275,7 @@ static AnimationController object5_animationController("object5");
 // 초기화된 카메라와 객체
 static Camera camera({ 0, 3.6f, 0 }, 0.0f, -0.5f, 0.0f);
 static Shadow shadow{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
-static Player player{ STAGE3_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
+static Player player{ STAGE1_PLAYER_POSITION, { 2.6f, 2.6f, 0.0f }};
 static CImage image;
 static Mouse mouse;
 static Actor wolf{ WOLF_POSITION, { 6.5f, 10.9f, 0.0f } };
@@ -1285,8 +1285,8 @@ static Actor key3{ KEY3_POSITION, { 2.6f, 2.6f, 0.0f } };
 static Actor object1{ OBJECT_POSITION1, { 2.6f, 2.6f, 0.0f } };
 static Actor object2{ OBJECT_POSITION2, { 2.6f, 2.6f, 0.0f } };
 static Actor object3{ OBJECT_POSITION3, { 2.6f, 2.6f, 0.0f } };
-static Actor object4{ OBJECT_POSITION4, { 2.6f, 2.6f, 0.0f } };
-static Actor object5{ OBJECT_POSITION5, { 2.6f, 2.6f, 0.0f } };
+static Actor object4{ OBJECT_POSITION4, { 2.6f, 2.6f, 0.0f } };   //무거운거 2
+static Actor object5{ OBJECT_POSITION5, { 2.6f, 2.6f, 0.0f } };   //무거운거 1
 
 
 
@@ -1361,7 +1361,7 @@ void InitializeAnimations() {
 	};
 
 	std::map<float, std::string> object1_image = {
-		{0.0f, "Shadow_L_default"}
+		{0.0f, "key"}
 	};
 	std::map<float, std::string> object2_image = {
 		{0.0f, "key"}
@@ -1370,10 +1370,10 @@ void InitializeAnimations() {
 		{0.0f, "key"}
 	};
 	std::map<float, std::string> object4_image = {
-		{0.0f, "key"}
+		{0.0f, "Shadow_L_default"}
 	};
 	std::map<float, std::string> object5_image = {
-		{0.0f, "key"}
+		{0.0f, "Shadow_L_default"}
 	};
 
 	std::map<float, std::string> shadow_imagesKittenL = {
@@ -1565,6 +1565,7 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		if (isKey3 == true) {
 			key3.DrawObject3D(mDC, camera);
 		}
+		object5.DrawObject3D(mDC, camera);
 	}
 	if (stage == 2) {
 		wolf.DrawObject3D(mDC, camera);
@@ -1683,20 +1684,40 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			Vector3 keyPos = key.getPosition();
 			Vector3 key2Pos = key2.getPosition();
 			Vector3 key3Pos = key3.getPosition();
-
+			Vector3 Object4Pos = object4.getPosition();
+			Vector3 Object5Pos = object5.getPosition();
 			Vector3 shadowPos = shadow.getPosition();
 
+			//key1 충돌체크
 			double distance = std::sqrt((keyPos.x - shadowPos.x) * (keyPos.x - shadowPos.x) + (keyPos.z - shadowPos.z) * (keyPos.z - shadowPos.z));
 			if (distance <= 3) {
 				isKey = false;
 			}
+			//key1 충돌체크
 			distance = std::sqrt((key2Pos.x - shadowPos.x) * (key2Pos.x - shadowPos.x) + (key2Pos.z - shadowPos.z) * (key2Pos.z - shadowPos.z));
 			if (distance <= 3) {
 				isKey2 = false;
 			}
+			//key1 충돌체크
 			distance = std::sqrt((key3Pos.x - shadowPos.x) * (key3Pos.x - shadowPos.x) + (key3Pos.z - shadowPos.z) * (key3Pos.z - shadowPos.z));
 			if (distance <= 3) {
 				isKey3 = false;
+			}
+			//object4 충돌체크
+			distance = std::sqrt((Object4Pos.x - shadowPos.x) * (Object4Pos.x - shadowPos.x) + (Object4Pos.z - shadowPos.z) * (Object4Pos.z - shadowPos.z));
+			if (distance <= 3) {
+				heavy = true;
+			}
+			else {
+				heavy = false;
+			}
+			//object5 충돌체크
+			distance = std::sqrt((Object5Pos.x - shadowPos.x) * (Object5Pos.x - shadowPos.x) + (Object5Pos.z - shadowPos.z) * (Object5Pos.z - shadowPos.z));
+			if (distance <= 3) {
+				heavy = true;
+			}
+			else {
+				heavy = false;
 			}
 		}
 		else if (stage == 2) {
@@ -1845,6 +1866,11 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						wolfSpeedCount = 100;
 						isObject1 = 0;
 					}
+					if (playerPos.y < -120) {
+						stage = 3;
+						player.setPosition(STAGE3_PLAYER_POSITION);
+						camera.setPosition(STAGE3_PLAYER_POSITION);
+					}
 				}
 				else if (wolfMoveMode == 3) {
 					//animation변경
@@ -1870,11 +1896,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 						isObject1 = 0;
 					}
 				}
-				if (playerPos.y < -120) {
-					stage = 3;
-					player.setPosition(STAGE3_PLAYER_POSITION);
-					camera.setPosition(STAGE3_PLAYER_POSITION);
-				}
+				
 			}
 			
 		}
@@ -1917,30 +1939,51 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	// player, camera 움직임 처리
 	{
-
+		//cantake 
 		shadow.Update(deltaTime);
-		shadow.getAnimationController().update(deltaTime);
-		if (keyStates[VK_SPACE] || canTake) {
-			mouse.UpdateMouse3DPosition(camera);
-			canTake = true;
-			std::string st = player.getAnimationController().getCurrentState();
-			Vector3 playerPos = player.getPosition();
-			Vector3 shadowPos = shadow.getPosition();
-			Vector3 targetPos = {
-				playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.2f : 0.2f),
-				playerPos.y,
-				playerPos.z
-			};
-			shadow.setPosition({
-				shadowPos.x + (targetPos.x - shadowPos.x) * 0.5f,
-				shadowPos.y + (targetPos.y - shadowPos.y) * 0.5f,
-				shadowPos.z + (targetPos.z - shadowPos.z) * 0.5f
+		shadow.getAnimationController().update(deltaTime); //!canTake &&
+		if (keyStates[ VK_SPACE ]) {
+			if (heavy == false) {
+				mouse.UpdateMouse3DPosition(camera);
+				canTake = true;
+				std::string st = player.getAnimationController().getCurrentState();
+				Vector3 playerPos = player.getPosition();
+				Vector3 shadowPos = shadow.getPosition();
+				Vector3 targetPos = {
+					playerPos.x + ((st == "kitten_R_default" || st == "kitten_R_move") ? -0.2f : 0.2f),
+					playerPos.y,
+					playerPos.z
+				};
+				shadow.setPosition({
+					shadowPos.x + (targetPos.x - shadowPos.x) * 0.5f,
+					shadowPos.y + (targetPos.y - shadowPos.y) * 0.5f,
+					shadowPos.z + (targetPos.z - shadowPos.z) * 0.5f
+					});
+				if (mouse.IsLeftClick()) {
+					shadow.Charge(deltaTime);
+				}
+
+
+			}  //!canTake && 
+			else if (heavy == true) {
+
+				Vector3 playerPos = player.getPosition();
+				Vector3 shadowPos = shadow.getPosition();
+				Vector3 targetPos = {
+					shadowPos.x,
+					shadowPos.y,
+					shadowPos.z
+				};
+				player.setPosition({
+					playerPos.x + (targetPos.x - playerPos.x) * 0.1f,
+					playerPos.y + (targetPos.y - playerPos.y) * 0.1f,
+					playerPos.z + (targetPos.z - playerPos.z) * 0.1f
 				});
-			if (mouse.IsLeftClick()) {
-				shadow.Charge(deltaTime);
+
 			}
 		}
-		else if (keyStates['E'] && !canTake) {
+		
+		/*else if (keyStates[ 'E' ] && !canTake) {
 			Vector3 playerPos = player.getPosition();
 			Vector3 shadowPos = shadow.getPosition();
 			Vector3 targetPos = {
@@ -1953,8 +1996,7 @@ static void CALLBACK HandleTimer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				playerPos.y + (targetPos.y - playerPos.y) * 0.1f,
 				playerPos.z + (targetPos.z - playerPos.z) * 0.1f
 				});
-		}
-		
+		}*/
 
 	}
 	{
