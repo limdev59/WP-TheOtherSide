@@ -67,8 +67,8 @@ static bool isKey = true;
 static bool isKey2 = true;
 static bool isKey3 = true;
 //2는 기본배치되있는 상태, 1은 그랩해서 능력 활성화 상태, 0은 사라진상태
-static int isObject1 = 2;   //사용
-static int isObject2 = 2;    //사용
+static int isObject1 = 2;
+static int isObject2 = 2;
 static int isObject3 = 2;
 static int isObject4 = 2;
 static int isObject5 = 2;
@@ -80,6 +80,7 @@ bool isWalking = false;
 bool isOpening = false;
 bool wolfAttack = false;
 float doingOpen = 0;
+bool vis = false;
 // 함수 선언
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -1680,6 +1681,32 @@ static void CALLBACK HandlePaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	shadow.DrawObject3D(mDC, camera);
 	player.DrawObject3D(mDC, camera);
 
+	if(vis){
+		Graphics graphics(mDC);
+		Font font(L"Arial", 16);
+		SolidBrush brush(Color(255, 255, 255));
+
+		std::wstring yawStr = L"Yaw: " + std::to_wstring(camera.getYaw());
+		std::wstring pitchStr = L"Pitch: " + std::to_wstring(camera.getPitch());
+		std::wstring rollStr = L"Roll: " + std::to_wstring(camera.getRoll());
+		std::wstring plPosx = L"player x: " + std::to_wstring(player.getPosition().x);
+		std::wstring plPosy = L"player y: " + std::to_wstring(player.getPosition().y);
+		std::wstring plPosz = L"player z: " + std::to_wstring(player.getPosition().z);
+		std::wstring sdPosx = L"shadow x: " + std::to_wstring(shadow.getPosition().x);
+		std::wstring sdPosy = L"shadow y: " + std::to_wstring(shadow.getPosition().y);
+		std::wstring sdPosz = L"shadow z: " + std::to_wstring(shadow.getPosition().z);
+
+		graphics.DrawString(yawStr.c_str(), -1, &font, PointF(10, 10), &brush);
+		graphics.DrawString(pitchStr.c_str(), -1, &font, PointF(10, 30), &brush);
+		graphics.DrawString(rollStr.c_str(), -1, &font, PointF(10, 50), &brush);
+		graphics.DrawString(plPosx.c_str(), -1, &font, PointF(10, 70), &brush);
+		graphics.DrawString(plPosy.c_str(), -1, &font, PointF(10, 90), &brush);
+		graphics.DrawString(plPosz.c_str(), -1, &font, PointF(10, 110), &brush);
+		graphics.DrawString(sdPosx.c_str(), -1, &font, PointF(10, 130), &brush);
+		graphics.DrawString(sdPosy.c_str(), -1, &font, PointF(10, 150), &brush);
+		graphics.DrawString(sdPosz.c_str(), -1, &font, PointF(10, 170), &brush);
+	}
+
 
 	BitBlt(hDC, 0, 0, rt.right, rt.bottom, mDC, 0, 0, SRCCOPY);
 	DeleteDC(mDC);
@@ -1721,6 +1748,9 @@ static void CALLBACK HandleKeyDown(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	if (!isWalking &&(keyStates[ 'A' ] || keyStates[ 'D' ] || keyStates[ 'W' ] || keyStates[ 'S' ])) {
 		ssystem->playSound(bpm140_sound, 0, false, &channel4);
 		isWalking = true;
+	}
+	if (keyStates[VK_F1]) {
+		vis = !vis;
 	}
 	if (keyStates[ 'A' ] && current != "kitten_L_move") {
 		player.getAnimationController().setCurrentState("kitten_L_move");

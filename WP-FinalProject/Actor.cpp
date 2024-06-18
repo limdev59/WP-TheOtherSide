@@ -138,19 +138,7 @@ void Actor::DrawObject3D(HDC hdc, const Camera& cam) {
 
     PlgBlt(hdc, points, transformedDC, 0, 0, frameWidth, frameHeight, maskBitmap, 0, 0);
 
-    {
-        Graphics graphics(hdc);
-        Font font(L"Arial", 16);
-        SolidBrush brush(Color(255, 255, 255));
-
-        std::wstring yawStr = L"Yaw: " + std::to_wstring(cam.getYaw());
-        std::wstring pitchStr = L"Pitch: " + std::to_wstring(cam.getPitch());
-        std::wstring rollStr = L"Roll: " + std::to_wstring(cam.getRoll());
-
-        graphics.DrawString(yawStr.c_str(), -1, &font, PointF(10, 10), &brush);
-        graphics.DrawString(pitchStr.c_str(), -1, &font, PointF(10, 30), &brush);
-        graphics.DrawString(rollStr.c_str(), -1, &font, PointF(10, 50), &brush);
-    }
+    
 
     delete pTransformedBitmap;
     DeleteObject(maskBitmap);
